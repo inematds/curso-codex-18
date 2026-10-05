@@ -33,8 +33,9 @@ DESC = ('Curso gratuito do INEMA.CLUB: os 18 conceitos que fazem o Codex trabalh
         'ciclo do agente, modelos, permissões, skills, plugins, navegador, subagentes e tarefas agendadas, do zero.')
 
 
-BACKLINKS = ('<p class="mt-2"><a href="https://www.inema.club/aprender-inteligencia-artificial/" class="underline">Guia: como aprender inteligência artificial</a>'
-             ' · <a href="https://www.inema.club/cursos/" class="underline">Todos os cursos</a></p>\n      ')
+BACKLINKS = ('<!-- inema-backlink:v1 -->\n      <p class="mt-2"><a href="https://www.inema.club/cursos/315-codex-os-18-conceitos-essenciais-do-zero-ao-assistente-que-trabalha-por-voce/" class="underline">Ficha completa deste curso no INEMA.CLUB</a>'
+             ' · <a href="https://www.inema.club/aprender-inteligencia-artificial/" class="underline">Guia: como aprender inteligência artificial</a>'
+             ' · <a href="https://www.inema.club/cursos/" class="underline">Todos os cursos</a></p>\n      <!-- /inema-backlink:v1 -->\n      ')
 
 CONTINUAR = '''  <script>
     // "Continuar de onde parei": lê o último módulo visitado (gravado pelo learn.js)

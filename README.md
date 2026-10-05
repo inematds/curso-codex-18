@@ -17,5 +17,6 @@ Manutenção: edite `context/corpos/`, rode `python3 scripts/montar.py` e `pytho
 
 ## Mais no INEMA.CLUB
 
+- [Ficha deste curso](https://www.inema.club/cursos/315-codex-os-18-conceitos-essenciais-do-zero-ao-assistente-que-trabalha-por-voce/)
 - [Guia: como aprender inteligência artificial](https://www.inema.club/aprender-inteligencia-artificial/)
 - [Todos os cursos](https://www.inema.club/cursos/)
