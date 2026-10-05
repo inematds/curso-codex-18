@@ -7,7 +7,7 @@ Modelos congelados para copiar a estrutura: `~/projetos/curso-agent-runtime/cont
 ## REGRA DURA — sem fontes
 
 - **Não citar nenhuma fonte**: nenhum vídeo, canal, autor, criador, post, "segundo fulano", "num vídeo que circulou". Nenhum link para YouTube. O curso é autoral.
-- Não citar nomes de projetos de terceiros (ex.: nada de "Herk", "Hyperframes", "trading challenge").
+- Não citar nomes de projetos ou pessoas de terceiros.
 - Exemplos usam só as personagens abaixo.
 
 ## Público e tom

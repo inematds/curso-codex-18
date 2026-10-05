@@ -17,3 +17,4 @@ When I correct you, or you catch yourself making a mistake: before continuing, a
 ## Lessons
 
 - flux2-klein escreve letras embaralhadas quando a cena tem placa, pergaminho ou livro: pedir só pictogramas ("pure icons, no signs, no labels") e conferir a imagem antes de usar.
+- `gh repo create --push` logo após `git init` empurra `master`: rodar `git branch -M main` antes do primeiro push (senão o Pages recusa).

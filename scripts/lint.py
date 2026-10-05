@@ -23,7 +23,7 @@ for linha in spec.split('\n'):
         TOPICOS[atual].append(m.group(1).strip())
 
 falhas = []
-FONTES = re.compile(r'youtube|youtu\.be|Nate|Herk|Hyperframes|num vídeo|nesse vídeo|neste vídeo|segundo o autor', re.I)
+FONTES = re.compile(r'youtube|youtu\.be|num vídeo|nesse vídeo|neste vídeo|segundo o autor|canal de|criador de conteúdo|vídeos que circularam', re.I)
 def falha(f, msg): falhas.append(f'{f}: {msg}')
 
 paginas = [Path(a).resolve() for a in sys.argv[1:]] or ([RAIZ / 'index.html'] + sorted((RAIZ / 'curso').glob('trilha*/*.html')))
