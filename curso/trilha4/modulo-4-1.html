@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="inema-course" content="cx18">
+  <title>Navegador: o Codex usa sites por você | Codex: os 18 conceitos</title>
+  <meta name="description" content="Curso gratuito do INEMA.CLUB: os 18 conceitos que fazem o Codex trabalhar por você — projetos, regras, ciclo do agente, modelos, permissões, skills, plugins, navegador, subagentes e tarefas agendadas, do zero.">
+
+  <!-- ANTI-FOUC: bloqueante, ANTES do Tailwind -->
+  <script>
+  (function () {
+    try {
+      var html = document.documentElement;
+      var DEF = { theme: 'inema-dark', font: 'inter', fontScale: 100, lineWidth: 68, leading: 1.7, accent: 'emerald' };
+      function clone(o) { var r = {}; for (var x in o) r[x] = o[x]; return r; }
+      var p = clone(DEF);
+      try {
+        var raw = localStorage.getItem('inema.prefs');
+        if (raw) {
+          var parsed = JSON.parse(raw);
+          if (parsed && typeof parsed === 'object') { for (var k in DEF) if (parsed[k] != null) p[k] = parsed[k]; }
+        } else {
+          var legacy = localStorage.getItem('theme');
+          if (legacy === 'light') p.theme = 'claro'; else if (legacy === 'dark') p.theme = 'inema-dark';
+        }
+      } catch (e) { p = clone(DEF); }
+      var THEMES = {
+        'inema-dark': { dark: true,  attr: null,        cs: 'dark'  },
+        'claro':      { dark: false, attr: null,        cs: 'light' },
+        'sepia':      { dark: false, attr: 'sepia',     cs: 'light' },
+        'foco':       { dark: null,  attr: 'foco',      cs: null    },
+        'contraste':  { dark: true,  attr: 'contraste', cs: 'dark'  }
+      };
+      var t = THEMES[p.theme] || THEMES['inema-dark'];
+      if (t.dark === true) html.classList.add('dark'); else if (t.dark === false) html.classList.remove('dark');
+      if (t.attr) html.setAttribute('data-theme', t.attr); else html.removeAttribute('data-theme');
+      html.style.colorScheme = (t.cs ? t.cs : (html.classList.contains('dark') ? 'dark' : 'light'));
+      html.setAttribute('data-font', p.font || 'inter');
+      html.setAttribute('data-accent', p.accent || 'emerald');
+      var s = html.style; var scale = (+p.fontScale || 100);
+      s.setProperty('--inema-font-scale', (scale / 100).toString());
+      s.setProperty('font-size', scale + '%');
+      s.setProperty('--measure', (+p.lineWidth || 68) + 'ch');
+      s.setProperty('--lh-body', (+p.leading || 1.7).toString());
+      var fam = p.font === 'system' ? 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif'
+        : (p.font === 'leitura' ? '"Atkinson Hyperlegible", "Inter", system-ui, sans-serif' : '"Inter", system-ui, sans-serif');
+      s.setProperty('--font-body', fam);
+      var ACC = { emerald: [152,76,45], blue: [217,91,60], purple: [258,90,66], amber: [38,92,50], teal: [174,72,41], rose: [350,89,60] };
+      var a = ACC[p.accent] || ACC.emerald;
+      s.setProperty('--accent-h', a[0]+''); s.setProperty('--accent-s', a[1]+'%'); s.setProperty('--accent-l', a[2]+'%');
+      s.setProperty('--accent', 'hsl('+a[0]+' '+a[1]+'% '+a[2]+'%)');
+    } catch (err) { try { document.documentElement.classList.add('dark'); document.documentElement.style.colorScheme = 'dark'; } catch(e){} }
+  })();
+  </script>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { darkMode: 'class', theme: { extend: { colors: {
+      primary: '#FACC15', dark: { 900: '#111827', 800: '#1f2937', 700: '#374151', 600: '#4b5563' } } } } }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/learn.css">
+
+  <!-- Manifesto do curso (OBRIGATORIO em TODA pagina, identico) -->
+  <script type="application/json" data-inema-manifest>
+  {"course":"cx18","tracks":[{"n":"1","title":"Fundamentos","modules":[{"id":"1-1","title":"Projetos: a pasta que lembra de você","topics":6,"href":"curso/trilha1/modulo-1-1.html"},{"id":"1-2","title":"AGENTS.md: as regras da casa","topics":6,"href":"curso/trilha1/modulo-1-2.html"},{"id":"1-3","title":"O ciclo do agente","topics":6,"href":"curso/trilha1/modulo-1-3.html"},{"id":"1-4","title":"/goal: um objetivo até o fim","topics":6,"href":"curso/trilha1/modulo-1-4.html"}]},{"n":"2","title":"Ambientes","modules":[{"id":"2-1","title":"Local, nuvem e celular","topics":6,"href":"curso/trilha2/modulo-2-1.html"},{"id":"2-2","title":"Worktrees: cópias para testar sem medo","topics":6,"href":"curso/trilha2/modulo-2-2.html"},{"id":"2-3","title":"A pasta .codex: configurações","topics":6,"href":"curso/trilha2/modulo-2-3.html"}]},{"n":"3","title":"Controle","modules":[{"id":"3-1","title":"Modelos: força e custo","topics":6,"href":"curso/trilha3/modulo-3-1.html"},{"id":"3-2","title":"Esforço e modo rápido","topics":6,"href":"curso/trilha3/modulo-3-2.html"},{"id":"3-3","title":"Permissões: quanto ele faz sozinho","topics":6,"href":"curso/trilha3/modulo-3-3.html"},{"id":"3-4","title":"Skills: receitas reutilizáveis","topics":6,"href":"curso/trilha3/modulo-3-4.html"},{"id":"3-5","title":"A pasta .agents e a vinda do Claude Code","topics":6,"href":"curso/trilha3/modulo-3-5.html"},{"id":"3-6","title":"Plugins: conecte seus aplicativos","topics":6,"href":"curso/trilha3/modulo-3-6.html"}]},{"n":"4","title":"Ferramentas e escala","modules":[{"id":"4-1","title":"Navegador: o Codex usa sites por você","topics":6,"href":"curso/trilha4/modulo-4-1.html"},{"id":"4-2","title":"Sites: do localhost para o mundo","topics":6,"href":"curso/trilha4/modulo-4-2.html"},{"id":"4-3","title":"Subagentes: delegue em paralelo","topics":6,"href":"curso/trilha4/modulo-4-3.html"},{"id":"4-4","title":"Tarefas agendadas: o Codex no piloto","topics":6,"href":"curso/trilha4/modulo-4-4.html"},{"id":"4-5","title":"Modo de voz: tudo junto","topics":6,"href":"curso/trilha4/modulo-4-5.html"}]}]}
+  </script>
+
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .dark body { background-color: #111827; }
+
+    /* Light mode - base */
+    html:not(.dark) body { background-color: #f8fafc; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-600 { background-color: #e5e7eb; }
+    html:not(.dark) .text-neutral-100 { color: #111827; }
+    html:not(.dark) .text-neutral-200 { color: #1f2937; }
+    html:not(.dark) .text-neutral-300 { color: #4b5563; }
+    html:not(.dark) .text-neutral-400 { color: #6b7280; }
+    html:not(.dark) .text-neutral-500 { color: #6b7280; }
+    html:not(.dark) .text-white { color: #111827; }
+    html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+    html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+
+    /* Light mode - acentos das 5 trilhas (emerald, blue, purple, amber, teal) */
+    html:not(.dark) .text-emerald-400 { color: #059669; }
+    html:not(.dark) .bg-emerald-500\/20 { background-color: rgba(5, 150, 105, 0.12); }
+    html:not(.dark) .bg-emerald-500\/10 { background-color: rgba(5, 150, 105, 0.08); }
+    html:not(.dark) .bg-emerald-900\/20 { background-color: rgba(5, 150, 105, 0.07); }
+    html:not(.dark) .border-emerald-500\/30 { border-color: rgba(5, 150, 105, 0.25); }
+    html:not(.dark) .hover\:bg-emerald-500\/30:hover { background-color: rgba(5, 150, 105, 0.18); }
+    html:not(.dark) .hover\:text-emerald-400:hover { color: #059669; }
+    html:not(.dark) .hover\:bg-emerald-500\/10:hover { background-color: rgba(5, 150, 105, 0.08); }
+    html:not(.dark) .group:hover .group-hover\:text-emerald-400 { color: #059669; }
+    html:not(.dark) .text-blue-400 { color: #2563eb; }
+    html:not(.dark) .bg-blue-500\/20 { background-color: rgba(37, 99, 235, 0.12); }
+    html:not(.dark) .bg-blue-500\/10 { background-color: rgba(37, 99, 235, 0.08); }
+    html:not(.dark) .bg-blue-900\/20 { background-color: rgba(37, 99, 235, 0.07); }
+    html:not(.dark) .border-blue-500\/30 { border-color: rgba(37, 99, 235, 0.25); }
+    html:not(.dark) .hover\:bg-blue-500\/30:hover { background-color: rgba(37, 99, 235, 0.18); }
+    html:not(.dark) .hover\:text-blue-400:hover { color: #2563eb; }
+    html:not(.dark) .hover\:bg-blue-500\/10:hover { background-color: rgba(37, 99, 235, 0.08); }
+    html:not(.dark) .group:hover .group-hover\:text-blue-400 { color: #2563eb; }
+    html:not(.dark) .text-purple-400 { color: #7c3aed; }
+    html:not(.dark) .bg-purple-500\/20 { background-color: rgba(124, 58, 237, 0.12); }
+    html:not(.dark) .bg-purple-500\/10 { background-color: rgba(124, 58, 237, 0.08); }
+    html:not(.dark) .bg-purple-900\/20 { background-color: rgba(124, 58, 237, 0.07); }
+    html:not(.dark) .border-purple-500\/30 { border-color: rgba(124, 58, 237, 0.25); }
+    html:not(.dark) .hover\:bg-purple-500\/30:hover { background-color: rgba(124, 58, 237, 0.18); }
+    html:not(.dark) .hover\:text-purple-400:hover { color: #7c3aed; }
+    html:not(.dark) .hover\:bg-purple-500\/10:hover { background-color: rgba(124, 58, 237, 0.08); }
+    html:not(.dark) .group:hover .group-hover\:text-purple-400 { color: #7c3aed; }
+    html:not(.dark) .text-amber-400 { color: #92400e; }
+    html:not(.dark) .bg-amber-500\/20 { background-color: rgba(217, 119, 6, 0.12); }
+    html:not(.dark) .bg-amber-500\/10 { background-color: rgba(217, 119, 6, 0.08); }
+    html:not(.dark) .bg-amber-900\/20 { background-color: rgba(217, 119, 6, 0.07); }
+    html:not(.dark) .border-amber-500\/30 { border-color: rgba(217, 119, 6, 0.25); }
+    html:not(.dark) .hover\:bg-amber-500\/30:hover { background-color: rgba(217, 119, 6, 0.18); }
+    html:not(.dark) .hover\:text-amber-400:hover { color: #92400e; }
+    html:not(.dark) .hover\:bg-amber-500\/10:hover { background-color: rgba(217, 119, 6, 0.08); }
+    html:not(.dark) .group:hover .group-hover\:text-amber-400 { color: #92400e; }
+    html:not(.dark) .text-teal-400 { color: #0d9488; }
+    html:not(.dark) .bg-teal-500\/20 { background-color: rgba(13, 148, 136, 0.12); }
+    html:not(.dark) .bg-teal-500\/10 { background-color: rgba(13, 148, 136, 0.08); }
+    html:not(.dark) .bg-teal-900\/20 { background-color: rgba(13, 148, 136, 0.07); }
+    html:not(.dark) .border-teal-500\/30 { border-color: rgba(13, 148, 136, 0.25); }
+    html:not(.dark) .hover\:bg-teal-500\/30:hover { background-color: rgba(13, 148, 136, 0.18); }
+    html:not(.dark) .hover\:text-teal-400:hover { color: #0d9488; }
+    html:not(.dark) .hover\:bg-teal-500\/10:hover { background-color: rgba(13, 148, 136, 0.08); }
+    html:not(.dark) .group:hover .group-hover\:text-teal-400 { color: #0d9488; }
+
+    /* Light mode - remove gradientes e cores especiais */
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+    html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.25); }
+    html:not(.dark) .border-primary\/30 { border-color: rgba(161, 98, 7, 0.22); }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-yellow-400 { color: #a16207; }
+    html:not(.dark) .text-red-400 { color: #b91c1c; }
+    html:not(.dark) .bg-red-900\/20 { background-color: rgba(185, 28, 28, 0.06); }
+    html:not(.dark) .border-red-500\/30 { border-color: rgba(185, 28, 28, 0.25); }
+    html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+    html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+
+    /* Light mode - nav */
+    html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+
+    /* Dark mode - bordas suaves */
+    .dark .border-dark-600 { border-color: #374151; }
+    .dark .divide-dark-600 > :not([hidden]) ~ :not([hidden]) { border-color: #374151; }
+
+    /* Alvos de ancora abaixo do nav sticky */
+    [data-inema-topic], [id^="modulo-"], [id^="topico-"] { scroll-margin-top: 72px; }
+
+    /* SVG light mode + animacao */
+    html:not(.dark) svg[role="img"] { filter: saturate(0.82) brightness(0.96); }
+    @keyframes wf-pulse { 0%,100% { opacity:.55 } 50% { opacity:1 } }
+    @keyframes wf-dash { to { stroke-dashoffset: -24; } }
+    @media (prefers-reduced-motion: no-preference) {
+      .wf-a { animation: wf-pulse 2.6s ease-in-out infinite; }
+      .wf-a:nth-child(2){animation-delay:.25s} .wf-a:nth-child(3){animation-delay:.5s}
+      .wf-a:nth-child(4){animation-delay:.75s} .wf-a:nth-child(5){animation-delay:1s}
+      .wf-flow { stroke-dasharray: 6 6; animation: wf-dash 1.2s linear infinite; }
+    }
+
+    /* Topicos expansiveis */
+    .topic-explanation { display: none; }
+    .topic-explanation.active { display: block; }
+    /* Popover de aparência ancorado à direita e fora do layout quando fechado (sem transbordo) */
+    .inema-appearance-pop { right: 0; }
+    main code, main pre { overflow-wrap: anywhere; }
+    main .flex-1 { min-width: 0; }
+    .inema-appearance-pop:not([data-open="true"]) { visibility: hidden; display: none; }
+  </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+  <a href="#conteudo" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[60] focus:px-4 focus:py-2 focus:bg-primary focus:text-black focus:rounded-lg">Pular para o conteúdo</a>
+
+  <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-14">
+        <div class="flex items-center space-x-1.5 sm:space-x-3">
+          <a href="../../index.html" class="flex items-center space-x-2 text-yellow-400 hover:text-yellow-300">
+            <span class="text-2xl">🧭</span>
+            <span class="font-bold text-lg hidden lg:inline">Codex 18</span>
+          </a>
+          <span class="text-neutral-600 hidden sm:inline">|</span>
+          <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium">INEMA.CLUB</a>
+          <span class="text-neutral-600">-</span>
+          <a href="https://inema.pro" target="_blank" class="text-amber-700 hover:text-amber-600 dark:text-slate-300 dark:hover:text-slate-200 text-sm font-medium">PRO</a>
+        </div>
+        <div class="flex items-center sm:space-x-1">
+          <a href="../trilha1/index.html" class="px-1.5 sm:px-2.5 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors">
+            <span class="xl:hidden">T1</span><span class="hidden xl:inline">Fundamentos</span>
+          </a>
+          <a href="../trilha2/index.html" class="px-1.5 sm:px-2.5 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors">
+            <span class="xl:hidden">T2</span><span class="hidden xl:inline">Ambientes</span>
+          </a>
+          <a href="../trilha3/index.html" class="px-1.5 sm:px-2.5 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-purple-400 hover:bg-purple-500/10 transition-colors">
+            <span class="xl:hidden">T3</span><span class="hidden xl:inline">Controle</span>
+          </a>
+          <a href="index.html" class="px-1.5 sm:px-2.5 py-1.5 rounded-lg text-sm font-semibold text-amber-400 bg-amber-500/10">
+            <span class="xl:hidden">T4</span><span class="hidden xl:inline">Ferramentas e escala</span>
+          </a>
+          <button type="button" data-inema-journey-open class="hidden sm:inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-sm text-neutral-300 hover:text-neutral-100 transition-colors" title="Minha jornada">
+            <span aria-hidden="true">◷</span><span class="hidden md:inline">Jornada</span>
+            <span class="inema-journey-badge" data-inema-journey-badge data-count="0"></span>
+          </button>
+          <div class="relative">
+            <button type="button" data-inema-appearance-toggle="#aparencia" aria-expanded="false" aria-controls="aparencia" class="p-2 rounded-lg text-neutral-300 hover:text-neutral-100 transition-colors" title="Aparência">
+              <span aria-hidden="true" class="text-sm font-semibold">Aa</span><span class="sr-only">Aparência</span>
+            </button>
+            <div id="aparencia" data-inema-appearance class="inema-appearance-pop">
+              <div class="inema-segment" aria-label="Tema">
+                <button type="button" data-inema-set-theme="inema-dark">Escuro</button>
+                <button type="button" data-inema-set-theme="claro">Claro</button>
+                <button type="button" data-inema-set-theme="sepia">Sépia</button>
+                <button type="button" data-inema-set-theme="foco">Foco</button>
+                <button type="button" data-inema-set-theme="contraste">Alto contraste</button>
+              </div>
+              <div class="inema-segment" aria-label="Fonte">
+                <button type="button" data-inema-set-font="inter">Inter</button>
+                <button type="button" data-inema-set-font="system">Sistema</button>
+                <button type="button" data-inema-set-font="leitura">Leitura</button>
+              </div>
+              <div class="inema-segment" aria-label="Tamanho do texto">
+                <button type="button" data-inema-set-fontscale="100">A</button>
+                <button type="button" data-inema-set-fontscale="112">A+</button>
+                <button type="button" data-inema-set-fontscale="125">A++</button>
+              </div>
+              <div class="inema-segment" aria-label="Largura da linha">
+                <button type="button" data-inema-set-linewidth="60">Estreito</button>
+                <button type="button" data-inema-set-linewidth="68">Médio</button>
+                <button type="button" data-inema-set-linewidth="75">Largo</button>
+              </div>
+              <div class="inema-segment" aria-label="Entrelinha">
+                <button type="button" data-inema-set-leading="1.45">Compacto</button>
+                <button type="button" data-inema-set-leading="1.7">Confortável</button>
+              </div>
+            </div>
+          </div>
+          <button id="theme-toggle" class="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors" aria-label="Alternar tema claro/escuro">
+            <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+            <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <nav aria-label="Trilha de navegação" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+    <div class="flex items-center space-x-2 text-sm text-neutral-400">
+      <a href="../../index.html" class="hover:text-amber-400">Início</a><span>/</span>
+      <a href="index.html" class="hover:text-amber-400">Trilha 4</a><span>/</span>
+      <span class="text-amber-400">Módulo 4.1</span>
+    </div>
+  </nav>
+
+  <header class="bg-gradient-to-br from-amber-900/30 via-dark-800 to-dark-800 py-12 border-b border-dark-600" data-inema-module="4-1" data-inema-track="4">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <span class="inline-block px-3 py-1 bg-amber-500/20 text-amber-400 text-xs font-semibold rounded-full mb-4">MÓDULO 4.1 · CONCEITO 14 DE 18</span>
+      <h1 class="text-3xl sm:text-4xl font-bold mb-4">🌐 Navegador: o Codex usa sites por você</h1>
+      <p class="text-lg text-neutral-400 max-w-3xl">Nem todo site tem plugin ou integração. Para esses, o Codex abre um navegador próprio, olha a tela, clica e digita como você faria. Você faz o login uma vez e ele reaproveita a sessão.</p>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 max-w-2xl">
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-amber-400">6</div><div class="text-xs text-neutral-400">Tópicos</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-amber-400">~30</div><div class="text-xs text-neutral-400">Minutos</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-amber-400">Médio</div><div class="text-xs text-neutral-400">Nível</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-amber-400">Ferramenta</div><div class="text-xs text-neutral-400">Tipo</div></div>
+      </div>
+      <div data-inema-meter="modulo:4-1" class="mt-6 max-w-2xl" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-label="Progresso do módulo 4.1">
+        <div class="flex justify-between text-xs text-neutral-400 mb-1"><span data-inema-meter-frac>0 de 6</span><span data-inema-meter-pct>0%</span></div>
+        <div class="inema-bar"><div class="inema-bar__fill" data-inema-meter-fill></div></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-10">
+    <figure class="rounded-2xl overflow-hidden border border-amber-500/30">
+      <img src="assets/img/modulo-4-1.png" alt="Ilustração: uma janela de navegador aberta dentro do aplicativo do Codex, com um cursor luminoso do agente clicando num botão do site enquanto a pessoa apenas acompanha. O agente usa o site no lugar dela, com a sessão que ela abriu antes." class="w-full h-auto" loading="lazy" width="1536" height="640">
+    </figure>
+  </div>
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:grid lg:grid-cols-[1fr_220px] lg:gap-10">
+  <main id="conteudo" class="min-w-0" data-inema-module="4-1" data-inema-track="4">
+
+    <!-- ===================== TOPICO 1 ===================== -->
+    <section id="topico-1" data-inema-topic="modulo-4-1#topico-1" class="mb-16">
+      <div class="flex flex-wrap items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-amber-500/20 text-amber-400 font-bold text-xl">1</span>
+        <h2 class="text-2xl font-bold flex-1">Conheça o navegador dentro do Codex</h2>
+        <button type="button" data-inema-doubt-toggle aria-pressed="false" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-dark-700 border border-dark-600 text-neutral-300 hover:bg-dark-600 transition-colors text-sm"><span aria-hidden="true">?</span><span>Tenho dúvida</span></button>
+      </div>
+      <p data-inema-block="m4-1-t1-p1" class="text-neutral-300 mb-4 leading-relaxed">Até aqui o Codex trabalhou com arquivos da sua pasta e com aplicativos conectados por plugin. Mas boa parte da vida acontece em sites: o portal do fornecedor, a área do cliente do banco, a comunidade onde você posta, o painel da prefeitura.</p>
+      <p data-inema-block="m4-1-t1-p2" class="text-neutral-300 mb-6 leading-relaxed">Para isso o aplicativo tem um <strong class="text-amber-400">navegador embutido</strong>: uma aba de internet que fica dentro do próprio Codex. O agente abre essa aba, lê a página, clica nos botões e preenche campos. Você acompanha tudo ao vivo. O nome do botão pode mudar entre versões; procure por "navegador" ou pelo ícone de globo.</p>
+
+      <div class="bg-amber-900/20 rounded-xl border border-amber-500/30 p-6 mb-6">
+        <h3 class="text-base font-semibold text-amber-400 mb-3 flex items-center"><span class="mr-2">🆕</span> Novo aqui? Quatro palavras deste módulo</h3>
+        <ul class="space-y-2 text-neutral-300 text-sm">
+          <li><strong>Navegador embutido</strong> — uma janela de internet que mora dentro do aplicativo do Codex, separada do seu Chrome ou Safari.</li>
+          <li><strong>Sessão</strong> — o "estou logado" que o site lembra depois que você entra com usuário e senha.</li>
+          <li><strong>Integração</strong> — uma porta oficial que o site oferece para outros programas conversarem com ele (plugin, API ou MCP).</li>
+          <li><strong>Visão</strong> — a capacidade do modelo de olhar uma imagem da tela e entender o que há nela: botões, campos, textos.</li>
+        </ul>
+      </div>
+
+      <div class="rounded-2xl border border-amber-500/30 bg-dark-900/40 p-3 sm:p-4 mb-3 overflow-hidden">
+        <svg viewBox="0 0 800 280" class="w-full h-auto" role="img" aria-label="Janela do aplicativo do Codex dividida em três partes. À esquerda, a barra lateral com os projetos. No meio, a conversa com o pedido entre no portal do fornecedor e baixe os pedidos. À direita, uma aba de navegador mostrando um site, com o cursor do agente clicando no botão Exportar.">
+          <defs>
+            <pattern id="m41a-grid" width="32" height="32" patternUnits="userSpaceOnUse"><circle cx="1.3" cy="1.3" r="1.3" fill="#fbbf24" opacity="0.10"/></pattern>
+            <filter id="m41a-glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          </defs>
+          <rect x="0" y="0" width="800" height="280" fill="url(#m41a-grid)"/>
+          <rect x="30" y="20" width="740" height="240" rx="14" fill="#0b1220" stroke="#fbbf24" stroke-width="2"/>
+          <rect x="30" y="20" width="120" height="240" rx="14" fill="#2a1d06"/>
+          <text x="90" y="48" text-anchor="middle" fill="#fde68a" font-family="Inter,sans-serif" font-size="11" font-weight="600">Projetos</text>
+          <rect x="42" y="62" width="96" height="24" rx="6" fill="#3b2a08" stroke="#fbbf24"/><text x="90" y="79" text-anchor="middle" fill="#fde68a" font-family="Inter,sans-serif" font-size="10">loja-rui</text>
+          <text x="90" y="106" text-anchor="middle" fill="#6b7280" font-family="Inter,sans-serif" font-size="10">paula-escritorio</text>
+          <text x="265" y="48" text-anchor="middle" fill="#fde68a" font-family="Inter,sans-serif" font-size="11" font-weight="600">Conversa</text>
+          <rect x="165" y="62" width="200" height="54" rx="10" fill="#111827" stroke="#6b7280"/>
+          <text x="175" y="84" fill="#e5e7eb" font-family="Inter,sans-serif" font-size="10">Entre no portal do fornecedor</text>
+          <text x="175" y="102" fill="#e5e7eb" font-family="Inter,sans-serif" font-size="10">e baixe os pedidos da semana.</text>
+          <rect x="165" y="128" width="200" height="40" rx="10" fill="#0b1f2e" stroke="#38bdf8"/>
+          <text x="175" y="152" fill="#bae6fd" font-family="Inter,sans-serif" font-size="10">Abrindo o portal… clicando</text>
+          <rect x="165" y="215" width="200" height="30" rx="8" fill="#111827" stroke="#38bdf8"/><text x="175" y="235" fill="#7dd3fc" font-family="Inter,sans-serif" font-size="10">mensagem…</text>
+          <rect x="385" y="34" width="370" height="212" rx="10" fill="#111827" stroke="#38bdf8" stroke-width="1.6"/>
+          <rect x="385" y="34" width="370" height="28" rx="10" fill="#0b1f2e"/>
+          <circle cx="402" cy="48" r="4" fill="#f87171"/><circle cx="416" cy="48" r="4" fill="#fbbf24"/><circle cx="430" cy="48" r="4" fill="#34d399"/>
+          <rect x="445" y="40" width="290" height="16" rx="8" fill="#111827"/><text x="455" y="52" fill="#7dd3fc" font-family="ui-monospace,monospace" font-size="9">portal-do-fornecedor · pedidos</text>
+          <g font-family="Inter,sans-serif" font-size="10" fill="#9ca3af">
+            <rect x="405" y="78" width="330" height="20" rx="4" fill="#1f2937"/><text x="415" y="92">Pedido 1041 · cimento · 40 sacos</text>
+            <rect x="405" y="104" width="330" height="20" rx="4" fill="#1f2937"/><text x="415" y="118">Pedido 1042 · areia · 6 m³</text>
+            <rect x="405" y="130" width="330" height="20" rx="4" fill="#1f2937"/><text x="415" y="144">Pedido 1043 · tijolo · 2 milheiros</text>
+          </g>
+          <g filter="url(#m41a-glow)"><rect x="625" y="185" width="110" height="34" rx="8" fill="#2a1d06" stroke="#fbbf24" stroke-width="2"/></g>
+          <text x="680" y="207" text-anchor="middle" fill="#fde68a" font-family="Inter,sans-serif" font-size="11" font-weight="600">Exportar</text>
+          <path class="wf-a" d="M668,198 L668,226 L675,219 L681,232 L686,230 L680,217 L690,217 Z" fill="#38bdf8" stroke="#0b1220" stroke-width="1"/>
+          <circle class="wf-a" cx="668" cy="198" r="14" fill="none" stroke="#38bdf8" stroke-width="1.5" opacity="0.7"/>
+        </svg>
+      </div>
+      <p class="text-sm text-neutral-400 mb-6"><strong class="text-neutral-300">Como ler o desenho:</strong> o pedido é escrito na conversa (meio), mas a ação acontece na aba do navegador (direita). O cursor azul é o agente, não você. Ele lê a lista de pedidos e vai até o botão certo.</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="bg-red-900/20 rounded-xl p-6 border border-red-500/30">
+          <h3 class="font-semibold text-red-400 mb-3">✗ Sem o navegador</h3>
+          <ul class="space-y-2 text-neutral-300 text-sm">
+            <li>✗ Você entra no site e copia os dados à mão</li>
+            <li>✗ Cola na conversa para o Codex trabalhar</li>
+            <li>✗ Site sem plugin vira beco sem saída</li>
+            <li>✗ Tarefa repetida toda semana, do mesmo jeito</li>
+          </ul>
+        </div>
+        <div class="bg-dark-800 rounded-xl p-6 border border-amber-500/30">
+          <h3 class="font-semibold text-amber-400 mb-3">✓ Com o navegador</h3>
+          <ul class="space-y-2 text-neutral-300 text-sm">
+            <li>✓ Ele mesmo abre o site e busca a informação</li>
+            <li>✓ Os dados chegam direto na pasta do projeto</li>
+            <li>✓ Funciona em sites que não têm integração</li>
+            <li>✓ Você assiste e pode interromper a qualquer momento</li>
+          </ul>
+        </div>
+      </div>
+      <div class="flex justify-start mt-6">
+        <button type="button" data-inema-read-toggle aria-pressed="false" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-amber-500/20 border border-amber-500/30 text-amber-400 hover:bg-amber-500/30 transition-colors">
+          <span class="inema-read-icon" aria-hidden="true">○</span><span class="inema-read-label">Marcar como lido</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ===================== TOPICO 2 ===================== -->
+    <section id="topico-2" data-inema-topic="modulo-4-1#topico-2" class="mb-16">
+      <div class="flex flex-wrap items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-amber-500/20 text-amber-400 font-bold text-xl">2</span>
+        <h2 class="text-2xl font-bold flex-1">Faça login uma vez e reutilize</h2>
+        <button type="button" data-inema-doubt-toggle aria-pressed="false" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-dark-700 border border-dark-600 text-neutral-300 hover:bg-dark-600 transition-colors text-sm"><span aria-hidden="true">?</span><span>Tenho dúvida</span></button>
+      </div>
+      <p data-inema-block="m4-1-t2-p1" class="text-neutral-300 mb-4 leading-relaxed">O navegador do Codex guarda a sessão, como o seu navegador de sempre. Você entra no site uma vez, com seu usuário e senha, e nas próximas tarefas ele já encontra a porta aberta.</p>
+      <p data-inema-block="m4-1-t2-p2" class="text-neutral-300 mb-6 leading-relaxed">O ponto importante: <strong class="text-amber-400">quem digita a senha é você</strong>, não o agente. Você não cola senha na conversa nem guarda senha em arquivo da pasta. Faz o login com as próprias mãos na aba do navegador e depois devolve o controle.</p>
+
+      <div class="rounded-2xl border border-amber-500/30 bg-dark-900/40 p-3 sm:p-4 mb-3 overflow-hidden">
+        <svg viewBox="0 0 800 230" class="w-full h-auto" role="img" aria-label="Linha do tempo. Segunda-feira: você digita usuário e senha no site. A sessão vira uma chave guardada no navegador do Codex. Terça, quarta e quinta: o agente usa a mesma chave e entra direto, sem pedir senha de novo.">
+          <defs>
+            <pattern id="m41b-grid" width="32" height="32" patternUnits="userSpaceOnUse"><circle cx="1.3" cy="1.3" r="1.3" fill="#fbbf24" opacity="0.10"/></pattern>
+            <filter id="m41b-glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            <marker id="m41b-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#38bdf8"/></marker>
+          </defs>
+          <rect x="0" y="0" width="800" height="230" fill="url(#m41b-grid)"/>
+          <rect x="30" y="40" width="190" height="120" rx="12" fill="#2a1d06" stroke="#fbbf24" stroke-width="2"/>
+          <text x="125" y="64" text-anchor="middle" fill="#fde68a" font-family="Inter,sans-serif" font-size="12" font-weight="600">segunda · você</text>
+          <rect x="50" y="78" width="150" height="22" rx="5" fill="#111827" stroke="#6b7280"/><text x="60" y="93" fill="#9ca3af" font-family="Inter,sans-serif" font-size="10">usuário: rui@loja</text>
+          <rect x="50" y="106" width="150" height="22" rx="5" fill="#111827" stroke="#6b7280"/><text x="60" y="121" fill="#9ca3af" font-family="Inter,sans-serif" font-size="10">senha: ••••••••</text>
+          <rect x="85" y="134" width="80" height="18" rx="5" fill="#3b2a08" stroke="#fbbf24"/><text x="125" y="147" text-anchor="middle" fill="#fde68a" font-family="Inter,sans-serif" font-size="10">Entrar</text>
+          <line x1="225" y1="100" x2="300" y2="100" stroke="#38bdf8" stroke-width="2" marker-end="url(#m41b-arrow)"/>
+          <g filter="url(#m41b-glow)"><circle cx="350" cy="100" r="40" fill="#0b1f2e" stroke="#38bdf8" stroke-width="2"/></g>
+          <text x="350" y="98" text-anchor="middle" fill="#bae6fd" font-family="Inter,sans-serif" font-size="22">🔑</text>
+          <text x="350" y="120" text-anchor="middle" fill="#7dd3fc" font-family="Inter,sans-serif" font-size="10">sessão salva</text>
+          <g stroke="#38bdf8" stroke-width="2" fill="none">
+            <path class="wf-flow" d="M392,90 C 450,60 470,55 520,55" marker-end="url(#m41b-arrow)"/>
+            <path class="wf-flow" d="M392,100 L 520,105" marker-end="url(#m41b-arrow)"/>
+            <path class="wf-flow" d="M392,110 C 450,140 470,155 520,155" marker-end="url(#m41b-arrow)"/>
+          </g>
+          <g font-family="Inter,sans-serif" font-size="11">
+            <rect class="wf-a" x="525" y="38" width="240" height="34" rx="9" fill="#111827" stroke="#38bdf8"/><text x="540" y="60" fill="#bae6fd">terça · agente entra direto ✓</text>
+            <rect class="wf-a" x="525" y="88" width="240" height="34" rx="9" fill="#111827" stroke="#38bdf8"/><text x="540" y="110" fill="#bae6fd">quarta · agente entra direto ✓</text>
+            <rect class="wf-a" x="525" y="138" width="240" height="34" rx="9" fill="#111827" stroke="#38bdf8"/><text x="540" y="160" fill="#bae6fd">quinta · agente entra direto ✓</text>
+          </g>
+          <text x="400" y="210" text-anchor="middle" fill="#9ca3af" font-family="Inter,sans-serif" font-size="11">se o site derrubar a sessão, ele avisa e você entra de novo</text>
+        </svg>
+      </div>
+      <p class="text-sm text-neutral-400 mb-6"><strong class="text-neutral-300">Como ler o desenho:</strong> o quadro âmbar é o único momento em que a senha aparece, e quem digita é você. A chave azul no meio é a sessão salva. Nos dias seguintes o agente só usa a chave.</p>
+
+      <div class="space-y-5 mb-6">
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center"><span class="text-amber-400 font-bold">1</span></div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-5 border border-dark-600"><h4 class="font-semibold text-neutral-100 mb-1">Abra a aba do navegador no Codex</h4><p class="text-neutral-300 text-sm">Dentro do projeto certo (o Rui usa <code>loja-rui</code>), abra o navegador embutido e digite o endereço do site.</p></div>
+        </div>
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center"><span class="text-amber-400 font-bold">2</span></div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-5 border border-dark-600"><h4 class="font-semibold text-neutral-100 mb-1">Faça o login você mesmo</h4><p class="text-neutral-300 text-sm">Digite usuário, senha e, se o site pedir, o código do celular. O agente não precisa ver nada disso.</p></div>
+        </div>
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center"><span class="text-amber-400 font-bold">3</span></div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-5 border border-dark-600"><h4 class="font-semibold text-neutral-100 mb-1">Confirme que entrou</h4><p class="text-neutral-300 text-sm">Veja seu nome no canto da página. Se a sessão está aberta, o Codex também está.</p></div>
+        </div>
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center"><span class="text-amber-400 font-bold">4</span></div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-5 border border-dark-600"><h4 class="font-semibold text-neutral-100 mb-1">Faça o pedido na conversa</h4><p class="text-neutral-300 text-sm">Agora escreva o que quer. Nas próximas vezes, pule direto para este passo.</p></div>
+        </div>
+      </div>
+
+      <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-2 flex items-center"><span class="mr-2">💡</span> Sessão salva é a chave da sua casa</h3>
+        <p class="text-neutral-300 text-sm">Uma sessão aberta dá ao agente o mesmo acesso que você tem naquele site. Faça login só nos sites que ele realmente vai usar e, quando acabar um trabalho pontual, saia da conta (o botão "Sair" do próprio site).</p>
+      </div>
+      <div class="flex justify-start mt-6">
+        <button type="button" data-inema-read-toggle aria-pressed="false" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-amber-500/20 border border-amber-500/30 text-amber-400 hover:bg-amber-500/30 transition-colors">
+          <span class="inema-read-icon" aria-hidden="true">○</span><span class="inema-read-label">Marcar como lido</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ===================== TOPICO 3 ===================== -->
+    <section id="topico-3" data-inema-topic="modulo-4-1#topico-3" class="mb-16">
+      <div class="flex flex-wrap items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-amber-500/20 text-amber-400 font-bold text-xl">3</span>
+        <h2 class="text-2xl font-bold flex-1">Peça uma tarefa num site sem integração</h2>
+        <button type="button" data-inema-doubt-toggle aria-pressed="false" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-dark-700 border border-dark-600 text-neutral-300 hover:bg-dark-600 transition-colors text-sm"><span aria-hidden="true">?</span><span>Tenho dúvida</span></button>
+      </div>
+      <p data-inema-block="m4-1-t3-p1" class="text-neutral-300 mb-4 leading-relaxed">O pedido é igual a qualquer outro: diga o site, o que buscar e onde guardar. A diferença é que você também diz <strong class="text-amber-400">o que ele não pode fazer</strong>, porque ali ele está mexendo numa conta real.</p>
+      <p data-inema-block="m4-1-t3-p2" class="text-neutral-300 mb-6 leading-relaxed">A Paula participa de uma comunidade de RH que não tem integração nenhuma. Toda segunda ela entrava, lia as discussões da semana e anotava as dúvidas mais repetidas para virar post. Agora o Codex faz a coleta, e ela só escreve.</p>
+
+      <div class="rounded-2xl border border-amber-500/30 bg-dark-900/40 p-3 sm:p-4 mb-3 overflow-hidden">
+        <svg viewBox="0 0 800 220" class="w-full h-auto" role="img" aria-label="Fluxo em quatro estações. Pedido da Paula na conversa. O agente abre a comunidade no navegador. Lê e coleta as discussões da semana. Salva um arquivo de resumo na pasta linkedin do projeto. Uma placa vermelha lateral indica: não publicar, não responder ninguém.">
+          <defs>
+            <pattern id="m41c-grid" width="32" height="32" patternUnits="userSpaceOnUse"><circle cx="1.3" cy="1.3" r="1.3" fill="#fbbf24" opacity="0.10"/></pattern>
+            <marker id="m41c-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#38bdf8"/></marker>
+            <filter id="m41c-glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          </defs>
+          <rect x="0" y="0" width="800" height="220" fill="url(#m41c-grid)"/>
+          <g font-family="Inter,sans-serif" font-size="11" text-anchor="middle">
+            <rect x="20" y="50" width="160" height="70" rx="12" fill="#111827" stroke="#6b7280" stroke-width="2"/><text x="100" y="80" fill="#e5e7eb">💬 pedido</text><text x="100" y="100" fill="#9ca3af">"colete as dúvidas"</text>
+            <rect x="215" y="50" width="160" height="70" rx="12" fill="#0b1f2e" stroke="#38bdf8" stroke-width="2"/><text x="295" y="80" fill="#bae6fd">🌐 abre a comunidade</text><text x="295" y="100" fill="#7dd3fc">sessão já salva</text>
+            <rect x="410" y="50" width="160" height="70" rx="12" fill="#0b1f2e" stroke="#38bdf8" stroke-width="2"/><text x="490" y="80" fill="#bae6fd">👀 lê e anota</text><text x="490" y="100" fill="#7dd3fc">discussões da semana</text>
+          </g>
+          <g filter="url(#m41c-glow)"><rect x="605" y="50" width="175" height="70" rx="12" fill="#2a1d06" stroke="#fbbf24" stroke-width="2"/></g>
+          <text x="692" y="80" text-anchor="middle" fill="#fde68a" font-family="Inter,sans-serif" font-size="11">📄 linkedin/</text>
+          <text x="692" y="100" text-anchor="middle" fill="#fde68a" font-family="ui-monospace,monospace" font-size="10">duvidas-semana.md</text>
+          <g stroke="#38bdf8" stroke-width="2"><line class="wf-flow" x1="182" y1="85" x2="211" y2="85" marker-end="url(#m41c-arrow)"/><line class="wf-flow" x1="377" y1="85" x2="406" y2="85" marker-end="url(#m41c-arrow)"/><line class="wf-flow" x1="572" y1="85" x2="601" y2="85" marker-end="url(#m41c-arrow)"/></g>
+          <rect x="215" y="150" width="355" height="42" rx="10" fill="#2a0f0f" stroke="#f87171" stroke-width="1.6"/>
+          <text x="392" y="176" text-anchor="middle" fill="#fca5a5" font-family="Inter,sans-serif" font-size="11">⛔ dentro do site: não publicar, não curtir, não responder</text>
+        </svg>
+      </div>
+      <p class="text-sm text-neutral-400 mb-6"><strong class="text-neutral-300">Como ler o desenho:</strong> as caixas azuis são o trabalho dentro do site; a âmbar é o resultado na pasta. A faixa vermelha embaixo é a cerca: enquanto estiver no site, ele só lê.</p>
+
+      <div class="bg-dark-800 rounded-xl border border-amber-500/30 overflow-hidden mb-6">
+        <div class="px-5 py-3 bg-amber-900/20 border-b border-amber-500/30"><span class="text-amber-400 font-semibold text-sm">💬 Copia e cola no Codex: coleta num site sem integração</span></div>
+        <div class="p-5">
+          <p class="text-neutral-300 text-sm mb-3"><strong class="text-amber-400">Objetivo:</strong> trazer informação de um site para a pasta do projeto, sem que o agente mude nada no site.</p>
+          <pre class="font-mono text-sm text-neutral-200 whitespace-pre-wrap bg-dark-900/60 rounded-lg p-4 border border-dark-600">Use o navegador do Codex. Entre em &lt;endereço do site&gt; (já estou logada) e leia as discussões publicadas nos últimos 7 dias.
+Liste as 5 dúvidas que mais se repetem, com o título de cada discussão e o link.
+Salve em linkedin/duvidas-semana.md.
+Regras: só leitura. Não publique, não curta, não responda e não mude configuração nenhuma. Se aparecer qualquer botão de confirmação, pare e me pergunte.</pre>
+        </div>
+        <div class="px-5 py-3 bg-dark-700/40 border-t border-dark-600 text-neutral-300 text-sm"><strong class="text-amber-400">Como verificar:</strong> abra o arquivo <code>duvidas-semana.md</code> e clique em dois dos links. As discussões têm de existir e ser da última semana. No site, confira que nada novo foi postado no seu nome.</div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+        <div class="bg-dark-800 rounded-xl p-5 border border-dark-600"><div class="text-2xl mb-2">🧱</div><h4 class="font-semibold text-amber-400 text-sm mb-1">Rui · fornecedor</h4><p class="text-neutral-400 text-xs">Baixa os pedidos da semana do portal e compara com <code>estoque.csv</code>.</p></div>
+        <div class="bg-dark-800 rounded-xl p-5 border border-dark-600"><div class="text-2xl mb-2">👩‍💼</div><h4 class="font-semibold text-amber-400 text-sm mb-1">Paula · comunidade</h4><p class="text-neutral-400 text-xs">Coleta as dúvidas mais repetidas para virar post.</p></div>
+        <div class="bg-dark-800 rounded-xl p-5 border border-dark-600"><div class="text-2xl mb-2">🏛️</div><h4 class="font-semibold text-amber-400 text-sm mb-1">Qualquer um · governo</h4><p class="text-neutral-400 text-xs">Consulta a situação de uma nota ou certidão num portal público.</p></div>
+      </div>
+      <div class="flex justify-start mt-6">
+        <button type="button" data-inema-read-toggle aria-pressed="false" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-amber-500/20 border border-amber-500/30 text-amber-400 hover:bg-amber-500/30 transition-colors">
+          <span class="inema-read-icon" aria-hidden="true">○</span><span class="inema-read-label">Marcar como lido</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ===================== TOPICO 4 ===================== -->
+    <section id="topico-4" data-inema-topic="modulo-4-1#topico-4" class="mb-16">
+      <div class="flex flex-wrap items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-amber-500/20 text-amber-400 font-bold text-xl">4</span>
+        <h2 class="text-2xl font-bold flex-1">Entenda como o agente enxerga a tela</h2>
+        <button type="button" data-inema-doubt-toggle aria-pressed="false" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-dark-700 border border-dark-600 text-neutral-300 hover:bg-dark-600 transition-colors text-sm"><span aria-hidden="true">?</span><span>Tenho dúvida</span></button>
+      </div>
+      <p data-inema-block="m4-1-t4-p1" class="text-neutral-300 mb-4 leading-relaxed">O agente não "sente" o site. Ele tira uma espécie de foto da tela, olha a imagem, decide onde clicar ou o que digitar, age e tira outra foto para ver o que mudou. É o mesmo ciclo do módulo 1.3 (pensar, agir, responder), só que a ferramenta agora é o mouse e o teclado.</p>
+      <p data-inema-block="m4-1-t4-p2" class="text-neutral-300 mb-6 leading-relaxed">Com o modelo mais forte, isso funciona muito bem: ele lê tabelas, acha botões escondidos em menus e consegue até reproduzir um desenho num editor online a partir de uma foto. Com modelos menores, erra mais o lugar do clique.</p>
+
+      <div class="rounded-2xl border border-amber-500/30 bg-dark-900/40 p-3 sm:p-4 mb-3 overflow-hidden">
+        <svg viewBox="0 0 800 260" class="w-full h-auto" role="img" aria-label="Ciclo da visão em quatro passos ao redor de uma tela. Foto da tela, o modelo identifica caixas em volta de botões e campos, decide clicar em Buscar, executa o clique, e tira nova foto. À esquerda, a tela com retângulos tracejados marcando o campo de busca e o botão.">
+          <defs>
+            <pattern id="m41d-grid" width="32" height="32" patternUnits="userSpaceOnUse"><circle cx="1.3" cy="1.3" r="1.3" fill="#fbbf24" opacity="0.10"/></pattern>
+            <marker id="m41d-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#fbbf24"/></marker>
+            <filter id="m41d-glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          </defs>
+          <rect x="0" y="0" width="800" height="260" fill="url(#m41d-grid)"/>
+          <rect x="30" y="30" width="330" height="200" rx="12" fill="#111827" stroke="#38bdf8" stroke-width="2"/>
+          <rect x="30" y="30" width="330" height="24" rx="12" fill="#0b1f2e"/>
+          <text x="45" y="47" fill="#7dd3fc" font-family="ui-monospace,monospace" font-size="9">o que o agente "vê"</text>
+          <rect x="55" y="80" width="200" height="28" rx="5" fill="#1f2937"/><text x="65" y="98" fill="#6b7280" font-family="Inter,sans-serif" font-size="10">Buscar produto…</text>
+          <rect x="50" y="75" width="210" height="38" rx="6" fill="none" stroke="#fbbf24" stroke-width="1.5" stroke-dasharray="5 4"/><text x="55" y="126" fill="#fde68a" font-family="Inter,sans-serif" font-size="9">campo de texto</text>
+          <rect x="270" y="80" width="70" height="28" rx="5" fill="#3b2a08"/><text x="305" y="98" text-anchor="middle" fill="#fde68a" font-family="Inter,sans-serif" font-size="10">Buscar</text>
+          <rect x="265" y="75" width="80" height="38" rx="6" fill="none" stroke="#fbbf24" stroke-width="1.5" stroke-dasharray="5 4"/><text x="270" y="126" fill="#fde68a" font-family="Inter,sans-serif" font-size="9">botão</text>
+          <rect x="55" y="145" width="285" height="14" rx="3" fill="#1f2937"/><rect x="55" y="167" width="285" height="14" rx="3" fill="#1f2937"/><rect x="55" y="189" width="200" height="14" rx="3" fill="#1f2937"/>
+          <g transform="translate(590,130)">
+            <circle r="78" fill="none" stroke="#fbbf24" stroke-width="1.2" opacity="0.35"/>
+            <g font-family="Inter,sans-serif" font-size="11" text-anchor="middle">
+              <g filter="url(#m41d-glow)"><rect x="-55" y="-108" width="110" height="34" rx="9" fill="#2a1d06" stroke="#fbbf24" stroke-width="2"/></g><text x="0" y="-86" fill="#fde68a">📸 foto da tela</text>
+              <rect x="90" y="-17" width="110" height="34" rx="9" fill="#0b1f2e" stroke="#38bdf8" stroke-width="2"/><text x="145" y="5" fill="#bae6fd">🧠 o que é o quê</text>
+              <rect x="-55" y="74" width="110" height="34" rx="9" fill="#0b1f2e" stroke="#38bdf8" stroke-width="2"/><text x="0" y="96" fill="#bae6fd">🎯 decide o clique</text>
+              <rect x="-200" y="-17" width="110" height="34" rx="9" fill="#0b1f2e" stroke="#38bdf8" stroke-width="2"/><text x="-145" y="5" fill="#bae6fd">🖱️ clica/digita</text>
+            </g>
+            <g stroke="#fbbf24" stroke-width="2" fill="none">
+              <path class="wf-flow" d="M58,-80 C 100,-70 120,-50 130,-20" marker-end="url(#m41d-arrow)"/>
+              <path class="wf-flow" d="M130,20 C 120,50 100,70 58,82" marker-end="url(#m41d-arrow)"/>
+              <path class="wf-flow" d="M-58,82 C -100,70 -120,50 -130,20" marker-end="url(#m41d-arrow)"/>
+              <path class="wf-flow" d="M-130,-20 C -120,-50 -100,-70 -58,-80" marker-end="url(#m41d-arrow)"/>
+            </g>
+          </g>
+        </svg>
+      </div>
+      <p class="text-sm text-neutral-400 mb-6"><strong class="text-neutral-300">Como ler o desenho:</strong> à esquerda, a tela com as marcações tracejadas que o modelo "enxerga": ele reconhece um campo e um botão. À direita, o ciclo que se repete a cada passo. Cada volta custa tempo e cota, por isso o navegador é mais lento que um plugin.</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="bg-dark-800 rounded-xl p-6 border border-amber-500/30">
+          <h3 class="font-semibold text-amber-400 mb-3">✓ Onde ele vai bem</h3>
+          <ul class="space-y-2 text-neutral-300 text-sm">
+            <li>✓ Páginas com textos, tabelas e listas claras</li>
+            <li>✓ Formulários simples, com rótulos visíveis</li>
+            <li>✓ Menus e filtros padrão (data, categoria)</li>
+            <li>✓ Copiar dados de várias páginas para um arquivo</li>
+          </ul>
+        </div>
+        <div class="bg-red-900/20 rounded-xl p-6 border border-red-500/30">
+          <h3 class="font-semibold text-red-400 mb-3">✗ Onde ele tropeça</h3>
+          <ul class="space-y-2 text-neutral-300 text-sm">
+            <li>✗ Testes "não sou um robô" (ele para e chama você)</li>
+            <li>✗ Telas que mudam a cada segundo, como animações</li>
+            <li>✗ Sites que trocam de layout sem aviso</li>
+            <li>✗ Botões só com ícone, sem texto nem descrição</li>
+          </ul>
+        </div>
+      </div>
+      <div class="flex justify-start mt-6">
+        <button type="button" data-inema-read-toggle aria-pressed="false" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-amber-500/20 border border-amber-500/30 text-amber-400 hover:bg-amber-500/30 transition-colors">
+          <span class="inema-read-icon" aria-hidden="true">○</span><span class="inema-read-label">Marcar como lido</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ===================== TOPICO 5 ===================== -->
+    <section id="topico-5" data-inema-topic="modulo-4-1#topico-5" class="mb-16">
+      <div class="flex flex-wrap items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-amber-500/20 text-amber-400 font-bold text-xl">5</span>
+        <h2 class="text-2xl font-bold flex-1">Escolha entre plugin, API e navegador</h2>
+        <button type="button" data-inema-doubt-toggle aria-pressed="false" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-dark-700 border border-dark-600 text-neutral-300 hover:bg-dark-600 transition-colors text-sm"><span aria-hidden="true">?</span><span>Tenho dúvida</span></button>
+      </div>
+      <p data-inema-block="m4-1-t5-p1" class="text-neutral-300 mb-4 leading-relaxed">Existem três jeitos de o Codex conversar com um serviço da internet. Eles formam uma escada: comece pelo degrau de cima e só desça quando o de cima não existir.</p>
+      <p data-inema-block="m4-1-t5-p2" class="text-neutral-300 mb-6 leading-relaxed">O <strong class="text-amber-400">plugin</strong> (módulo 3.6) é a porta oficial e pronta. A <strong class="text-amber-400">API ou o MCP</strong> são portas oficiais que exigem uma configuração (no terminal, <code>codex mcp list</code> mostra as conexões MCP que você já tem). O <strong class="text-amber-400">navegador</strong> é entrar pela porta da frente, como uma pessoa: funciona em quase tudo, mas é o mais lento e o que mais quebra quando o site muda.</p>
+
+      <div class="rounded-2xl border border-amber-500/30 bg-dark-900/40 p-3 sm:p-4 mb-3 overflow-hidden">
+        <svg viewBox="0 0 800 260" class="w-full h-auto" role="img" aria-label="Escada descendente com três degraus. Degrau mais alto: plugin, rápido e estável, primeira escolha. Degrau do meio: API ou MCP, estável mas precisa configurar. Degrau mais baixo: navegador, funciona em quase todo site, mas é lento e frágil. Uma seta lateral indica: desça só se o degrau de cima não existir.">
+          <defs>
+            <pattern id="m41e-grid" width="32" height="32" patternUnits="userSpaceOnUse"><circle cx="1.3" cy="1.3" r="1.3" fill="#fbbf24" opacity="0.10"/></pattern>
+            <filter id="m41e-glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            <marker id="m41e-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#38bdf8"/></marker>
+          </defs>
+          <rect x="0" y="0" width="800" height="260" fill="url(#m41e-grid)"/>
+          <g filter="url(#m41e-glow)"><rect x="60" y="30" width="250" height="60" rx="10" fill="#2a1d06" stroke="#fbbf24" stroke-width="2"/></g>
+          <text x="185" y="56" text-anchor="middle" fill="#fde68a" font-family="Inter,sans-serif" font-size="14" font-weight="600">🧩 1. Plugin</text>
+          <text x="185" y="76" text-anchor="middle" fill="#fde68a" font-family="Inter,sans-serif" font-size="10">rápido · estável · pronto</text>
+          <rect x="230" y="100" width="250" height="60" rx="10" fill="#0b1f2e" stroke="#38bdf8" stroke-width="2"/>
+          <text x="355" y="126" text-anchor="middle" fill="#bae6fd" font-family="Inter,sans-serif" font-size="14" font-weight="600">🔌 2. API ou MCP</text>
+          <text x="355" y="146" text-anchor="middle" fill="#7dd3fc" font-family="Inter,sans-serif" font-size="10">estável · precisa configurar</text>
+          <rect x="400" y="170" width="250" height="60" rx="10" fill="#111827" stroke="#9ca3af" stroke-width="2"/>
+          <text x="525" y="196" text-anchor="middle" fill="#e5e7eb" font-family="Inter,sans-serif" font-size="14" font-weight="600">🌐 3. Navegador</text>
+          <text x="525" y="216" text-anchor="middle" fill="#9ca3af" font-family="Inter,sans-serif" font-size="10">quase todo site · lento · frágil</text>
+          <path d="M310,60 L330,60 L330,95" stroke="#38bdf8" stroke-width="1.5" fill="none" stroke-dasharray="4 4" marker-end="url(#m41e-arrow)"/>
+          <path d="M480,130 L500,130 L500,165" stroke="#38bdf8" stroke-width="1.5" fill="none" stroke-dasharray="4 4" marker-end="url(#m41e-arrow)"/>
+          <text x="335" y="80" fill="#7dd3fc" font-family="Inter,sans-serif" font-size="9">não existe?</text>
+          <text x="505" y="150" fill="#7dd3fc" font-family="Inter,sans-serif" font-size="9">não existe?</text>
+          <line x1="720" y1="40" x2="720" y2="220" stroke="#fbbf24" stroke-width="2" marker-end="url(#m41e-arrow)" opacity="0.7"/>
+          <text x="740" y="80" fill="#fde68a" font-family="Inter,sans-serif" font-size="10" transform="rotate(90 740 80)">mais frágil e mais lento</text>
+        </svg>
+      </div>
+      <p class="text-sm text-neutral-400 mb-6"><strong class="text-neutral-300">Como ler o desenho:</strong> cada degrau abaixo é mais universal e mais frágil. As setas tracejadas mostram quando descer: só quando o degrau de cima não existe para aquele serviço. A seta à direita lembra o preço de descer.</p>
+
+      <div class="overflow-x-auto mb-6 rounded-xl border border-dark-600">
+        <table class="w-full text-sm text-left">
+          <thead class="bg-dark-700/60 text-amber-400"><tr><th class="px-4 py-3 font-semibold">Caminho</th><th class="px-4 py-3 font-semibold">Velocidade</th><th class="px-4 py-3 font-semibold">Quebra quando…</th><th class="px-4 py-3 font-semibold">Exemplo</th></tr></thead>
+          <tbody class="divide-y divide-dark-600">
+            <tr class="bg-dark-800"><td class="px-4 py-3 text-neutral-100">Plugin</td><td class="px-4 py-3 text-neutral-300">Alta</td><td class="px-4 py-3 text-neutral-300">Quase nunca</td><td class="px-4 py-3 text-neutral-300">Paula lendo a agenda conectada</td></tr>
+            <tr class="bg-dark-800"><td class="px-4 py-3 text-neutral-100">API / MCP</td><td class="px-4 py-3 text-neutral-300">Alta</td><td class="px-4 py-3 text-neutral-300">A chave vence ou muda a versão</td><td class="px-4 py-3 text-neutral-300">Rui consultando o sistema de notas</td></tr>
+            <tr class="bg-dark-800"><td class="px-4 py-3 text-neutral-100">Navegador</td><td class="px-4 py-3 text-neutral-300">Baixa</td><td class="px-4 py-3 text-neutral-300">O site muda um botão de lugar</td><td class="px-4 py-3 text-neutral-300">Rui no portal do fornecedor</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-sm text-neutral-400 mb-6"><strong class="text-neutral-300">O que olhar na tabela:</strong> a coluna "Quebra quando…". Uma tarefa semanal pelo navegador precisa ser conferida de vez em quando, porque um dia o site muda e ela para.</p>
+
+      <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-2 flex items-center"><span class="mr-2">💡</span> Pergunte antes de escolher</h3>
+        <p class="text-neutral-300 text-sm">Não sabe se existe plugin? Peça: "Para trabalhar com &lt;nome do site&gt;, existe plugin, API ou MCP? Se não existir, use o navegador." O Codex procura primeiro e só desce a escada se precisar.</p>
+      </div>
+      <div class="flex justify-start mt-6">
+        <button type="button" data-inema-read-toggle aria-pressed="false" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-amber-500/20 border border-amber-500/30 text-amber-400 hover:bg-amber-500/30 transition-colors">
+          <span class="inema-read-icon" aria-hidden="true">○</span><span class="inema-read-label">Marcar como lido</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ===================== TOPICO 6 ===================== -->
+    <section id="topico-6" data-inema-topic="modulo-4-1#topico-6" class="mb-16">
+      <div class="flex flex-wrap items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-amber-500/20 text-amber-400 font-bold text-xl">6</span>
+        <h2 class="text-2xl font-bold flex-1">Use o navegador com regras</h2>
+        <button type="button" data-inema-doubt-toggle aria-pressed="false" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-dark-700 border border-dark-600 text-neutral-300 hover:bg-dark-600 transition-colors text-sm"><span aria-hidden="true">?</span><span>Tenho dúvida</span></button>
+      </div>
+      <p data-inema-block="m4-1-t6-p1" class="text-neutral-300 mb-4 leading-relaxed">No navegador, o agente age em seu nome, com a sua conta. Um clique errado num arquivo da pasta se desfaz; um "Confirmar compra" num site, não. Por isso o navegador pede regras mais firmes que o resto.</p>
+      <p data-inema-block="m4-1-t6-p2" class="text-neutral-300 mb-6 leading-relaxed">O Rui escreveu as regras no <code>AGENTS.md</code> da <code>loja-rui</code>, assim vale para toda conversa. E usa o modo de permissão <strong class="text-amber-400">Pedir aprovação</strong> (módulo 3.3) sempre que a tarefa envolve um site onde dá para gastar dinheiro.</p>
+
+      <div class="rounded-2xl border border-amber-500/30 bg-dark-900/40 p-3 sm:p-4 mb-3 overflow-hidden">
+        <svg viewBox="0 0 800 230" class="w-full h-auto" role="img" aria-label="Semáforo de ações no navegador. Verde, pode sozinho: ler, buscar, baixar relatório. Amarelo, pergunta antes: preencher formulário, salvar rascunho. Vermelho, nunca sem você: pagar, comprar, enviar, apagar, mudar senha.">
+          <defs>
+            <pattern id="m41f-grid" width="32" height="32" patternUnits="userSpaceOnUse"><circle cx="1.3" cy="1.3" r="1.3" fill="#fbbf24" opacity="0.10"/></pattern>
+            <filter id="m41f-glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          </defs>
+          <rect x="0" y="0" width="800" height="230" fill="url(#m41f-grid)"/>
+          <rect x="40" y="20" width="90" height="190" rx="20" fill="#111827" stroke="#6b7280" stroke-width="2"/>
+          <g filter="url(#m41f-glow)"><circle cx="85" cy="60" r="22" fill="#34d399"/><circle cx="85" cy="115" r="22" fill="#fbbf24"/><circle cx="85" cy="170" r="22" fill="#f87171"/></g>
+          <g font-family="Inter,sans-serif" font-size="12">
+            <rect x="160" y="38" width="600" height="44" rx="10" fill="#0e2018" stroke="#34d399" stroke-width="1.6"/>
+            <text x="178" y="58" fill="#a7f3d0" font-weight="600">Pode sozinho</text><text x="178" y="74" fill="#a7f3d0" font-size="11">ler páginas · buscar · filtrar · baixar relatório · copiar para a pasta</text>
+            <rect x="160" y="93" width="600" height="44" rx="10" fill="#2a1d06" stroke="#fbbf24" stroke-width="1.6"/>
+            <text x="178" y="113" fill="#fde68a" font-weight="600">Pergunta antes</text><text x="178" y="129" fill="#fde68a" font-size="11">preencher formulário · salvar rascunho · mudar filtro de conta</text>
+            <rect x="160" y="148" width="600" height="44" rx="10" fill="#2a0f0f" stroke="#f87171" stroke-width="1.6"/>
+            <text x="178" y="168" fill="#fca5a5" font-weight="600">Nunca sem você</text><text x="178" y="184" fill="#fca5a5" font-size="11">pagar · comprar · enviar mensagem · publicar · apagar · trocar senha</text>
+          </g>
+        </svg>
+      </div>
+      <p class="text-sm text-neutral-400 mb-6"><strong class="text-neutral-300">Como ler o desenho:</strong> cada cor do semáforo é uma faixa de ações. O verde ele faz direto; no amarelo ele monta e espera seu "ok"; no vermelho ele para e entrega o controle para você clicar.</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="bg-dark-800 rounded-xl p-6 border border-amber-500/30">
+          <h3 class="font-semibold text-amber-400 mb-3">✓ Regras que funcionam</h3>
+          <ul class="space-y-2 text-neutral-300 text-sm">
+            <li>✓ "No navegador, só leitura, a menos que eu diga"</li>
+            <li>✓ "Pagamento, compra e envio: pare e me chame"</li>
+            <li>✓ Um site por tarefa, com o endereço escrito</li>
+            <li>✓ Salvar o resultado num arquivo para conferir</li>
+          </ul>
+        </div>
+        <div class="bg-red-900/20 rounded-xl p-6 border border-red-500/30">
+          <h3 class="font-semibold text-red-400 mb-3">✗ Armadilhas</h3>
+          <ul class="space-y-2 text-neutral-300 text-sm">
+            <li>✗ Deixar logado no banco "para facilitar"</li>
+            <li>✗ Usar Acesso total em tarefa com site de compras</li>
+            <li>✗ Colar senha na conversa</li>
+            <li>✗ Pedidos vagos como "resolva lá no site"</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6" data-inema-check="modulo-4-1#q1">
+        <p class="font-medium mb-4">Teste rápido (opcional): o Rui precisa puxar pedidos de um portal de fornecedor que não tem plugin nem API. O que fazer?</p>
+        <div class="space-y-2">
+          <button type="button" data-inema-check-option="0" class="block w-full text-left px-4 py-2 rounded-lg bg-dark-700 border border-dark-600 hover:bg-dark-600 transition-colors text-sm">Colar usuário e senha na conversa para o Codex entrar sozinho.</button>
+          <button type="button" data-inema-check-option="1" class="block w-full text-left px-4 py-2 rounded-lg bg-dark-700 border border-dark-600 hover:bg-dark-600 transition-colors text-sm">Desistir, porque o Codex só trabalha com sites que têm integração.</button>
+          <button type="button" data-inema-check-option="2" class="block w-full text-left px-4 py-2 rounded-lg bg-dark-700 border border-dark-600 hover:bg-dark-600 transition-colors text-sm">Fazer login ele mesmo no navegador do Codex e pedir a coleta com a regra "só leitura".</button>
+        </div>
+        <div data-inema-check-feedback class="mt-4 text-sm" role="status" aria-live="polite"></div>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center"><div class="text-2xl mb-1">🔑</div><div class="text-sm font-semibold text-amber-400">Login seu</div><p class="text-xs text-neutral-400 mt-1">senha nunca na conversa</p></div>
+        <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center"><div class="text-2xl mb-1">👀</div><div class="text-sm font-semibold text-amber-400">Só leitura</div><p class="text-xs text-neutral-400 mt-1">como ponto de partida</p></div>
+        <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center"><div class="text-2xl mb-1">⛔</div><div class="text-sm font-semibold text-amber-400">Dinheiro</div><p class="text-xs text-neutral-400 mt-1">sempre com você</p></div>
+        <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center"><div class="text-2xl mb-1">📜</div><div class="text-sm font-semibold text-amber-400">No AGENTS.md</div><p class="text-xs text-neutral-400 mt-1">regra escrita uma vez</p></div>
+      </div>
+      <div class="flex justify-start mt-6">
+        <button type="button" data-inema-read-toggle aria-pressed="false" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-amber-500/20 border border-amber-500/30 text-amber-400 hover:bg-amber-500/30 transition-colors">
+          <span class="inema-read-icon" aria-hidden="true">○</span><span class="inema-read-label">Marcar como lido</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ===================== RESUMO ===================== -->
+    <section class="mb-12">
+      <div class="bg-gradient-to-br from-amber-900/40 via-dark-800 to-dark-800 rounded-xl border border-amber-500/30 p-8">
+        <h2 class="text-2xl font-bold mb-6 flex items-center"><span class="mr-3">🎓</span> Resumo do módulo</h2>
+        <div class="space-y-4 mb-8">
+          <div class="flex items-start space-x-3"><span class="text-amber-400 mt-1">✓</span><div><strong class="text-neutral-100">O Codex tem um navegador próprio</strong><span class="text-neutral-400"> — ele clica e digita em sites por você.</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-amber-400 mt-1">✓</span><div><strong class="text-neutral-100">Login é seu, uma vez</strong><span class="text-neutral-400"> — a sessão fica salva.</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-amber-400 mt-1">✓</span><div><strong class="text-neutral-100">Ele enxerga a tela por imagem</strong><span class="text-neutral-400"> — foto, decide, age, nova foto.</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-amber-400 mt-1">✓</span><div><strong class="text-neutral-100">Plugin, depois API/MCP, depois navegador</strong><span class="text-neutral-400"> — desça só se precisar.</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-amber-400 mt-1">✓</span><div><strong class="text-neutral-100">Dinheiro e envio, só com você</strong><span class="text-neutral-400"> — regra escrita no AGENTS.md.</span></div></div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-4 mb-8">
+          <h3 class="font-semibold text-amber-400 mb-2">Próximo módulo:</h3>
+          <p class="text-neutral-300">4.2 — Sites: do localhost para o mundo</p>
+        </div>
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a href="index.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">← Voltar para a trilha</a>
+          <a href="modulo-4-2.html" class="flex-1 text-center px-6 py-3 bg-amber-600 text-white rounded-lg font-semibold hover:bg-amber-500 transition-colors">Módulo 4.2 →</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <aside class="hidden lg:block">
+    <nav data-inema-toc aria-label="Índice da página" class="sticky top-24">
+      <p class="text-sm text-neutral-400 mb-3"><span data-inema-section-counter>Seção 1 de 6</span></p>
+      <ol class="space-y-2 text-sm">
+        <li><a href="#topico-1" class="text-neutral-400 hover:text-amber-400">1. O navegador embutido</a></li>
+        <li><a href="#topico-2" class="text-neutral-400 hover:text-amber-400">2. Login uma vez</a></li>
+        <li><a href="#topico-3" class="text-neutral-400 hover:text-amber-400">3. Site sem integração</a></li>
+        <li><a href="#topico-4" class="text-neutral-400 hover:text-amber-400">4. Como ele enxerga</a></li>
+        <li><a href="#topico-5" class="text-neutral-400 hover:text-amber-400">5. Plugin, API ou navegador</a></li>
+        <li><a href="#topico-6" class="text-neutral-400 hover:text-amber-400">6. Regras</a></li>
+      </ol>
+    </nav>
+  </aside>
+  </div>
+
+  <footer class="border-t border-dark-600 py-8 mt-16">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-neutral-500 text-sm">
+      <p>Codex: os 18 conceitos · 2026 | <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300">INEMA.CLUB</a> - <a href="https://inema.pro" target="_blank" class="text-amber-700 hover:text-amber-600 dark:text-slate-300 dark:hover:text-slate-200">PRO</a></p>
+      
+    </div>
+  </footer>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+    const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+    const _html = document.documentElement;
+    if (!_html.classList.contains('dark')) { themeToggleDarkIcon.classList.remove('hidden'); }
+    else { themeToggleLightIcon.classList.remove('hidden'); }
+    themeToggle.addEventListener('click', () => {
+      if (window.INEMA && INEMA.setPref) { INEMA.setPref('theme', _html.classList.contains('dark') ? 'claro' : 'inema-dark'); }
+      else { _html.classList.toggle('dark'); }
+      themeToggleDarkIcon.classList.toggle('hidden', _html.classList.contains('dark'));
+      themeToggleLightIcon.classList.toggle('hidden', !_html.classList.contains('dark'));
+      try { localStorage.setItem('theme', _html.classList.contains('dark') ? 'dark' : 'light'); } catch (e) {}
+    });
+    function toggleTopic(button) {
+      const item = button.closest('.topic-item');
+      const exp = item.querySelector('.topic-explanation');
+      const card = button.closest('[id^="modulo-"]') || document;
+      card.querySelectorAll('.topic-explanation.active').forEach(e => { if (e !== exp) { e.classList.remove('active'); const b = e.parentElement.querySelector('[aria-controls]'); if (b) b.setAttribute('aria-expanded', 'false'); } });
+      exp.classList.toggle('active');
+      button.setAttribute('aria-expanded', exp.classList.contains('active') ? 'true' : 'false');
+    }
+    let _lastModalTrigger = null;
+    function openModal(id){ const m=document.getElementById(id); if(m){ _lastModalTrigger=document.activeElement; m.classList.remove('hidden'); document.body.style.overflow='hidden'; const c=m.querySelector('button'); if(c) c.focus(); } }
+    function closeModal(){ document.querySelectorAll('.modal').forEach(m=>m.classList.add('hidden')); document.body.style.overflow='auto'; if(_lastModalTrigger){ _lastModalTrigger.focus(); _lastModalTrigger=null; } }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+  </script>
+  <script src="../../assets/learn.js"></script>
+  <script>
+    if (window.INEMA && typeof window.INEMA.init === 'function') { window.INEMA.init(); }
+  </script>
+  <script>
+    window.addEventListener('DOMContentLoaded', function () {
+      if (window.INEMA && INEMA.registerCheck) {
+
+        INEMA.registerCheck('modulo-4-1#q1', { answer: 2, explain: {
+          '0': 'Não. Senha nunca vai para a conversa. Você mesmo faz o login na aba do navegador e a sessão fica salva.',
+          '1': 'Não. Para site sem integração existe justamente o navegador embutido: ele usa o site como uma pessoa usaria.',
+          '2': 'Isso. Login feito por ele, sessão salva, e a regra "só leitura" impede o agente de mexer em pedidos ou pagamentos.'
+        } });
+      }
+    });
+  </script>
+</body>
+</html>

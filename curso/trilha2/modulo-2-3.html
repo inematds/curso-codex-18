@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="inema-course" content="cx18">
+  <title>A pasta .codex: configurações | Codex: os 18 conceitos</title>
+  <meta name="description" content="Curso gratuito do INEMA.CLUB: os 18 conceitos que fazem o Codex trabalhar por você — projetos, regras, ciclo do agente, modelos, permissões, skills, plugins, navegador, subagentes e tarefas agendadas, do zero.">
+
+  <!-- ANTI-FOUC: bloqueante, ANTES do Tailwind -->
+  <script>
+  (function () {
+    try {
+      var html = document.documentElement;
+      var DEF = { theme: 'inema-dark', font: 'inter', fontScale: 100, lineWidth: 68, leading: 1.7, accent: 'emerald' };
+      function clone(o) { var r = {}; for (var x in o) r[x] = o[x]; return r; }
+      var p = clone(DEF);
+      try {
+        var raw = localStorage.getItem('inema.prefs');
+        if (raw) {
+          var parsed = JSON.parse(raw);
+          if (parsed && typeof parsed === 'object') { for (var k in DEF) if (parsed[k] != null) p[k] = parsed[k]; }
+        } else {
+          var legacy = localStorage.getItem('theme');
+          if (legacy === 'light') p.theme = 'claro'; else if (legacy === 'dark') p.theme = 'inema-dark';
+        }
+      } catch (e) { p = clone(DEF); }
+      var THEMES = {
+        'inema-dark': { dark: true,  attr: null,        cs: 'dark'  },
+        'claro':      { dark: false, attr: null,        cs: 'light' },
+        'sepia':      { dark: false, attr: 'sepia',     cs: 'light' },
+        'foco':       { dark: null,  attr: 'foco',      cs: null    },
+        'contraste':  { dark: true,  attr: 'contraste', cs: 'dark'  }
+      };
+      var t = THEMES[p.theme] || THEMES['inema-dark'];
+      if (t.dark === true) html.classList.add('dark'); else if (t.dark === false) html.classList.remove('dark');
+      if (t.attr) html.setAttribute('data-theme', t.attr); else html.removeAttribute('data-theme');
+      html.style.colorScheme = (t.cs ? t.cs : (html.classList.contains('dark') ? 'dark' : 'light'));
+      html.setAttribute('data-font', p.font || 'inter');
+      html.setAttribute('data-accent', p.accent || 'emerald');
+      var s = html.style; var scale = (+p.fontScale || 100);
+      s.setProperty('--inema-font-scale', (scale / 100).toString());
+      s.setProperty('font-size', scale + '%');
+      s.setProperty('--measure', (+p.lineWidth || 68) + 'ch');
+      s.setProperty('--lh-body', (+p.leading || 1.7).toString());
+      var fam = p.font === 'system' ? 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif'
+        : (p.font === 'leitura' ? '"Atkinson Hyperlegible", "Inter", system-ui, sans-serif' : '"Inter", system-ui, sans-serif');
+      s.setProperty('--font-body', fam);
+      var ACC = { emerald: [152,76,45], blue: [217,91,60], purple: [258,90,66], amber: [38,92,50], teal: [174,72,41], rose: [350,89,60] };
+      var a = ACC[p.accent] || ACC.emerald;
+      s.setProperty('--accent-h', a[0]+''); s.setProperty('--accent-s', a[1]+'%'); s.setProperty('--accent-l', a[2]+'%');
+      s.setProperty('--accent', 'hsl('+a[0]+' '+a[1]+'% '+a[2]+'%)');
+    } catch (err) { try { document.documentElement.classList.add('dark'); document.documentElement.style.colorScheme = 'dark'; } catch(e){} }
+  })();
+  </script>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { darkMode: 'class', theme: { extend: { colors: {
+      primary: '#FACC15', dark: { 900: '#111827', 800: '#1f2937', 700: '#374151', 600: '#4b5563' } } } } }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/learn.css">
+
+  <!-- Manifesto do curso (OBRIGATORIO em TODA pagina, identico) -->
+  <script type="application/json" data-inema-manifest>
+  {"course":"cx18","tracks":[{"n":"1","title":"Fundamentos","modules":[{"id":"1-1","title":"Projetos: a pasta que lembra de você","topics":6,"href":"curso/trilha1/modulo-1-1.html"},{"id":"1-2","title":"AGENTS.md: as regras da casa","topics":6,"href":"curso/trilha1/modulo-1-2.html"},{"id":"1-3","title":"O ciclo do agente","topics":6,"href":"curso/trilha1/modulo-1-3.html"},{"id":"1-4","title":"/goal: um objetivo até o fim","topics":6,"href":"curso/trilha1/modulo-1-4.html"}]},{"n":"2","title":"Ambientes","modules":[{"id":"2-1","title":"Local, nuvem e celular","topics":6,"href":"curso/trilha2/modulo-2-1.html"},{"id":"2-2","title":"Worktrees: cópias para testar sem medo","topics":6,"href":"curso/trilha2/modulo-2-2.html"},{"id":"2-3","title":"A pasta .codex: configurações","topics":6,"href":"curso/trilha2/modulo-2-3.html"}]},{"n":"3","title":"Controle","modules":[{"id":"3-1","title":"Modelos: força e custo","topics":6,"href":"curso/trilha3/modulo-3-1.html"},{"id":"3-2","title":"Esforço e modo rápido","topics":6,"href":"curso/trilha3/modulo-3-2.html"},{"id":"3-3","title":"Permissões: quanto ele faz sozinho","topics":6,"href":"curso/trilha3/modulo-3-3.html"},{"id":"3-4","title":"Skills: receitas reutilizáveis","topics":6,"href":"curso/trilha3/modulo-3-4.html"},{"id":"3-5","title":"A pasta .agents e a vinda do Claude Code","topics":6,"href":"curso/trilha3/modulo-3-5.html"},{"id":"3-6","title":"Plugins: conecte seus aplicativos","topics":6,"href":"curso/trilha3/modulo-3-6.html"}]},{"n":"4","title":"Ferramentas e escala","modules":[{"id":"4-1","title":"Navegador: o Codex usa sites por você","topics":6,"href":"curso/trilha4/modulo-4-1.html"},{"id":"4-2","title":"Sites: do localhost para o mundo","topics":6,"href":"curso/trilha4/modulo-4-2.html"},{"id":"4-3","title":"Subagentes: delegue em paralelo","topics":6,"href":"curso/trilha4/modulo-4-3.html"},{"id":"4-4","title":"Tarefas agendadas: o Codex no piloto","topics":6,"href":"curso/trilha4/modulo-4-4.html"},{"id":"4-5","title":"Modo de voz: tudo junto","topics":6,"href":"curso/trilha4/modulo-4-5.html"}]}]}
+  </script>
+
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .dark body { background-color: #111827; }
+
+    /* Light mode - base */
+    html:not(.dark) body { background-color: #f8fafc; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-600 { background-color: #e5e7eb; }
+    html:not(.dark) .text-neutral-100 { color: #111827; }
+    html:not(.dark) .text-neutral-200 { color: #1f2937; }
+    html:not(.dark) .text-neutral-300 { color: #4b5563; }
+    html:not(.dark) .text-neutral-400 { color: #6b7280; }
+    html:not(.dark) .text-neutral-500 { color: #6b7280; }
+    html:not(.dark) .text-white { color: #111827; }
+    html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+    html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+
+    /* Light mode - acentos das 5 trilhas (emerald, blue, purple, amber, teal) */
+    html:not(.dark) .text-emerald-400 { color: #059669; }
+    html:not(.dark) .bg-emerald-500\/20 { background-color: rgba(5, 150, 105, 0.12); }
+    html:not(.dark) .bg-emerald-500\/10 { background-color: rgba(5, 150, 105, 0.08); }
+    html:not(.dark) .bg-emerald-900\/20 { background-color: rgba(5, 150, 105, 0.07); }
+    html:not(.dark) .border-emerald-500\/30 { border-color: rgba(5, 150, 105, 0.25); }
+    html:not(.dark) .hover\:bg-emerald-500\/30:hover { background-color: rgba(5, 150, 105, 0.18); }
+    html:not(.dark) .hover\:text-emerald-400:hover { color: #059669; }
+    html:not(.dark) .hover\:bg-emerald-500\/10:hover { background-color: rgba(5, 150, 105, 0.08); }
+    html:not(.dark) .group:hover .group-hover\:text-emerald-400 { color: #059669; }
+    html:not(.dark) .text-blue-400 { color: #2563eb; }
+    html:not(.dark) .bg-blue-500\/20 { background-color: rgba(37, 99, 235, 0.12); }
+    html:not(.dark) .bg-blue-500\/10 { background-color: rgba(37, 99, 235, 0.08); }
+    html:not(.dark) .bg-blue-900\/20 { background-color: rgba(37, 99, 235, 0.07); }
+    html:not(.dark) .border-blue-500\/30 { border-color: rgba(37, 99, 235, 0.25); }
+    html:not(.dark) .hover\:bg-blue-500\/30:hover { background-color: rgba(37, 99, 235, 0.18); }
+    html:not(.dark) .hover\:text-blue-400:hover { color: #2563eb; }
+    html:not(.dark) .hover\:bg-blue-500\/10:hover { background-color: rgba(37, 99, 235, 0.08); }
+    html:not(.dark) .group:hover .group-hover\:text-blue-400 { color: #2563eb; }
+    html:not(.dark) .text-purple-400 { color: #7c3aed; }
+    html:not(.dark) .bg-purple-500\/20 { background-color: rgba(124, 58, 237, 0.12); }
+    html:not(.dark) .bg-purple-500\/10 { background-color: rgba(124, 58, 237, 0.08); }
+    html:not(.dark) .bg-purple-900\/20 { background-color: rgba(124, 58, 237, 0.07); }
+    html:not(.dark) .border-purple-500\/30 { border-color: rgba(124, 58, 237, 0.25); }
+    html:not(.dark) .hover\:bg-purple-500\/30:hover { background-color: rgba(124, 58, 237, 0.18); }
+    html:not(.dark) .hover\:text-purple-400:hover { color: #7c3aed; }
+    html:not(.dark) .hover\:bg-purple-500\/10:hover { background-color: rgba(124, 58, 237, 0.08); }
+    html:not(.dark) .group:hover .group-hover\:text-purple-400 { color: #7c3aed; }
+    html:not(.dark) .text-amber-400 { color: #92400e; }
+    html:not(.dark) .bg-amber-500\/20 { background-color: rgba(217, 119, 6, 0.12); }
+    html:not(.dark) .bg-amber-500\/10 { background-color: rgba(217, 119, 6, 0.08); }
+    html:not(.dark) .bg-amber-900\/20 { background-color: rgba(217, 119, 6, 0.07); }
+    html:not(.dark) .border-amber-500\/30 { border-color: rgba(217, 119, 6, 0.25); }
+    html:not(.dark) .hover\:bg-amber-500\/30:hover { background-color: rgba(217, 119, 6, 0.18); }
+    html:not(.dark) .hover\:text-amber-400:hover { color: #92400e; }
+    html:not(.dark) .hover\:bg-amber-500\/10:hover { background-color: rgba(217, 119, 6, 0.08); }
+    html:not(.dark) .group:hover .group-hover\:text-amber-400 { color: #92400e; }
+    html:not(.dark) .text-teal-400 { color: #0d9488; }
+    html:not(.dark) .bg-teal-500\/20 { background-color: rgba(13, 148, 136, 0.12); }
+    html:not(.dark) .bg-teal-500\/10 { background-color: rgba(13, 148, 136, 0.08); }
+    html:not(.dark) .bg-teal-900\/20 { background-color: rgba(13, 148, 136, 0.07); }
+    html:not(.dark) .border-teal-500\/30 { border-color: rgba(13, 148, 136, 0.25); }
+    html:not(.dark) .hover\:bg-teal-500\/30:hover { background-color: rgba(13, 148, 136, 0.18); }
+    html:not(.dark) .hover\:text-teal-400:hover { color: #0d9488; }
+    html:not(.dark) .hover\:bg-teal-500\/10:hover { background-color: rgba(13, 148, 136, 0.08); }
+    html:not(.dark) .group:hover .group-hover\:text-teal-400 { color: #0d9488; }
+
+    /* Light mode - remove gradientes e cores especiais */
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+    html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.25); }
+    html:not(.dark) .border-primary\/30 { border-color: rgba(161, 98, 7, 0.22); }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-yellow-400 { color: #a16207; }
+    html:not(.dark) .text-red-400 { color: #b91c1c; }
+    html:not(.dark) .bg-red-900\/20 { background-color: rgba(185, 28, 28, 0.06); }
+    html:not(.dark) .border-red-500\/30 { border-color: rgba(185, 28, 28, 0.25); }
+    html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+    html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+
+    /* Light mode - nav */
+    html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+
+    /* Dark mode - bordas suaves */
+    .dark .border-dark-600 { border-color: #374151; }
+    .dark .divide-dark-600 > :not([hidden]) ~ :not([hidden]) { border-color: #374151; }
+
+    /* Alvos de ancora abaixo do nav sticky */
+    [data-inema-topic], [id^="modulo-"], [id^="topico-"] { scroll-margin-top: 72px; }
+
+    /* SVG light mode + animacao */
+    html:not(.dark) svg[role="img"] { filter: saturate(0.82) brightness(0.96); }
+    @keyframes wf-pulse { 0%,100% { opacity:.55 } 50% { opacity:1 } }
+    @keyframes wf-dash { to { stroke-dashoffset: -24; } }
+    @media (prefers-reduced-motion: no-preference) {
+      .wf-a { animation: wf-pulse 2.6s ease-in-out infinite; }
+      .wf-a:nth-child(2){animation-delay:.25s} .wf-a:nth-child(3){animation-delay:.5s}
+      .wf-a:nth-child(4){animation-delay:.75s} .wf-a:nth-child(5){animation-delay:1s}
+      .wf-flow { stroke-dasharray: 6 6; animation: wf-dash 1.2s linear infinite; }
+    }
+
+    /* Topicos expansiveis */
+    .topic-explanation { display: none; }
+    .topic-explanation.active { display: block; }
+    /* Popover de aparência ancorado à direita e fora do layout quando fechado (sem transbordo) */
+    .inema-appearance-pop { right: 0; }
+    main code, main pre { overflow-wrap: anywhere; }
+    main .flex-1 { min-width: 0; }
+    .inema-appearance-pop:not([data-open="true"]) { visibility: hidden; display: none; }
+  </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+  <a href="#conteudo" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[60] focus:px-4 focus:py-2 focus:bg-primary focus:text-black focus:rounded-lg">Pular para o conteúdo</a>
+
+  <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-14">
+        <div class="flex items-center space-x-1.5 sm:space-x-3">
+          <a href="../../index.html" class="flex items-center space-x-2 text-yellow-400 hover:text-yellow-300">
+            <span class="text-2xl">🧭</span>
+            <span class="font-bold text-lg hidden lg:inline">Codex 18</span>
+          </a>
+          <span class="text-neutral-600 hidden sm:inline">|</span>
+          <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium">INEMA.CLUB</a>
+          <span class="text-neutral-600">-</span>
+          <a href="https://inema.pro" target="_blank" class="text-amber-700 hover:text-amber-600 dark:text-slate-300 dark:hover:text-slate-200 text-sm font-medium">PRO</a>
+        </div>
+        <div class="flex items-center sm:space-x-1">
+          <a href="../trilha1/index.html" class="px-1.5 sm:px-2.5 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors">
+            <span class="xl:hidden">T1</span><span class="hidden xl:inline">Fundamentos</span>
+          </a>
+          <a href="index.html" class="px-1.5 sm:px-2.5 py-1.5 rounded-lg text-sm font-semibold text-blue-400 bg-blue-500/10">
+            <span class="xl:hidden">T2</span><span class="hidden xl:inline">Ambientes</span>
+          </a>
+          <a href="../trilha3/index.html" class="px-1.5 sm:px-2.5 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-purple-400 hover:bg-purple-500/10 transition-colors">
+            <span class="xl:hidden">T3</span><span class="hidden xl:inline">Controle</span>
+          </a>
+          <a href="../trilha4/index.html" class="px-1.5 sm:px-2.5 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-amber-400 hover:bg-amber-500/10 transition-colors">
+            <span class="xl:hidden">T4</span><span class="hidden xl:inline">Ferramentas e escala</span>
+          </a>
+          <button type="button" data-inema-journey-open class="hidden sm:inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-sm text-neutral-300 hover:text-neutral-100 transition-colors" title="Minha jornada">
+            <span aria-hidden="true">◷</span><span class="hidden md:inline">Jornada</span>
+            <span class="inema-journey-badge" data-inema-journey-badge data-count="0"></span>
+          </button>
+          <div class="relative">
+            <button type="button" data-inema-appearance-toggle="#aparencia" aria-expanded="false" aria-controls="aparencia" class="p-2 rounded-lg text-neutral-300 hover:text-neutral-100 transition-colors" title="Aparência">
+              <span aria-hidden="true" class="text-sm font-semibold">Aa</span><span class="sr-only">Aparência</span>
+            </button>
+            <div id="aparencia" data-inema-appearance class="inema-appearance-pop">
+              <div class="inema-segment" aria-label="Tema">
+                <button type="button" data-inema-set-theme="inema-dark">Escuro</button>
+                <button type="button" data-inema-set-theme="claro">Claro</button>
+                <button type="button" data-inema-set-theme="sepia">Sépia</button>
+                <button type="button" data-inema-set-theme="foco">Foco</button>
+                <button type="button" data-inema-set-theme="contraste">Alto contraste</button>
+              </div>
+              <div class="inema-segment" aria-label="Fonte">
+                <button type="button" data-inema-set-font="inter">Inter</button>
+                <button type="button" data-inema-set-font="system">Sistema</button>
+                <button type="button" data-inema-set-font="leitura">Leitura</button>
+              </div>
+              <div class="inema-segment" aria-label="Tamanho do texto">
+                <button type="button" data-inema-set-fontscale="100">A</button>
+                <button type="button" data-inema-set-fontscale="112">A+</button>
+                <button type="button" data-inema-set-fontscale="125">A++</button>
+              </div>
+              <div class="inema-segment" aria-label="Largura da linha">
+                <button type="button" data-inema-set-linewidth="60">Estreito</button>
+                <button type="button" data-inema-set-linewidth="68">Médio</button>
+                <button type="button" data-inema-set-linewidth="75">Largo</button>
+              </div>
+              <div class="inema-segment" aria-label="Entrelinha">
+                <button type="button" data-inema-set-leading="1.45">Compacto</button>
+                <button type="button" data-inema-set-leading="1.7">Confortável</button>
+              </div>
+            </div>
+          </div>
+          <button id="theme-toggle" class="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors" aria-label="Alternar tema claro/escuro">
+            <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+            <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <nav aria-label="Trilha de navegação" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+    <div class="flex items-center space-x-2 text-sm text-neutral-400">
+      <a href="../../index.html" class="hover:text-blue-400">Início</a><span>/</span>
+      <a href="index.html" class="hover:text-blue-400">Trilha 2</a><span>/</span>
+      <span class="text-blue-400">Módulo 2.3</span>
+    </div>
+  </nav>
+
+  <header class="bg-gradient-to-br from-blue-900/30 via-dark-800 to-dark-800 py-12 border-b border-dark-600" data-inema-module="2-3" data-inema-track="2">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <span class="inline-block px-3 py-1 bg-blue-500/20 text-blue-400 text-xs font-semibold rounded-full mb-4">MÓDULO 2.3 · CONCEITO 7 DE 18</span>
+      <h1 class="text-3xl sm:text-4xl font-bold mb-4">⚙️ A pasta .codex: configurações</h1>
+      <p class="text-lg text-neutral-400 max-w-3xl">As preferências do Codex moram em pastas chamadas <code>.codex</code>: uma dentro do projeto e outra na sua pasta de usuário. Entender a diferença entre as duas é a ideia mais útil deste módulo, e ela volta quando chegarmos às skills.</p>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 max-w-2xl">
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-blue-400">6</div><div class="text-xs text-neutral-400">Tópicos</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-blue-400">~30</div><div class="text-xs text-neutral-400">Minutos</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-blue-400">Base</div><div class="text-xs text-neutral-400">Nível</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-blue-400">Ambiente</div><div class="text-xs text-neutral-400">Tipo</div></div>
+      </div>
+      <div data-inema-meter="modulo:2-3" class="mt-6 max-w-2xl" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-label="Progresso do módulo 2.3">
+        <div class="flex justify-between text-xs text-neutral-400 mb-1"><span data-inema-meter-frac>0 de 6</span><span data-inema-meter-pct>0%</span></div>
+        <div class="inema-bar"><div class="inema-bar__fill" data-inema-meter-fill></div></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-10">
+    <figure class="rounded-2xl overflow-hidden border border-blue-500/30">
+      <img src="assets/img/modulo-2-3.png" alt="Ilustração: um painel de controle com engrenagens e chaves luminosas ao lado de duas pastas, uma pequena dentro de um projeto e uma maior que cobre todos os projetos. A cena mostra que as configurações do Codex ficam em dois níveis: as do projeto e as do usuário." class="w-full h-auto" loading="lazy" width="1536" height="640">
+    </figure>
+  </div>
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:grid lg:grid-cols-[1fr_220px] lg:gap-10">
+  <main id="conteudo" class="min-w-0" data-inema-module="2-3" data-inema-track="2">
+
+    <!-- ===================== TOPICO 1 ===================== -->
+    <section id="topico-1" data-inema-topic="modulo-2-3#topico-1" class="mb-16">
+      <div class="flex flex-wrap items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">1</span>
+        <h2 class="text-2xl font-bold flex-1">Encontre a pasta .codex</h2>
+        <button type="button" data-inema-doubt-toggle aria-pressed="false" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-dark-700 border border-dark-600 text-neutral-300 hover:bg-dark-600 transition-colors text-sm"><span aria-hidden="true">?</span><span>Tenho dúvida</span></button>
+      </div>
+      <p data-inema-block="m2-3-t1-p1" class="text-neutral-300 mb-4 leading-relaxed">A Paula abriu a pasta <code>paula-escritorio</code> no explorador de arquivos e não viu nenhum <code>.codex</code>. Não é que ele não exista: está escondido. Toda pasta cujo nome começa com ponto é <strong class="text-blue-400">oculta</strong>.</p>
+      <p data-inema-block="m2-3-t1-p2" class="text-neutral-300 mb-6 leading-relaxed">O ponto é uma convenção antiga: "isto é configuração, não mexa sem querer". Para ver, é só pedir ao sistema que mostre os itens ocultos. Nada muda nos arquivos; eles só aparecem.</p>
+
+      <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-base font-semibold text-blue-400 mb-3 flex items-center"><span class="mr-2">🆕</span> Novo aqui? Quatro palavras deste módulo</h3>
+        <ul class="space-y-2 text-neutral-300 text-sm">
+          <li><strong>Pasta oculta</strong> — pasta com ponto no começo do nome. Existe, mas o sistema esconde por padrão.</li>
+          <li><strong>Configuração</strong> — uma preferência guardada em arquivo: qual modelo usar, quanto esforço, o que pode ou não fazer.</li>
+          <li><strong>Pasta de usuário</strong> — a sua pasta pessoal no computador. No terminal ela tem o apelido <code>~</code>. Então <code>~/.codex</code> é "a pasta .codex dentro da minha pasta pessoal".</li>
+          <li><strong>config.toml</strong> — o arquivo de texto com as configurações do Codex, no formato <code>chave = valor</code>.</li>
+        </ul>
+      </div>
+
+      <div class="rounded-2xl border border-blue-500/30 bg-dark-900/40 p-3 sm:p-4 mb-3 overflow-hidden">
+        <svg viewBox="0 0 800 250" class="w-full h-auto" role="img" aria-label="Duas janelas do explorador de arquivos da mesma pasta paula-escritorio. Na primeira, com um olho fechado, aparecem só clientes, propostas e AGENTS.md. Na segunda, com um olho aberto e o aviso mostrar itens ocultos ligado, aparece também a pasta .codex, destacada e meio transparente.">
+          <defs>
+            <pattern id="m23a-grid" width="32" height="32" patternUnits="userSpaceOnUse"><circle cx="1.3" cy="1.3" r="1.3" fill="#60a5fa" opacity="0.10"/></pattern>
+            <filter id="m23a-glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            <marker id="m23a-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#38bdf8"/></marker>
+          </defs>
+          <rect x="0" y="0" width="800" height="250" fill="url(#m23a-grid)"/>
+          <rect x="40" y="25" width="310" height="200" rx="14" fill="#111827" stroke="#6b7280" stroke-width="2"/>
+          <text x="60" y="52" fill="#d1d5db" font-family="Inter,sans-serif" font-weight="600" font-size="12">ocultos: desligado</text>
+          <path d="M300,46 q15,-12 30,0 q-15,12 -30,0 z" fill="none" stroke="#9ca3af" stroke-width="1.6"/><line x1="298" y1="54" x2="332" y2="38" stroke="#9ca3af" stroke-width="1.6"/>
+          <g font-family="ui-monospace,monospace" font-size="12" fill="#d1d5db">
+            <text x="60" y="88">📁 paula-escritorio/</text>
+            <text x="85" y="115">📜 AGENTS.md</text>
+            <text x="85" y="142">📁 clientes/</text>
+            <text x="85" y="169">📁 propostas/</text>
+            <text x="85" y="196">📁 linkedin/</text>
+          </g>
+          <line class="wf-flow" x1="358" y1="125" x2="432" y2="125" stroke="#38bdf8" stroke-width="2.5" marker-end="url(#m23a-arrow)"/>
+          <rect x="440" y="25" width="320" height="200" rx="14" fill="#0f1b33" stroke="#60a5fa" stroke-width="2"/>
+          <text x="460" y="52" fill="#bfdbfe" font-family="Inter,sans-serif" font-weight="600" font-size="12">ocultos: ligado</text>
+          <path d="M705,46 q15,-12 30,0 q-15,12 -30,0 z" fill="none" stroke="#60a5fa" stroke-width="1.6"/><circle cx="720" cy="46" r="4" fill="#60a5fa"/>
+          <g font-family="ui-monospace,monospace" font-size="12" fill="#bfdbfe">
+            <text x="460" y="88">📁 paula-escritorio/</text>
+            <g filter="url(#m23a-glow)"><rect x="478" y="96" width="140" height="26" rx="6" fill="#1e3a8a" stroke="#38bdf8" opacity="0.85"/></g>
+            <text x="485" y="114" fill="#bae6fd" opacity="0.9">⚙️ .codex/</text>
+            <text x="485" y="142">📜 AGENTS.md</text>
+            <text x="485" y="169">📁 clientes/</text>
+            <text x="485" y="196">📁 propostas/  …</text>
+          </g>
+        </svg>
+      </div>
+      <p class="text-sm text-neutral-400 mb-6"><strong class="text-neutral-300">Como ler o desenho:</strong> é a mesma pasta nas duas janelas. Só muda o olho no canto: fechado, a <code>.codex</code> some; aberto, ela aparece (meio transparente, como os sistemas costumam mostrar itens ocultos).</p>
+
+      <div class="overflow-x-auto mb-6 rounded-xl border border-dark-600">
+        <table class="w-full text-sm text-left">
+          <thead class="bg-dark-700/60 text-blue-400"><tr><th class="px-4 py-3 font-semibold">Sistema</th><th class="px-4 py-3 font-semibold">Como mostrar itens ocultos</th></tr></thead>
+          <tbody class="divide-y divide-dark-600">
+            <tr class="bg-dark-800"><td class="px-4 py-3 text-neutral-100">Windows</td><td class="px-4 py-3 text-neutral-300">No Explorador de Arquivos, menu Exibir → Mostrar → Itens ocultos</td></tr>
+            <tr class="bg-dark-800"><td class="px-4 py-3 text-neutral-100">Mac</td><td class="px-4 py-3 text-neutral-300">No Finder, atalho Cmd + Shift + ponto</td></tr>
+            <tr class="bg-dark-800"><td class="px-4 py-3 text-neutral-100">Linux</td><td class="px-4 py-3 text-neutral-300">No gerenciador de arquivos, atalho Ctrl + H</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-sm text-neutral-400 mb-6"><strong class="text-neutral-300">O que olhar na tabela:</strong> o atalho do seu sistema. Os nomes dos menus mudam um pouco entre versões, mas a opção sempre fala em "ocultos". O mesmo atalho esconde de novo.</p>
+      <div class="flex justify-start mt-6">
+        <button type="button" data-inema-read-toggle aria-pressed="false" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-500/20 border border-blue-500/30 text-blue-400 hover:bg-blue-500/30 transition-colors">
+          <span class="inema-read-icon" aria-hidden="true">○</span><span class="inema-read-label">Marcar como lido</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ===================== TOPICO 2 ===================== -->
+    <section id="topico-2" data-inema-topic="modulo-2-3#topico-2" class="mb-16">
+      <div class="flex flex-wrap items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">2</span>
+        <h2 class="text-2xl font-bold flex-1">Separe projeto de usuário</h2>
+        <button type="button" data-inema-doubt-toggle aria-pressed="false" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-dark-700 border border-dark-600 text-neutral-300 hover:bg-dark-600 transition-colors text-sm"><span aria-hidden="true">?</span><span>Tenho dúvida</span></button>
+      </div>
+      <p data-inema-block="m2-3-t2-p1" class="text-neutral-300 mb-4 leading-relaxed">Existem dois lugares para a <code>.codex</code>. <strong class="text-blue-400">No projeto</strong> (<code>paula-escritorio/.codex/</code>): configurações que valem só para aquele projeto, como agentes e fluxos próprios dele.</p>
+      <p data-inema-block="m2-3-t2-p2" class="text-neutral-300 mb-6 leading-relaxed"><strong class="text-blue-400">No usuário</strong> (<code>~/.codex/</code>): configurações globais, que valem para todos os projetos daquele computador. É como a diferença entre a regra de uma sala e a regra do prédio inteiro.</p>
+
+      <div class="rounded-2xl border border-blue-500/30 bg-dark-900/40 p-3 sm:p-4 mb-3 overflow-hidden">
+        <svg viewBox="0 0 800 270" class="w-full h-auto" role="img" aria-label="Um guarda-chuva grande chamado pasta de usuário, til barra ponto codex, cobre três projetos: paula-escritorio, loja-rui e um terceiro projeto. Dentro de paula-escritorio há uma pasta ponto codex pequena, que vale só ali. As outras pastas não têm nenhuma.">
+          <defs>
+            <pattern id="m23b-grid" width="32" height="32" patternUnits="userSpaceOnUse"><circle cx="1.3" cy="1.3" r="1.3" fill="#60a5fa" opacity="0.10"/></pattern>
+            <filter id="m23b-glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          </defs>
+          <rect x="0" y="0" width="800" height="270" fill="url(#m23b-grid)"/>
+          <g filter="url(#m23b-glow)"><path d="M90,120 Q400,-20 710,120 Z" fill="#0f1b33" stroke="#60a5fa" stroke-width="2.5"/></g>
+          <text x="400" y="78" text-anchor="middle" fill="#bfdbfe" font-family="ui-monospace,monospace" font-weight="600" font-size="14">~/.codex</text>
+          <text x="400" y="100" text-anchor="middle" fill="#93c5fd" font-family="Inter,sans-serif" font-size="11">usuário: vale para todos os projetos</text>
+          <line x1="400" y1="120" x2="400" y2="135" stroke="#60a5fa" stroke-width="2"/>
+          <g font-family="Inter,sans-serif" text-anchor="middle">
+            <rect x="110" y="145" width="180" height="100" rx="12" fill="#111827" stroke="#60a5fa" stroke-width="2"/>
+            <text x="200" y="172" fill="#e5e7eb" font-size="12">📁 paula-escritorio</text>
+            <rect class="wf-a" x="140" y="188" width="120" height="40" rx="8" fill="#0b1f2e" stroke="#38bdf8" stroke-width="2"/>
+            <text x="200" y="206" fill="#bae6fd" font-family="ui-monospace,monospace" font-size="11">.codex/</text>
+            <text x="200" y="221" fill="#7dd3fc" font-size="9">só deste projeto</text>
+            <rect x="310" y="145" width="180" height="100" rx="12" fill="#111827" stroke="#60a5fa" stroke-width="2"/>
+            <text x="400" y="172" fill="#e5e7eb" font-size="12">📁 loja-rui</text>
+            <text x="400" y="210" fill="#6b7280" font-size="10">sem .codex próprio</text>
+            <rect x="510" y="145" width="180" height="100" rx="12" fill="#111827" stroke="#60a5fa" stroke-width="2"/>
+            <text x="600" y="172" fill="#e5e7eb" font-size="12">📁 outro projeto</text>
+            <text x="600" y="210" fill="#6b7280" font-size="10">sem .codex próprio</text>
+          </g>
+        </svg>
+      </div>
+      <p class="text-sm text-neutral-400 mb-6"><strong class="text-neutral-300">Como ler o desenho:</strong> o guarda-chuva azul é a configuração de usuário: cobre os três projetos. A caixinha ciano dentro do projeto da Paula vale só ali. Os projetos sem caixinha ficam apenas com o que vem do guarda-chuva.</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="bg-dark-800 rounded-xl p-6 border border-blue-500/30">
+          <h3 class="font-semibold text-blue-400 mb-3">✓ Vai no .codex do projeto</h3>
+          <ul class="space-y-2 text-neutral-300 text-sm">
+            <li>✓ O que só faz sentido para aquele trabalho</li>
+            <li>✓ Agentes e fluxos próprios do projeto</li>
+            <li>✓ Ajustes que você quer levar junto com a pasta</li>
+          </ul>
+        </div>
+        <div class="bg-dark-800 rounded-xl p-6 border border-cyan-500/30">
+          <h3 class="font-semibold text-cyan-400 mb-3">✓ Vai no ~/.codex do usuário</h3>
+          <ul class="space-y-2 text-neutral-300 text-sm">
+            <li>✓ Seu modelo e esforço padrão</li>
+            <li>✓ O que vale para qualquer projeto seu</li>
+            <li>✓ Login, histórico e memórias (o Codex cuida sozinho)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-2 flex items-center"><span class="mr-2">💡</span> Guarde esta pergunta: "projeto ou usuário?"</h3>
+        <p class="text-neutral-300 text-sm">Ela volta no módulo 3.5, com a pasta <code>.agents</code> das skills: skill do projeto vale só ali; skill do usuário vale em todo lugar. Quem entende aqui, entende lá.</p>
+      </div>
+      <div class="flex justify-start mt-6">
+        <button type="button" data-inema-read-toggle aria-pressed="false" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-500/20 border border-blue-500/30 text-blue-400 hover:bg-blue-500/30 transition-colors">
+          <span class="inema-read-icon" aria-hidden="true">○</span><span class="inema-read-label">Marcar como lido</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ===================== TOPICO 3 ===================== -->
+    <section id="topico-3" data-inema-topic="modulo-2-3#topico-3" class="mb-16">
+      <div class="flex flex-wrap items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">3</span>
+        <h2 class="text-2xl font-bold flex-1">Leia o config.toml sem medo</h2>
+        <button type="button" data-inema-doubt-toggle aria-pressed="false" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-dark-700 border border-dark-600 text-neutral-300 hover:bg-dark-600 transition-colors text-sm"><span aria-hidden="true">?</span><span>Tenho dúvida</span></button>
+      </div>
+      <p data-inema-block="m2-3-t3-p1" class="text-neutral-300 mb-4 leading-relaxed">O coração da configuração é o <code>config.toml</code>. O nome assusta, mas por dentro é uma lista de preferências, uma por linha: o nome da preferência, um sinal de igual e o valor escolhido.</p>
+      <p data-inema-block="m2-3-t3-p2" class="text-neutral-300 mb-6 leading-relaxed">O Rui abriu o dele num editor de texto comum e encontrou duas linhas. Em cinco minutos entendeu tudo: <strong class="text-blue-400">qual modelo ele usa por padrão e quanto esse modelo pensa</strong>.</p>
+
+      <div class="rounded-2xl border border-blue-500/30 bg-dark-900/40 p-3 sm:p-4 mb-3 overflow-hidden">
+        <svg viewBox="0 0 800 250" class="w-full h-auto" role="img" aria-label="Arquivo config.toml aberto num editor, com duas linhas: model igual a gpt-6-astra e model_reasoning_effort igual a medium. Etiquetas apontam para cada parte: à esquerda a chave, o nome da preferência; no meio o sinal de igual; à direita o valor, entre aspas, que é o que você escolheu.">
+          <defs>
+            <pattern id="m23c-grid" width="32" height="32" patternUnits="userSpaceOnUse"><circle cx="1.3" cy="1.3" r="1.3" fill="#60a5fa" opacity="0.10"/></pattern>
+            <marker id="m23c-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#38bdf8"/></marker>
+          </defs>
+          <rect x="0" y="0" width="800" height="250" fill="url(#m23c-grid)"/>
+          <rect x="120" y="60" width="560" height="120" rx="12" fill="#0b1220" stroke="#60a5fa" stroke-width="2"/>
+          <rect x="120" y="60" width="560" height="26" rx="12" fill="#0f1b33"/>
+          <text x="140" y="78" fill="#93c5fd" font-family="ui-monospace,monospace" font-size="11">~/.codex/config.toml</text>
+          <g font-family="ui-monospace,monospace" font-size="15">
+            <text x="150" y="122" fill="#bfdbfe">model</text><text x="370" y="122" fill="#9ca3af">=</text><text x="400" y="122" fill="#7dd3fc">"gpt-6-astra"</text>
+            <text x="150" y="158" fill="#bfdbfe">model_reasoning_effort</text><text x="370" y="158" fill="#9ca3af">=</text><text x="400" y="158" fill="#7dd3fc">"medium"</text>
+          </g>
+          <g font-family="Inter,sans-serif" font-size="11">
+            <path d="M200,232 L200,170" stroke="#60a5fa" stroke-width="1.6" marker-end="url(#m23c-arrow)"/>
+            <text x="200" y="245" text-anchor="middle" fill="#93c5fd">chave: o nome da preferência</text>
+            <path d="M375,30 L375,105" stroke="#9ca3af" stroke-width="1.6" marker-end="url(#m23c-arrow)"/>
+            <text x="375" y="22" text-anchor="middle" fill="#9ca3af">sinal de igual</text>
+            <path d="M560,232 L520,170" stroke="#38bdf8" stroke-width="1.6" marker-end="url(#m23c-arrow)"/>
+            <text x="590" y="245" text-anchor="middle" fill="#7dd3fc">valor: o que você escolheu</text>
+          </g>
+        </svg>
+      </div>
+      <p class="text-sm text-neutral-400 mb-6"><strong class="text-neutral-300">Como ler o desenho:</strong> cada linha tem três partes. A seta da esquerda aponta a chave, a de cima o sinal de igual e a da direita o valor. Mudar a configuração é trocar o valor, nunca o nome da chave.</p>
+
+      <div class="bg-dark-800 rounded-xl border border-blue-500/30 overflow-hidden mb-6">
+        <div class="px-5 py-3 bg-blue-900/20 border-b border-blue-500/30"><span class="text-blue-400 font-semibold text-sm">📄 Copia e cola: um config.toml mínimo</span></div>
+        <div class="p-5">
+          <p class="text-neutral-300 text-sm mb-3"><strong class="text-blue-400">Objetivo:</strong> reconhecer as duas preferências mais comuns e o que cada uma faz.</p>
+          <pre class="font-mono text-sm text-neutral-200 whitespace-pre-wrap bg-dark-900/60 rounded-lg p-4 border border-dark-600">model = "gpt-6-astra"
+model_reasoning_effort = "medium"</pre>
+          <p class="text-neutral-400 text-xs mt-3">A primeira linha escolhe o modelo padrão. A segunda diz quanto ele pensa antes de responder. Os modelos e os níveis de esforço são assunto dos módulos 3.1 e 3.2.</p>
+        </div>
+        <div class="px-5 py-3 bg-dark-700/40 border-t border-dark-600 text-neutral-300 text-sm"><strong class="text-blue-400">Como verificar:</strong> abra uma conversa nova e olhe o seletor embaixo da caixa de mensagem. O modelo e o esforço mostrados devem ser os mesmos do arquivo. Se algo parecer errado, <code>codex doctor</code> faz um diagnóstico da instalação.</div>
+      </div>
+
+      <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-base font-semibold text-blue-400 mb-2 flex items-center"><span class="mr-2">🆕</span> Novo aqui? TOML e aspas</h3>
+        <p class="text-neutral-300 text-sm"><strong>TOML</strong> é só o nome do formato do arquivo, feito para ser lido por gente. Texto vai entre aspas (<code>"medium"</code>). Esquecer uma aspa é o erro mais comum de quem edita à mão, e é por isso que o próximo tópico manda pedir ao Codex.</p>
+      </div>
+      <div class="flex justify-start mt-6">
+        <button type="button" data-inema-read-toggle aria-pressed="false" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-500/20 border border-blue-500/30 text-blue-400 hover:bg-blue-500/30 transition-colors">
+          <span class="inema-read-icon" aria-hidden="true">○</span><span class="inema-read-label">Marcar como lido</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ===================== TOPICO 4 ===================== -->
+    <section id="topico-4" data-inema-topic="modulo-2-3#topico-4" class="mb-16">
+      <div class="flex flex-wrap items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">4</span>
+        <h2 class="text-2xl font-bold flex-1">Saiba o que fica na pasta global</h2>
+        <button type="button" data-inema-doubt-toggle aria-pressed="false" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-dark-700 border border-dark-600 text-neutral-300 hover:bg-dark-600 transition-colors text-sm"><span aria-hidden="true">?</span><span>Tenho dúvida</span></button>
+      </div>
+      <p data-inema-block="m2-3-t4-p1" class="text-neutral-300 mb-4 leading-relaxed">A <code>~/.codex</code> é a gaveta pessoal do Codex no seu computador. Além do <code>config.toml</code>, ele guarda ali as memórias, o histórico das sessões, as automações e o seu login.</p>
+      <p data-inema-block="m2-3-t4-p2" class="text-neutral-300 mb-6 leading-relaxed">Quase tudo isso o próprio Codex escreve e lê. Você não precisa abrir, mas precisa saber que existe, porque <strong class="text-blue-400">essa pasta tem a sua conta dentro</strong>. Os nomes exatos dos arquivos internos podem mudar entre versões.</p>
+
+      <div class="rounded-2xl border border-blue-500/30 bg-dark-900/40 p-3 sm:p-4 mb-3 overflow-hidden">
+        <svg viewBox="0 0 800 270" class="w-full h-auto" role="img" aria-label="Gaveteiro com cinco gavetas, rotulado til barra ponto codex. Gavetas: config.toml, as preferências, que você pode ajustar; memórias, fatos lembrados; histórico de sessões, conversas anteriores; automações, tarefas agendadas; e login, auth.json, marcada com um cadeado vermelho e o aviso: nunca compartilhe.">
+          <defs>
+            <pattern id="m23d-grid" width="32" height="32" patternUnits="userSpaceOnUse"><circle cx="1.3" cy="1.3" r="1.3" fill="#60a5fa" opacity="0.10"/></pattern>
+            <filter id="m23d-glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          </defs>
+          <rect x="0" y="0" width="800" height="270" fill="url(#m23d-grid)"/>
+          <g filter="url(#m23d-glow)"><rect x="200" y="20" width="400" height="235" rx="14" fill="#0f1b33" stroke="#60a5fa" stroke-width="2.5"/></g>
+          <text x="400" y="44" text-anchor="middle" fill="#bfdbfe" font-family="ui-monospace,monospace" font-weight="600" font-size="13">~/.codex</text>
+          <g font-family="Inter,sans-serif" font-size="12">
+            <rect x="220" y="56" width="360" height="34" rx="6" fill="#111827" stroke="#60a5fa"/><circle cx="560" cy="73" r="4" fill="#60a5fa"/><text x="236" y="78" fill="#bfdbfe">⚙️ config.toml — preferências</text>
+            <rect x="220" y="96" width="360" height="34" rx="6" fill="#111827" stroke="#60a5fa"/><circle cx="560" cy="113" r="4" fill="#60a5fa"/><text x="236" y="118" fill="#bfdbfe">🧠 memórias — fatos lembrados</text>
+            <rect x="220" y="136" width="360" height="34" rx="6" fill="#111827" stroke="#60a5fa"/><circle cx="560" cy="153" r="4" fill="#60a5fa"/><text x="236" y="158" fill="#bfdbfe">🗂️ histórico de sessões</text>
+            <rect x="220" y="176" width="360" height="34" rx="6" fill="#111827" stroke="#60a5fa"/><circle cx="560" cy="193" r="4" fill="#60a5fa"/><text x="236" y="198" fill="#bfdbfe">⏰ automações</text>
+            <rect x="220" y="216" width="360" height="30" rx="6" fill="#2a0f0f" stroke="#f87171" stroke-width="2"/><text x="236" y="236" fill="#fca5a5">🔒 login (auth.json)</text>
+          </g>
+          <g font-family="Inter,sans-serif" font-size="11">
+            <line x1="620" y1="73" x2="660" y2="73" stroke="#38bdf8" stroke-width="1.6"/><text x="665" y="77" fill="#7dd3fc">você ajusta</text>
+            <line x1="620" y1="153" x2="660" y2="153" stroke="#38bdf8" stroke-width="1.6"/><text x="665" y="150" fill="#7dd3fc">o Codex</text><text x="665" y="164" fill="#7dd3fc">cuida</text>
+            <line x1="620" y1="231" x2="660" y2="231" stroke="#f87171" stroke-width="1.6"/><text x="665" y="228" fill="#fca5a5">nunca</text><text x="665" y="242" fill="#fca5a5">compartilhe</text>
+            <text x="100" y="140" text-anchor="middle" fill="#9ca3af">vale para</text><text x="100" y="156" text-anchor="middle" fill="#9ca3af">todos os projetos</text>
+          </g>
+        </svg>
+      </div>
+      <p class="text-sm text-neutral-400 mb-6"><strong class="text-neutral-300">Como ler o desenho:</strong> cada gaveta guarda um tipo de coisa. As notas à direita dizem quem mexe: a de cima é sua, as do meio são do Codex e a de baixo, em vermelho, é a chave da sua conta.</p>
+
+      <div class="overflow-x-auto mb-6 rounded-xl border border-dark-600">
+        <table class="w-full text-sm text-left">
+          <thead class="bg-dark-700/60 text-blue-400"><tr><th class="px-4 py-3 font-semibold">Gaveta</th><th class="px-4 py-3 font-semibold">Para que serve</th><th class="px-4 py-3 font-semibold">Você mexe?</th></tr></thead>
+          <tbody class="divide-y divide-dark-600">
+            <tr class="bg-dark-800"><td class="px-4 py-3 text-neutral-100">config.toml</td><td class="px-4 py-3 text-neutral-300">Modelo, esforço e outras preferências</td><td class="px-4 py-3 text-neutral-300">Sim, de preferência pedindo ao Codex</td></tr>
+            <tr class="bg-dark-800"><td class="px-4 py-3 text-neutral-100">Memórias</td><td class="px-4 py-3 text-neutral-300">Fatos que ele lembra sobre você</td><td class="px-4 py-3 text-neutral-300">Peça para revisar ou apagar uma memória</td></tr>
+            <tr class="bg-dark-800"><td class="px-4 py-3 text-neutral-100">Histórico de sessões</td><td class="px-4 py-3 text-neutral-300">Permite retomar com <code>codex resume</code></td><td class="px-4 py-3 text-neutral-300">Não</td></tr>
+            <tr class="bg-dark-800"><td class="px-4 py-3 text-neutral-100">Automações</td><td class="px-4 py-3 text-neutral-300">Tarefas que rodam sozinhas (módulo 4.4)</td><td class="px-4 py-3 text-neutral-300">Pelo app, não pelo arquivo</td></tr>
+            <tr class="bg-dark-800"><td class="px-4 py-3 text-neutral-100">Login</td><td class="px-4 py-3 text-neutral-300">Mantém você conectado (<code>codex login</code>)</td><td class="px-4 py-3 text-neutral-300">Nunca. E nunca envie a ninguém</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-sm text-neutral-400 mb-6"><strong class="text-neutral-300">O que olhar na tabela:</strong> a coluna da direita. Só a primeira linha é "sua" no dia a dia; o resto existe para o Codex funcionar.</p>
+      <div class="flex justify-start mt-6">
+        <button type="button" data-inema-read-toggle aria-pressed="false" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-500/20 border border-blue-500/30 text-blue-400 hover:bg-blue-500/30 transition-colors">
+          <span class="inema-read-icon" aria-hidden="true">○</span><span class="inema-read-label">Marcar como lido</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ===================== TOPICO 5 ===================== -->
+    <section id="topico-5" data-inema-topic="modulo-2-3#topico-5" class="mb-16">
+      <div class="flex flex-wrap items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">5</span>
+        <h2 class="text-2xl font-bold flex-1">Peça ao Codex para ajustar a configuração</h2>
+        <button type="button" data-inema-doubt-toggle aria-pressed="false" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-dark-700 border border-dark-600 text-neutral-300 hover:bg-dark-600 transition-colors text-sm"><span aria-hidden="true">?</span><span>Tenho dúvida</span></button>
+      </div>
+      <p data-inema-block="m2-3-t5-p1" class="text-neutral-300 mb-4 leading-relaxed">Você quase não precisa editar nada à mão. O Codex sabe onde ficam os arquivos e consulta a própria documentação para escrever a configuração certa. Diga o que quer em português.</p>
+      <p data-inema-block="m2-3-t5-p2" class="text-neutral-300 mb-6 leading-relaxed">A Paula pediu: "deixe o esforço padrão em medium neste projeto". Antes, perguntou: "isso vai no .codex do projeto ou no global?". Essa <strong class="text-blue-400">segunda pergunta</strong> é a que evita surpresa em outro projeto.</p>
+
+      <div class="rounded-2xl border border-blue-500/30 bg-dark-900/40 p-3 sm:p-4 mb-3 overflow-hidden">
+        <svg viewBox="0 0 800 240" class="w-full h-auto" role="img" aria-label="Ciclo de ajuste em cinco passos em círculo: 1, você pede em português; 2, o Codex consulta a documentação; 3, ele pergunta projeto ou global; 4, ele mostra a linha que vai mudar; 5, você aprova e ele grava. No centro, o arquivo config.toml.">
+          <defs>
+            <pattern id="m23e-grid" width="32" height="32" patternUnits="userSpaceOnUse"><circle cx="1.3" cy="1.3" r="1.3" fill="#60a5fa" opacity="0.10"/></pattern>
+            <filter id="m23e-glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            <marker id="m23e-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#38bdf8"/></marker>
+          </defs>
+          <rect x="0" y="0" width="800" height="240" fill="url(#m23e-grid)"/>
+          <ellipse cx="400" cy="120" rx="250" ry="85" fill="none" stroke="#60a5fa" stroke-width="1.6" stroke-dasharray="5 6" opacity="0.7"/>
+          <g filter="url(#m23e-glow)"><rect x="335" y="98" width="130" height="44" rx="10" fill="#0f1b33" stroke="#60a5fa" stroke-width="2"/></g>
+          <text x="400" y="125" text-anchor="middle" fill="#bfdbfe" font-family="ui-monospace,monospace" font-size="12">config.toml</text>
+          <g font-family="Inter,sans-serif" font-size="11" text-anchor="middle">
+            <rect x="320" y="14" width="160" height="40" rx="10" fill="#111827" stroke="#38bdf8"/><text x="400" y="38" fill="#bae6fd">1 · você pede</text>
+            <rect x="585" y="70" width="180" height="40" rx="10" fill="#111827" stroke="#38bdf8"/><text x="675" y="94" fill="#bae6fd">2 · consulta a documentação</text>
+            <rect x="545" y="170" width="180" height="40" rx="10" fill="#111827" stroke="#38bdf8"/><text x="635" y="194" fill="#bae6fd">3 · "projeto ou global?"</text>
+            <rect x="75" y="170" width="180" height="40" rx="10" fill="#111827" stroke="#38bdf8"/><text x="165" y="194" fill="#bae6fd">4 · mostra o que muda</text>
+            <rect x="35" y="70" width="180" height="40" rx="10" fill="#0b1f2e" stroke="#60a5fa" stroke-width="2"/><text x="125" y="94" fill="#bfdbfe">5 · você aprova, ele grava</text>
+          </g>
+          <g stroke="#38bdf8" stroke-width="2" fill="none">
+            <path class="wf-flow" d="M482,36 C 560,40 620,50 650,68" marker-end="url(#m23e-arrow)"/>
+            <path class="wf-flow" d="M680,112 C 680,140 670,155 655,168" marker-end="url(#m23e-arrow)"/>
+            <path class="wf-flow" d="M543,192 C 450,215 350,215 258,192" marker-end="url(#m23e-arrow)"/>
+            <path class="wf-flow" d="M140,168 C 120,150 115,130 120,112" marker-end="url(#m23e-arrow)"/>
+            <path class="wf-flow" d="M150,68 C 200,40 260,36 318,34" marker-end="url(#m23e-arrow)"/>
+          </g>
+        </svg>
+      </div>
+      <p class="text-sm text-neutral-400 mb-6"><strong class="text-neutral-300">Como ler o desenho:</strong> siga os números no sentido horário, a partir do topo. O arquivo no centro só muda no passo 5, depois que você viu a linha nova. Os passos 3 e 4 são a sua rede de segurança.</p>
+
+      <div class="space-y-5 mb-6">
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center"><span class="text-blue-400 font-bold">1</span></div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-5 border border-dark-600"><h4 class="font-semibold text-neutral-100 mb-1">Diga o que quer, não como fazer</h4><p class="text-neutral-300 text-sm">"Quero que, neste projeto, ele pense mais antes de responder." Não precisa saber o nome da chave.</p></div>
+        </div>
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center"><span class="text-blue-400 font-bold">2</span></div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-5 border border-dark-600"><h4 class="font-semibold text-neutral-100 mb-1">Pergunte onde vai</h4><p class="text-neutral-300 text-sm">Projeto (só aqui) ou usuário (todos os projetos)? Escolha de propósito.</p></div>
+        </div>
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center"><span class="text-blue-400 font-bold">3</span></div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-5 border border-dark-600"><h4 class="font-semibold text-neutral-100 mb-1">Peça para ver antes de gravar</h4><p class="text-neutral-300 text-sm">Ele mostra o arquivo e a linha nova. Você aprova.</p></div>
+        </div>
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center"><span class="text-blue-400 font-bold">4</span></div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-5 border border-dark-600"><h4 class="font-semibold text-neutral-100 mb-1">Teste numa conversa nova</h4><p class="text-neutral-300 text-sm">Configurações costumam valer a partir da próxima conversa. Abra uma e confira o seletor.</p></div>
+        </div>
+      </div>
+
+      <div class="bg-dark-800 rounded-xl border border-blue-500/30 overflow-hidden mb-6">
+        <div class="px-5 py-3 bg-blue-900/20 border-b border-blue-500/30"><span class="text-blue-400 font-semibold text-sm">💬 Copia e cola no Codex: ajustar sem editar à mão</span></div>
+        <div class="p-5">
+          <p class="text-neutral-300 text-sm mb-3"><strong class="text-blue-400">Objetivo:</strong> mudar uma preferência no lugar certo, vendo a mudança antes.</p>
+          <pre class="font-mono text-sm text-neutral-200 whitespace-pre-wrap bg-dark-900/60 rounded-lg p-4 border border-dark-600">Quero que o esforço padrão seja medium só neste projeto, sem mudar os outros. Consulte a sua documentação, me diga em que arquivo isso fica (no .codex do projeto ou no global) e me mostre a linha exata que vai escrever. Só grave depois que eu aprovar.</pre>
+        </div>
+        <div class="px-5 py-3 bg-dark-700/40 border-t border-dark-600 text-neutral-300 text-sm"><strong class="text-blue-400">Como verificar:</strong> abra uma conversa nova neste projeto e confira o esforço no seletor. Depois abra uma conversa em outro projeto: lá o esforço deve continuar como estava.</div>
+      </div>
+
+      <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-2 flex items-center"><span class="mr-2">💡</span> Para uma sessão só, nem precisa de arquivo</h3>
+        <p class="text-neutral-300 text-sm">Se a mudança é só para hoje, troque no seletor do app ou abra o terminal com <code>codex -c model_reasoning_effort="high"</code>. Quando fechar, volta ao padrão do <code>config.toml</code>.</p>
+      </div>
+      <div class="flex justify-start mt-6">
+        <button type="button" data-inema-read-toggle aria-pressed="false" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-500/20 border border-blue-500/30 text-blue-400 hover:bg-blue-500/30 transition-colors">
+          <span class="inema-read-icon" aria-hidden="true">○</span><span class="inema-read-label">Marcar como lido</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ===================== TOPICO 6 ===================== -->
+    <section id="topico-6" data-inema-topic="modulo-2-3#topico-6" class="mb-16">
+      <div class="flex flex-wrap items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">6</span>
+        <h2 class="text-2xl font-bold flex-1">Proteja o que não deve sair da máquina</h2>
+        <button type="button" data-inema-doubt-toggle aria-pressed="false" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-dark-700 border border-dark-600 text-neutral-300 hover:bg-dark-600 transition-colors text-sm"><span aria-hidden="true">?</span><span>Tenho dúvida</span></button>
+      </div>
+      <p data-inema-block="m2-3-t6-p1" class="text-neutral-300 mb-4 leading-relaxed">O Rui quis ajudar um amigo e pensou em mandar a pasta <code>~/.codex</code> inteira, "com a configuração pronta". Ainda bem que perguntou antes. Ali dentro está o login dele (<code>auth.json</code>), o histórico de conversas e as memórias sobre a loja.</p>
+      <p data-inema-block="m2-3-t6-p2" class="text-neutral-300 mb-6 leading-relaxed">Quem recebe essa pasta pode <strong class="text-blue-400">entrar na conta dele</strong> e ler o que ele conversou. A regra é simples: a pasta global não sai do seu computador. Para ajudar alguém, mande só as linhas do <code>config.toml</code> que interessam.</p>
+
+      <div class="rounded-2xl border border-blue-500/30 bg-dark-900/40 p-3 sm:p-4 mb-3 overflow-hidden">
+        <svg viewBox="0 0 800 250" class="w-full h-auto" role="img" aria-label="Um escudo azul cobre a pasta til barra ponto codex, com cadeado, login, histórico e memórias dentro. Uma seta tentando levar a pasta inteira para fora, para um envelope, é bloqueada por um X vermelho. Ao lado, uma seta verde permitida leva só duas linhas do config.toml num bilhete.">
+          <defs>
+            <pattern id="m23f-grid" width="32" height="32" patternUnits="userSpaceOnUse"><circle cx="1.3" cy="1.3" r="1.3" fill="#60a5fa" opacity="0.10"/></pattern>
+            <filter id="m23f-glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="2.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            <marker id="m23f-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#34d399"/></marker>
+          </defs>
+          <rect x="0" y="0" width="800" height="250" fill="url(#m23f-grid)"/>
+          <g filter="url(#m23f-glow)"><path d="M200,30 L320,55 L320,135 C 320,185 270,215 200,232 C 130,215 80,185 80,135 L80,55 Z" fill="#0f1b33" stroke="#60a5fa" stroke-width="2.5"/></g>
+          <text x="200" y="80" text-anchor="middle" fill="#bfdbfe" font-family="ui-monospace,monospace" font-weight="600" font-size="13">~/.codex</text>
+          <g font-family="Inter,sans-serif" font-size="11" text-anchor="middle">
+            <text x="200" y="110" fill="#fca5a5">🔒 login</text>
+            <text x="200" y="132" fill="#bfdbfe">🗂️ histórico</text>
+            <text x="200" y="154" fill="#bfdbfe">🧠 memórias</text>
+            <text x="200" y="176" fill="#bfdbfe">⚙️ config.toml</text>
+          </g>
+          <path d="M325,90 C 400,70 450,70 520,80" stroke="#f87171" stroke-width="2.5" fill="none" stroke-dasharray="6 5"/>
+          <line x1="410" y1="62" x2="440" y2="92" stroke="#f87171" stroke-width="4"/><line x1="440" y1="62" x2="410" y2="92" stroke="#f87171" stroke-width="4"/>
+          <rect x="525" y="50" width="230" height="60" rx="10" fill="#2a0f0f" stroke="#f87171" stroke-width="2"/>
+          <text x="640" y="76" text-anchor="middle" fill="#fca5a5" font-family="Inter,sans-serif" font-size="12">✉️ pasta inteira</text>
+          <text x="640" y="96" text-anchor="middle" fill="#fca5a5" font-family="Inter,sans-serif" font-size="10">expõe login e conversas</text>
+          <path class="wf-flow" d="M325,175 C 400,195 450,195 518,185" stroke="#34d399" stroke-width="2.5" fill="none" marker-end="url(#m23f-arrow)"/>
+          <rect x="525" y="150" width="230" height="70" rx="10" fill="#0e2018" stroke="#34d399" stroke-width="2"/>
+          <text x="640" y="172" text-anchor="middle" fill="#a7f3d0" font-family="Inter,sans-serif" font-size="12">📝 só as linhas úteis</text>
+          <text x="640" y="192" text-anchor="middle" fill="#6ee7b7" font-family="ui-monospace,monospace" font-size="10">model = "gpt-6-astra"</text>
+          <text x="640" y="208" text-anchor="middle" fill="#6ee7b7" font-family="ui-monospace,monospace" font-size="10">model_reasoning_effort = …</text>
+        </svg>
+      </div>
+      <p class="text-sm text-neutral-400 mb-6"><strong class="text-neutral-300">Como ler o desenho:</strong> o escudo é o seu computador protegendo a pasta global. A seta vermelha de cima (a pasta inteira saindo) está bloqueada. A seta verde de baixo é o jeito certo: copiar só as linhas de configuração, sem nada pessoal.</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="bg-red-900/20 rounded-xl p-6 border border-red-500/30">
+          <h3 class="font-semibold text-red-400 mb-3">✗ Nunca</h3>
+          <ul class="space-y-2 text-neutral-300 text-sm">
+            <li>✗ Enviar a pasta <code>~/.codex</code> para alguém</li>
+            <li>✗ Colar o conteúdo do <code>auth.json</code> num chat ou e-mail</li>
+            <li>✗ Pôr a pasta global numa pasta compartilhada da nuvem</li>
+            <li>✗ Escrever senha ou chave dentro do <code>config.toml</code> ou do AGENTS.md</li>
+          </ul>
+        </div>
+        <div class="bg-dark-800 rounded-xl p-6 border border-blue-500/30">
+          <h3 class="font-semibold text-blue-400 mb-3">✓ Sempre</h3>
+          <ul class="space-y-2 text-neutral-300 text-sm">
+            <li>✓ Compartilhar só linhas de preferência, copiadas à mão</li>
+            <li>✓ Revisar o <code>.codex</code> do projeto antes de mandar a pasta do projeto</li>
+            <li>✓ Se o login vazar, troque a senha da conta e entre de novo com <code>codex login</code></li>
+            <li>✓ Perguntar ao Codex "tem algo pessoal nesta pasta?" antes de enviar</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6" data-inema-check="modulo-2-3#q1">
+        <p class="font-medium mb-4">Teste rápido (opcional): o Rui quer passar a configuração dele para um amigo. O que ele deve enviar?</p>
+        <div class="space-y-2">
+          <button type="button" data-inema-check-option="0" class="block w-full text-left px-4 py-2 rounded-lg bg-dark-700 border border-dark-600 hover:bg-dark-600 transition-colors text-sm">A pasta ~/.codex inteira, porque assim vai tudo pronto.</button>
+          <button type="button" data-inema-check-option="1" class="block w-full text-left px-4 py-2 rounded-lg bg-dark-700 border border-dark-600 hover:bg-dark-600 transition-colors text-sm">Só as linhas de preferência do config.toml, como o modelo e o esforço.</button>
+          <button type="button" data-inema-check-option="2" class="block w-full text-left px-4 py-2 rounded-lg bg-dark-700 border border-dark-600 hover:bg-dark-600 transition-colors text-sm">O arquivo auth.json, que é o mais importante.</button>
+        </div>
+        <div data-inema-check-feedback class="mt-4 text-sm" role="status" aria-live="polite"></div>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center"><div class="text-2xl mb-1">👁️</div><div class="text-sm font-semibold text-blue-400">Oculta</div><p class="text-xs text-neutral-400 mt-1">o ponto esconde</p></div>
+        <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center"><div class="text-2xl mb-1">🏠</div><div class="text-sm font-semibold text-blue-400">Projeto × usuário</div><p class="text-xs text-neutral-400 mt-1">sala × prédio</p></div>
+        <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center"><div class="text-2xl mb-1">💬</div><div class="text-sm font-semibold text-blue-400">Peça ao Codex</div><p class="text-xs text-neutral-400 mt-1">ele edita por você</p></div>
+        <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center"><div class="text-2xl mb-1">🔒</div><div class="text-sm font-semibold text-blue-400">Global fica</div><p class="text-xs text-neutral-400 mt-1">não sai da máquina</p></div>
+      </div>
+      <div class="flex justify-start mt-6">
+        <button type="button" data-inema-read-toggle aria-pressed="false" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-500/20 border border-blue-500/30 text-blue-400 hover:bg-blue-500/30 transition-colors">
+          <span class="inema-read-icon" aria-hidden="true">○</span><span class="inema-read-label">Marcar como lido</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ===================== RESUMO ===================== -->
+    <section class="mb-12">
+      <div class="bg-gradient-to-br from-blue-900/40 via-dark-800 to-dark-800 rounded-xl border border-blue-500/30 p-8">
+        <h2 class="text-2xl font-bold mb-6 flex items-center"><span class="mr-3">🎓</span> Resumo do módulo</h2>
+        <div class="space-y-4 mb-8">
+          <div class="flex items-start space-x-3"><span class="text-blue-400 mt-1">✓</span><div><strong class="text-neutral-100">.codex é uma pasta oculta</strong><span class="text-neutral-400"> — mostre os itens ocultos para ver.</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-blue-400 mt-1">✓</span><div><strong class="text-neutral-100">Projeto vale ali, usuário vale em tudo</strong><span class="text-neutral-400"> — a ideia volta nas skills.</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-blue-400 mt-1">✓</span><div><strong class="text-neutral-100">config.toml é chave = valor</strong><span class="text-neutral-400"> — modelo e esforço em duas linhas.</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-blue-400 mt-1">✓</span><div><strong class="text-neutral-100">Peça ao Codex para ajustar</strong><span class="text-neutral-400"> — e pergunte "projeto ou global?".</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-blue-400 mt-1">✓</span><div><strong class="text-neutral-100"><code>~/.codex</code> tem seu login</strong><span class="text-neutral-400"> — não sai da sua máquina.</span></div></div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-4 mb-8">
+          <h3 class="font-semibold text-blue-400 mb-2">Próxima trilha:</h3>
+          <p class="text-neutral-300">Trilha 3 — Controle e personalização (começa no 3.1 — Modelos: força e custo)</p>
+        </div>
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a href="index.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">← Voltar para a trilha</a>
+          <a href="../trilha3/index.html" class="flex-1 text-center px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-500 transition-colors">Trilha 3 →</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <aside class="hidden lg:block">
+    <nav data-inema-toc aria-label="Índice da página" class="sticky top-24">
+      <p class="text-sm text-neutral-400 mb-3"><span data-inema-section-counter>Seção 1 de 6</span></p>
+      <ol class="space-y-2 text-sm">
+        <li><a href="#topico-1" class="text-neutral-400 hover:text-blue-400">1. Achar a .codex</a></li>
+        <li><a href="#topico-2" class="text-neutral-400 hover:text-blue-400">2. Projeto × usuário</a></li>
+        <li><a href="#topico-3" class="text-neutral-400 hover:text-blue-400">3. config.toml</a></li>
+        <li><a href="#topico-4" class="text-neutral-400 hover:text-blue-400">4. Pasta global</a></li>
+        <li><a href="#topico-5" class="text-neutral-400 hover:text-blue-400">5. Pedir ajuste</a></li>
+        <li><a href="#topico-6" class="text-neutral-400 hover:text-blue-400">6. Proteger</a></li>
+      </ol>
+    </nav>
+  </aside>
+  </div>
+
+  <footer class="border-t border-dark-600 py-8 mt-16">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-neutral-500 text-sm">
+      <p>Codex: os 18 conceitos · 2026 | <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300">INEMA.CLUB</a> - <a href="https://inema.pro" target="_blank" class="text-amber-700 hover:text-amber-600 dark:text-slate-300 dark:hover:text-slate-200">PRO</a></p>
+      
+    </div>
+  </footer>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+    const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+    const _html = document.documentElement;
+    if (!_html.classList.contains('dark')) { themeToggleDarkIcon.classList.remove('hidden'); }
+    else { themeToggleLightIcon.classList.remove('hidden'); }
+    themeToggle.addEventListener('click', () => {
+      if (window.INEMA && INEMA.setPref) { INEMA.setPref('theme', _html.classList.contains('dark') ? 'claro' : 'inema-dark'); }
+      else { _html.classList.toggle('dark'); }
+      themeToggleDarkIcon.classList.toggle('hidden', _html.classList.contains('dark'));
+      themeToggleLightIcon.classList.toggle('hidden', !_html.classList.contains('dark'));
+      try { localStorage.setItem('theme', _html.classList.contains('dark') ? 'dark' : 'light'); } catch (e) {}
+    });
+    function toggleTopic(button) {
+      const item = button.closest('.topic-item');
+      const exp = item.querySelector('.topic-explanation');
+      const card = button.closest('[id^="modulo-"]') || document;
+      card.querySelectorAll('.topic-explanation.active').forEach(e => { if (e !== exp) { e.classList.remove('active'); const b = e.parentElement.querySelector('[aria-controls]'); if (b) b.setAttribute('aria-expanded', 'false'); } });
+      exp.classList.toggle('active');
+      button.setAttribute('aria-expanded', exp.classList.contains('active') ? 'true' : 'false');
+    }
+    let _lastModalTrigger = null;
+    function openModal(id){ const m=document.getElementById(id); if(m){ _lastModalTrigger=document.activeElement; m.classList.remove('hidden'); document.body.style.overflow='hidden'; const c=m.querySelector('button'); if(c) c.focus(); } }
+    function closeModal(){ document.querySelectorAll('.modal').forEach(m=>m.classList.add('hidden')); document.body.style.overflow='auto'; if(_lastModalTrigger){ _lastModalTrigger.focus(); _lastModalTrigger=null; } }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+  </script>
+  <script src="../../assets/learn.js"></script>
+  <script>
+    if (window.INEMA && typeof window.INEMA.init === 'function') { window.INEMA.init(); }
+  </script>
+  <script>
+    window.addEventListener('DOMContentLoaded', function () {
+      if (window.INEMA && INEMA.registerCheck) {
+
+        INEMA.registerCheck('modulo-2-3#q1', { answer: 1, explain: {
+          '0': 'Não. A pasta global tem o login, o histórico e as memórias do Rui. Quem recebe pode entrar na conta dele.',
+          '1': 'Isso. As linhas de preferência não têm nada pessoal e são exatamente o que o amigo precisa.',
+          '2': 'Não. O auth.json é o login: entregar esse arquivo é entregar a conta.'
+        } });
+      }
+    });
+  </script>
+</body>
+</html>

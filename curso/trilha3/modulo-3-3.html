@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="inema-course" content="cx18">
+  <title>Permissões: quanto ele faz sozinho | Codex: os 18 conceitos</title>
+  <meta name="description" content="Curso gratuito do INEMA.CLUB: os 18 conceitos que fazem o Codex trabalhar por você — projetos, regras, ciclo do agente, modelos, permissões, skills, plugins, navegador, subagentes e tarefas agendadas, do zero.">
+
+  <!-- ANTI-FOUC: bloqueante, ANTES do Tailwind -->
+  <script>
+  (function () {
+    try {
+      var html = document.documentElement;
+      var DEF = { theme: 'inema-dark', font: 'inter', fontScale: 100, lineWidth: 68, leading: 1.7, accent: 'emerald' };
+      function clone(o) { var r = {}; for (var x in o) r[x] = o[x]; return r; }
+      var p = clone(DEF);
+      try {
+        var raw = localStorage.getItem('inema.prefs');
+        if (raw) {
+          var parsed = JSON.parse(raw);
+          if (parsed && typeof parsed === 'object') { for (var k in DEF) if (parsed[k] != null) p[k] = parsed[k]; }
+        } else {
+          var legacy = localStorage.getItem('theme');
+          if (legacy === 'light') p.theme = 'claro'; else if (legacy === 'dark') p.theme = 'inema-dark';
+        }
+      } catch (e) { p = clone(DEF); }
+      var THEMES = {
+        'inema-dark': { dark: true,  attr: null,        cs: 'dark'  },
+        'claro':      { dark: false, attr: null,        cs: 'light' },
+        'sepia':      { dark: false, attr: 'sepia',     cs: 'light' },
+        'foco':       { dark: null,  attr: 'foco',      cs: null    },
+        'contraste':  { dark: true,  attr: 'contraste', cs: 'dark'  }
+      };
+      var t = THEMES[p.theme] || THEMES['inema-dark'];
+      if (t.dark === true) html.classList.add('dark'); else if (t.dark === false) html.classList.remove('dark');
+      if (t.attr) html.setAttribute('data-theme', t.attr); else html.removeAttribute('data-theme');
+      html.style.colorScheme = (t.cs ? t.cs : (html.classList.contains('dark') ? 'dark' : 'light'));
+      html.setAttribute('data-font', p.font || 'inter');
+      html.setAttribute('data-accent', p.accent || 'emerald');
+      var s = html.style; var scale = (+p.fontScale || 100);
+      s.setProperty('--inema-font-scale', (scale / 100).toString());
+      s.setProperty('font-size', scale + '%');
+      s.setProperty('--measure', (+p.lineWidth || 68) + 'ch');
+      s.setProperty('--lh-body', (+p.leading || 1.7).toString());
+      var fam = p.font === 'system' ? 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif'
+        : (p.font === 'leitura' ? '"Atkinson Hyperlegible", "Inter", system-ui, sans-serif' : '"Inter", system-ui, sans-serif');
+      s.setProperty('--font-body', fam);
+      var ACC = { emerald: [152,76,45], blue: [217,91,60], purple: [258,90,66], amber: [38,92,50], teal: [174,72,41], rose: [350,89,60] };
+      var a = ACC[p.accent] || ACC.emerald;
+      s.setProperty('--accent-h', a[0]+''); s.setProperty('--accent-s', a[1]+'%'); s.setProperty('--accent-l', a[2]+'%');
+      s.setProperty('--accent', 'hsl('+a[0]+' '+a[1]+'% '+a[2]+'%)');
+    } catch (err) { try { document.documentElement.classList.add('dark'); document.documentElement.style.colorScheme = 'dark'; } catch(e){} }
+  })();
+  </script>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { darkMode: 'class', theme: { extend: { colors: {
+      primary: '#FACC15', dark: { 900: '#111827', 800: '#1f2937', 700: '#374151', 600: '#4b5563' } } } } }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/learn.css">
+
+  <!-- Manifesto do curso (OBRIGATORIO em TODA pagina, identico) -->
+  <script type="application/json" data-inema-manifest>
+  {"course":"cx18","tracks":[{"n":"1","title":"Fundamentos","modules":[{"id":"1-1","title":"Projetos: a pasta que lembra de você","topics":6,"href":"curso/trilha1/modulo-1-1.html"},{"id":"1-2","title":"AGENTS.md: as regras da casa","topics":6,"href":"curso/trilha1/modulo-1-2.html"},{"id":"1-3","title":"O ciclo do agente","topics":6,"href":"curso/trilha1/modulo-1-3.html"},{"id":"1-4","title":"/goal: um objetivo até o fim","topics":6,"href":"curso/trilha1/modulo-1-4.html"}]},{"n":"2","title":"Ambientes","modules":[{"id":"2-1","title":"Local, nuvem e celular","topics":6,"href":"curso/trilha2/modulo-2-1.html"},{"id":"2-2","title":"Worktrees: cópias para testar sem medo","topics":6,"href":"curso/trilha2/modulo-2-2.html"},{"id":"2-3","title":"A pasta .codex: configurações","topics":6,"href":"curso/trilha2/modulo-2-3.html"}]},{"n":"3","title":"Controle","modules":[{"id":"3-1","title":"Modelos: força e custo","topics":6,"href":"curso/trilha3/modulo-3-1.html"},{"id":"3-2","title":"Esforço e modo rápido","topics":6,"href":"curso/trilha3/modulo-3-2.html"},{"id":"3-3","title":"Permissões: quanto ele faz sozinho","topics":6,"href":"curso/trilha3/modulo-3-3.html"},{"id":"3-4","title":"Skills: receitas reutilizáveis","topics":6,"href":"curso/trilha3/modulo-3-4.html"},{"id":"3-5","title":"A pasta .agents e a vinda do Claude Code","topics":6,"href":"curso/trilha3/modulo-3-5.html"},{"id":"3-6","title":"Plugins: conecte seus aplicativos","topics":6,"href":"curso/trilha3/modulo-3-6.html"}]},{"n":"4","title":"Ferramentas e escala","modules":[{"id":"4-1","title":"Navegador: o Codex usa sites por você","topics":6,"href":"curso/trilha4/modulo-4-1.html"},{"id":"4-2","title":"Sites: do localhost para o mundo","topics":6,"href":"curso/trilha4/modulo-4-2.html"},{"id":"4-3","title":"Subagentes: delegue em paralelo","topics":6,"href":"curso/trilha4/modulo-4-3.html"},{"id":"4-4","title":"Tarefas agendadas: o Codex no piloto","topics":6,"href":"curso/trilha4/modulo-4-4.html"},{"id":"4-5","title":"Modo de voz: tudo junto","topics":6,"href":"curso/trilha4/modulo-4-5.html"}]}]}
+  </script>
+
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .dark body { background-color: #111827; }
+
+    /* Light mode - base */
+    html:not(.dark) body { background-color: #f8fafc; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-600 { background-color: #e5e7eb; }
+    html:not(.dark) .text-neutral-100 { color: #111827; }
+    html:not(.dark) .text-neutral-200 { color: #1f2937; }
+    html:not(.dark) .text-neutral-300 { color: #4b5563; }
+    html:not(.dark) .text-neutral-400 { color: #6b7280; }
+    html:not(.dark) .text-neutral-500 { color: #6b7280; }
+    html:not(.dark) .text-white { color: #111827; }
+    html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+    html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+
+    /* Light mode - acentos das 5 trilhas (emerald, blue, purple, amber, teal) */
+    html:not(.dark) .text-emerald-400 { color: #059669; }
+    html:not(.dark) .bg-emerald-500\/20 { background-color: rgba(5, 150, 105, 0.12); }
+    html:not(.dark) .bg-emerald-500\/10 { background-color: rgba(5, 150, 105, 0.08); }
+    html:not(.dark) .bg-emerald-900\/20 { background-color: rgba(5, 150, 105, 0.07); }
+    html:not(.dark) .border-emerald-500\/30 { border-color: rgba(5, 150, 105, 0.25); }
+    html:not(.dark) .hover\:bg-emerald-500\/30:hover { background-color: rgba(5, 150, 105, 0.18); }
+    html:not(.dark) .hover\:text-emerald-400:hover { color: #059669; }
+    html:not(.dark) .hover\:bg-emerald-500\/10:hover { background-color: rgba(5, 150, 105, 0.08); }
+    html:not(.dark) .group:hover .group-hover\:text-emerald-400 { color: #059669; }
+    html:not(.dark) .text-blue-400 { color: #2563eb; }
+    html:not(.dark) .bg-blue-500\/20 { background-color: rgba(37, 99, 235, 0.12); }
+    html:not(.dark) .bg-blue-500\/10 { background-color: rgba(37, 99, 235, 0.08); }
+    html:not(.dark) .bg-blue-900\/20 { background-color: rgba(37, 99, 235, 0.07); }
+    html:not(.dark) .border-blue-500\/30 { border-color: rgba(37, 99, 235, 0.25); }
+    html:not(.dark) .hover\:bg-blue-500\/30:hover { background-color: rgba(37, 99, 235, 0.18); }
+    html:not(.dark) .hover\:text-blue-400:hover { color: #2563eb; }
+    html:not(.dark) .hover\:bg-blue-500\/10:hover { background-color: rgba(37, 99, 235, 0.08); }
+    html:not(.dark) .group:hover .group-hover\:text-blue-400 { color: #2563eb; }
+    html:not(.dark) .text-purple-400 { color: #7c3aed; }
+    html:not(.dark) .bg-purple-500\/20 { background-color: rgba(124, 58, 237, 0.12); }
+    html:not(.dark) .bg-purple-500\/10 { background-color: rgba(124, 58, 237, 0.08); }
+    html:not(.dark) .bg-purple-900\/20 { background-color: rgba(124, 58, 237, 0.07); }
+    html:not(.dark) .border-purple-500\/30 { border-color: rgba(124, 58, 237, 0.25); }
+    html:not(.dark) .hover\:bg-purple-500\/30:hover { background-color: rgba(124, 58, 237, 0.18); }
+    html:not(.dark) .hover\:text-purple-400:hover { color: #7c3aed; }
+    html:not(.dark) .hover\:bg-purple-500\/10:hover { background-color: rgba(124, 58, 237, 0.08); }
+    html:not(.dark) .group:hover .group-hover\:text-purple-400 { color: #7c3aed; }
+    html:not(.dark) .text-amber-400 { color: #92400e; }
+    html:not(.dark) .bg-amber-500\/20 { background-color: rgba(217, 119, 6, 0.12); }
+    html:not(.dark) .bg-amber-500\/10 { background-color: rgba(217, 119, 6, 0.08); }
+    html:not(.dark) .bg-amber-900\/20 { background-color: rgba(217, 119, 6, 0.07); }
+    html:not(.dark) .border-amber-500\/30 { border-color: rgba(217, 119, 6, 0.25); }
+    html:not(.dark) .hover\:bg-amber-500\/30:hover { background-color: rgba(217, 119, 6, 0.18); }
+    html:not(.dark) .hover\:text-amber-400:hover { color: #92400e; }
+    html:not(.dark) .hover\:bg-amber-500\/10:hover { background-color: rgba(217, 119, 6, 0.08); }
+    html:not(.dark) .group:hover .group-hover\:text-amber-400 { color: #92400e; }
+    html:not(.dark) .text-teal-400 { color: #0d9488; }
+    html:not(.dark) .bg-teal-500\/20 { background-color: rgba(13, 148, 136, 0.12); }
+    html:not(.dark) .bg-teal-500\/10 { background-color: rgba(13, 148, 136, 0.08); }
+    html:not(.dark) .bg-teal-900\/20 { background-color: rgba(13, 148, 136, 0.07); }
+    html:not(.dark) .border-teal-500\/30 { border-color: rgba(13, 148, 136, 0.25); }
+    html:not(.dark) .hover\:bg-teal-500\/30:hover { background-color: rgba(13, 148, 136, 0.18); }
+    html:not(.dark) .hover\:text-teal-400:hover { color: #0d9488; }
+    html:not(.dark) .hover\:bg-teal-500\/10:hover { background-color: rgba(13, 148, 136, 0.08); }
+    html:not(.dark) .group:hover .group-hover\:text-teal-400 { color: #0d9488; }
+
+    /* Light mode - remove gradientes e cores especiais */
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+    html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.25); }
+    html:not(.dark) .border-primary\/30 { border-color: rgba(161, 98, 7, 0.22); }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-yellow-400 { color: #a16207; }
+    html:not(.dark) .text-red-400 { color: #b91c1c; }
+    html:not(.dark) .bg-red-900\/20 { background-color: rgba(185, 28, 28, 0.06); }
+    html:not(.dark) .border-red-500\/30 { border-color: rgba(185, 28, 28, 0.25); }
+    html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+    html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+
+    /* Light mode - nav */
+    html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+
+    /* Dark mode - bordas suaves */
+    .dark .border-dark-600 { border-color: #374151; }
+    .dark .divide-dark-600 > :not([hidden]) ~ :not([hidden]) { border-color: #374151; }
+
+    /* Alvos de ancora abaixo do nav sticky */
+    [data-inema-topic], [id^="modulo-"], [id^="topico-"] { scroll-margin-top: 72px; }
+
+    /* SVG light mode + animacao */
+    html:not(.dark) svg[role="img"] { filter: saturate(0.82) brightness(0.96); }
+    @keyframes wf-pulse { 0%,100% { opacity:.55 } 50% { opacity:1 } }
+    @keyframes wf-dash { to { stroke-dashoffset: -24; } }
+    @media (prefers-reduced-motion: no-preference) {
+      .wf-a { animation: wf-pulse 2.6s ease-in-out infinite; }
+      .wf-a:nth-child(2){animation-delay:.25s} .wf-a:nth-child(3){animation-delay:.5s}
+      .wf-a:nth-child(4){animation-delay:.75s} .wf-a:nth-child(5){animation-delay:1s}
+      .wf-flow { stroke-dasharray: 6 6; animation: wf-dash 1.2s linear infinite; }
+    }
+
+    /* Topicos expansiveis */
+    .topic-explanation { display: none; }
+    .topic-explanation.active { display: block; }
+    /* Popover de aparência ancorado à direita e fora do layout quando fechado (sem transbordo) */
+    .inema-appearance-pop { right: 0; }
+    main code, main pre { overflow-wrap: anywhere; }
+    main .flex-1 { min-width: 0; }
+    .inema-appearance-pop:not([data-open="true"]) { visibility: hidden; display: none; }
+  </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+  <a href="#conteudo" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[60] focus:px-4 focus:py-2 focus:bg-primary focus:text-black focus:rounded-lg">Pular para o conteúdo</a>
+
+  <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-14">
+        <div class="flex items-center space-x-1.5 sm:space-x-3">
+          <a href="../../index.html" class="flex items-center space-x-2 text-yellow-400 hover:text-yellow-300">
+            <span class="text-2xl">🧭</span>
+            <span class="font-bold text-lg hidden lg:inline">Codex 18</span>
+          </a>
+          <span class="text-neutral-600 hidden sm:inline">|</span>
+          <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium">INEMA.CLUB</a>
+          <span class="text-neutral-600">-</span>
+          <a href="https://inema.pro" target="_blank" class="text-amber-700 hover:text-amber-600 dark:text-slate-300 dark:hover:text-slate-200 text-sm font-medium">PRO</a>
+        </div>
+        <div class="flex items-center sm:space-x-1">
+          <a href="../trilha1/index.html" class="px-1.5 sm:px-2.5 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors">
+            <span class="xl:hidden">T1</span><span class="hidden xl:inline">Fundamentos</span>
+          </a>
+          <a href="../trilha2/index.html" class="px-1.5 sm:px-2.5 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors">
+            <span class="xl:hidden">T2</span><span class="hidden xl:inline">Ambientes</span>
+          </a>
+          <a href="index.html" class="px-1.5 sm:px-2.5 py-1.5 rounded-lg text-sm font-semibold text-purple-400 bg-purple-500/10">
+            <span class="xl:hidden">T3</span><span class="hidden xl:inline">Controle</span>
+          </a>
+          <a href="../trilha4/index.html" class="px-1.5 sm:px-2.5 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-amber-400 hover:bg-amber-500/10 transition-colors">
+            <span class="xl:hidden">T4</span><span class="hidden xl:inline">Ferramentas e escala</span>
+          </a>
+          <button type="button" data-inema-journey-open class="hidden sm:inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-sm text-neutral-300 hover:text-neutral-100 transition-colors" title="Minha jornada">
+            <span aria-hidden="true">◷</span><span class="hidden md:inline">Jornada</span>
+            <span class="inema-journey-badge" data-inema-journey-badge data-count="0"></span>
+          </button>
+          <div class="relative">
+            <button type="button" data-inema-appearance-toggle="#aparencia" aria-expanded="false" aria-controls="aparencia" class="p-2 rounded-lg text-neutral-300 hover:text-neutral-100 transition-colors" title="Aparência">
+              <span aria-hidden="true" class="text-sm font-semibold">Aa</span><span class="sr-only">Aparência</span>
+            </button>
+            <div id="aparencia" data-inema-appearance class="inema-appearance-pop">
+              <div class="inema-segment" aria-label="Tema">
+                <button type="button" data-inema-set-theme="inema-dark">Escuro</button>
+                <button type="button" data-inema-set-theme="claro">Claro</button>
+                <button type="button" data-inema-set-theme="sepia">Sépia</button>
+                <button type="button" data-inema-set-theme="foco">Foco</button>
+                <button type="button" data-inema-set-theme="contraste">Alto contraste</button>
+              </div>
+              <div class="inema-segment" aria-label="Fonte">
+                <button type="button" data-inema-set-font="inter">Inter</button>
+                <button type="button" data-inema-set-font="system">Sistema</button>
+                <button type="button" data-inema-set-font="leitura">Leitura</button>
+              </div>
+              <div class="inema-segment" aria-label="Tamanho do texto">
+                <button type="button" data-inema-set-fontscale="100">A</button>
+                <button type="button" data-inema-set-fontscale="112">A+</button>
+                <button type="button" data-inema-set-fontscale="125">A++</button>
+              </div>
+              <div class="inema-segment" aria-label="Largura da linha">
+                <button type="button" data-inema-set-linewidth="60">Estreito</button>
+                <button type="button" data-inema-set-linewidth="68">Médio</button>
+                <button type="button" data-inema-set-linewidth="75">Largo</button>
+              </div>
+              <div class="inema-segment" aria-label="Entrelinha">
+                <button type="button" data-inema-set-leading="1.45">Compacto</button>
+                <button type="button" data-inema-set-leading="1.7">Confortável</button>
+              </div>
+            </div>
+          </div>
+          <button id="theme-toggle" class="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors" aria-label="Alternar tema claro/escuro">
+            <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+            <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <nav aria-label="Trilha de navegação" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+    <div class="flex items-center space-x-2 text-sm text-neutral-400">
+      <a href="../../index.html" class="hover:text-purple-400">Início</a><span>/</span>
+      <a href="index.html" class="hover:text-purple-400">Trilha 3</a><span>/</span>
+      <span class="text-purple-400">Módulo 3.3</span>
+    </div>
+  </nav>
+
+  <header class="bg-gradient-to-br from-purple-900/30 via-dark-800 to-dark-800 py-12 border-b border-dark-600" data-inema-module="3-3" data-inema-track="3">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <span class="inline-block px-3 py-1 bg-purple-500/20 text-purple-400 text-xs font-semibold rounded-full mb-4">MÓDULO 3.3 · CONCEITO 10 DE 18</span>
+      <h1 class="text-3xl sm:text-4xl font-bold mb-4">🚦 Permissões: quanto ele faz sozinho</h1>
+      <p class="text-lg text-neutral-400 max-w-3xl">O Codex mexe de verdade nos seus arquivos e pode usar a internet. As permissões decidem quando ele age sozinho e quando para e pede a sua licença. É o freio de mão do agente.</p>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 max-w-2xl">
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-purple-400">6</div><div class="text-xs text-neutral-400">Tópicos</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-purple-400">~30</div><div class="text-xs text-neutral-400">Minutos</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-purple-400">Base</div><div class="text-xs text-neutral-400">Nível</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-purple-400">Segurança</div><div class="text-xs text-neutral-400">Tipo</div></div>
+      </div>
+      <div data-inema-meter="modulo:3-3" class="mt-6 max-w-2xl" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-label="Progresso do módulo 3.3">
+        <div class="flex justify-between text-xs text-neutral-400 mb-1"><span data-inema-meter-frac>0 de 6</span><span data-inema-meter-pct>0%</span></div>
+        <div class="inema-bar"><div class="inema-bar__fill" data-inema-meter-fill></div></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-10">
+    <figure class="rounded-2xl overflow-hidden border border-purple-500/30">
+      <img src="assets/img/modulo-3-3.png" alt="Ilustração: um robô assistente diante de um semáforo luminoso, com uma cancela entre ele e as pastas do computador. A cena ensina que você decide quando o agente para e pede licença e quando segue sozinho." class="w-full h-auto" loading="lazy" width="1536" height="640">
+    </figure>
+  </div>
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:grid lg:grid-cols-[1fr_220px] lg:gap-10">
+  <main id="conteudo" class="min-w-0" data-inema-module="3-3" data-inema-track="3">
+
+    <!-- ===================== TOPICO 1 ===================== -->
+    <section id="topico-1" data-inema-topic="modulo-3-3#topico-1" class="mb-16">
+      <div class="flex flex-wrap items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl">1</span>
+        <h2 class="text-2xl font-bold flex-1">Entenda por que o agente pede licença</h2>
+        <button type="button" data-inema-doubt-toggle aria-pressed="false" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-dark-700 border border-dark-600 text-neutral-300 hover:bg-dark-600 transition-colors text-sm"><span aria-hidden="true">?</span><span>Tenho dúvida</span></button>
+      </div>
+      <p data-inema-block="m3-3-t1-p1" class="text-neutral-300 mb-4 leading-relaxed">No chat do navegador, o pior que pode acontecer é uma resposta errada. No Codex é diferente: ele apaga, renomeia, cria arquivos, roda comandos e acessa a internet. Um engano vira um arquivo perdido, não só um texto ruim.</p>
+      <p data-inema-block="m3-3-t1-p2" class="text-neutral-300 mb-6 leading-relaxed">Por isso ele trabalha dentro de uma <strong class="text-purple-400">caixa de areia</strong> e, quando precisa sair dela, pede licença. O Rui aprendeu isso quando pediu "limpe a pasta do site" e o Codex parou para perguntar antes de apagar 40 fotos de produtos.</p>
+
+      <div class="bg-purple-900/20 rounded-xl border border-purple-500/30 p-6 mb-6">
+        <h3 class="text-base font-semibold text-purple-400 mb-3 flex items-center"><span class="mr-2">🆕</span> Novo aqui? Três palavras deste módulo</h3>
+        <ul class="space-y-2 text-neutral-300 text-sm">
+          <li><strong>Sandbox (caixa de areia)</strong> — área isolada onde os comandos do agente rodam sem acesso ao resto da máquina. O que acontece lá dentro não escapa.</li>
+          <li><strong>Aprovação</strong> — o momento em que o Codex mostra o que vai fazer e espera você dizer sim ou não.</li>
+          <li><strong>Permissão</strong> — a regra que diz quais ações precisam de aprovação e quais ele faz direto.</li>
+        </ul>
+      </div>
+
+      <div class="rounded-2xl border border-purple-500/30 bg-dark-900/40 p-3 sm:p-4 mb-3 overflow-hidden">
+        <svg viewBox="0 0 800 250" class="w-full h-auto" role="img" aria-label="O agente trabalha dentro de uma caixa de areia que contém a pasta loja-rui, onde edita livremente. Fora da caixa ficam a internet, as outras pastas do computador e as ações de apagar. Na saída da caixa há uma cancela com um balão perguntando: posso?">
+          <defs>
+            <pattern id="m33a-grid" width="32" height="32" patternUnits="userSpaceOnUse"><circle cx="1.3" cy="1.3" r="1.3" fill="#c084fc" opacity="0.10"/></pattern>
+            <filter id="m33a-glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            <marker id="m33a-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#38bdf8"/></marker>
+          </defs>
+          <rect x="0" y="0" width="800" height="250" fill="url(#m33a-grid)"/>
+          <g filter="url(#m33a-glow)"><rect x="40" y="30" width="360" height="190" rx="18" fill="#1e1233" stroke="#c084fc" stroke-width="2.5" stroke-dasharray="10 5"/></g>
+          <text x="220" y="56" text-anchor="middle" fill="#e9d5ff" font-family="Inter,sans-serif" font-weight="600" font-size="13">caixa de areia</text>
+          <g font-family="Inter,sans-serif" font-size="12" text-anchor="middle">
+            <circle cx="120" cy="130" r="34" fill="#0b1f2e" stroke="#38bdf8" stroke-width="2"/><text x="120" y="138" font-size="24">🤖</text>
+            <rect x="200" y="95" width="170" height="70" rx="12" fill="#111827" stroke="#c084fc"/><text x="285" y="125" fill="#e9d5ff">📁 loja-rui</text><text x="285" y="146" fill="#d8b4fe" font-size="11">lê e edita à vontade</text>
+          </g>
+          <line x1="156" y1="130" x2="196" y2="130" stroke="#38bdf8" stroke-width="2" marker-end="url(#m33a-arrow)"/>
+          <rect x="420" y="105" width="14" height="50" rx="3" fill="#fbbf24"/><line x1="434" y1="112" x2="500" y2="112" stroke="#fbbf24" stroke-width="5"/>
+          <rect x="430" y="60" width="90" height="32" rx="14" fill="#0b1f2e" stroke="#38bdf8"/><text x="475" y="81" text-anchor="middle" fill="#bae6fd" font-family="Inter,sans-serif" font-size="12">posso?</text>
+          <g font-family="Inter,sans-serif" font-size="12">
+            <rect x="560" y="40" width="200" height="40" rx="10" fill="#111827" stroke="#9ca3af"/><text x="580" y="65" fill="#e5e7eb">🌐 internet</text>
+            <rect x="560" y="105" width="200" height="40" rx="10" fill="#111827" stroke="#9ca3af"/><text x="580" y="130" fill="#e5e7eb">📂 outras pastas</text>
+            <rect x="560" y="170" width="200" height="40" rx="10" fill="#2a0f0f" stroke="#f87171"/><text x="580" y="195" fill="#fca5a5">🗑️ apagar arquivos</text>
+          </g>
+          <g stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="4 4" fill="none"><path d="M505,130 L555,60"/><path d="M505,130 L555,125"/><path d="M505,130 L555,190"/></g>
+        </svg>
+      </div>
+      <p class="text-sm text-neutral-400 mb-6"><strong class="text-neutral-300">Como ler o desenho:</strong> a moldura tracejada é a caixa de areia. Dentro dela, o agente trabalha na pasta do projeto sem perguntar. Para chegar a qualquer coisa à direita, ele passa pela cancela amarela, que é onde a permissão decide se ele pergunta ou segue.</p>
+
+      <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-2 flex items-center"><span class="mr-2">💡</span> Pedir licença não é defeito</h3>
+        <p class="text-neutral-300 text-sm">Quem começa costuma achar as perguntas chatas. Elas são o que deixa você usar um agente poderoso sem medo. A meta não é eliminar as perguntas, e sim ajustar para que ele pergunte só o que importa.</p>
+      </div>
+      <div class="flex justify-start mt-6">
+        <button type="button" data-inema-read-toggle aria-pressed="false" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-purple-500/20 border border-purple-500/30 text-purple-400 hover:bg-purple-500/30 transition-colors">
+          <span class="inema-read-icon" aria-hidden="true">○</span><span class="inema-read-label">Marcar como lido</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ===================== TOPICO 2 ===================== -->
+    <section id="topico-2" data-inema-topic="modulo-3-3#topico-2" class="mb-16">
+      <div class="flex flex-wrap items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl">2</span>
+        <h2 class="text-2xl font-bold flex-1">Conheça os três modos de permissão</h2>
+        <button type="button" data-inema-doubt-toggle aria-pressed="false" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-dark-700 border border-dark-600 text-neutral-300 hover:bg-dark-600 transition-colors text-sm"><span aria-hidden="true">?</span><span>Tenho dúvida</span></button>
+      </div>
+      <p data-inema-block="m3-3-t2-p1" class="text-neutral-300 mb-4 leading-relaxed">No aplicativo, o seletor de permissão fica embaixo da caixa de mensagem, ao lado de modelo e esforço. O nome do botão pode mudar entre versões, mas hoje são três modos.</p>
+      <p data-inema-block="m3-3-t2-p2" class="text-neutral-300 mb-6 leading-relaxed"><strong class="text-purple-400">Pedir aprovação</strong> pergunta antes de editar fora da pasta e antes de usar a internet. <strong class="text-purple-400">Aprovar por mim</strong> só pergunta quando a ação parece arriscada, como apagar ou fazer chamadas externas. <strong class="text-purple-400">Acesso total</strong> não pergunta nada.</p>
+
+      <div class="rounded-2xl border border-purple-500/30 bg-dark-900/40 p-3 sm:p-4 mb-3 overflow-hidden">
+        <svg viewBox="0 0 800 260" class="w-full h-auto" role="img" aria-label="Semáforo deitado com três luzes. Primeira luz, roxa: Pedir aprovação, muitas perguntas, ideal para aprender. Segunda luz, azul: Aprovar por mim, pergunta só no que é arriscado. Terceira luz, laranja: Acesso total, nenhuma pergunta, sem freio. Uma régua embaixo vai de mais controle seu até mais autonomia dele.">
+          <defs>
+            <pattern id="m33b-grid" width="32" height="32" patternUnits="userSpaceOnUse"><circle cx="1.3" cy="1.3" r="1.3" fill="#c084fc" opacity="0.10"/></pattern>
+            <filter id="m33b-glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            <marker id="m33b-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9ca3af"/></marker>
+          </defs>
+          <rect x="0" y="0" width="800" height="260" fill="url(#m33b-grid)"/>
+          <rect x="60" y="25" width="680" height="120" rx="60" fill="#111827" stroke="#4b5563" stroke-width="2"/>
+          <g filter="url(#m33b-glow)"><circle cx="170" cy="85" r="42" fill="#c084fc" opacity="0.9"/><circle cx="400" cy="85" r="42" fill="#38bdf8" opacity="0.9"/><circle cx="630" cy="85" r="42" fill="#fb923c" opacity="0.9"/></g>
+          <g font-family="Inter,sans-serif" text-anchor="middle" font-size="22"><text x="170" y="93">✋</text><text x="400" y="93">🛡️</text><text x="630" y="93">🔓</text></g>
+          <g font-family="Inter,sans-serif" text-anchor="middle">
+            <text x="170" y="172" fill="#e9d5ff" font-weight="600" font-size="13">Pedir aprovação</text><text x="170" y="191" fill="#d8b4fe" font-size="11">pergunta fora da pasta e na internet</text>
+            <text x="400" y="172" fill="#bae6fd" font-weight="600" font-size="13">Aprovar por mim</text><text x="400" y="191" fill="#7dd3fc" font-size="11">pergunta só no arriscado</text>
+            <text x="630" y="172" fill="#fdba74" font-weight="600" font-size="13">Acesso total</text><text x="630" y="191" fill="#fdba74" font-size="11">não pergunta nada</text>
+          </g>
+          <line x1="90" y1="225" x2="710" y2="225" stroke="#9ca3af" stroke-width="2" marker-start="url(#m33b-arrow)" marker-end="url(#m33b-arrow)"/>
+          <g font-family="Inter,sans-serif" font-size="11" fill="#9ca3af"><text x="90" y="248">mais controle seu</text><text x="710" y="248" text-anchor="end">mais autonomia dele</text></g>
+        </svg>
+      </div>
+      <p class="text-sm text-neutral-400 mb-6"><strong class="text-neutral-300">Como ler o desenho:</strong> as três luzes são os três modos. Da esquerda para a direita, ele pergunta cada vez menos. A régua de baixo mostra a troca: o que ele ganha em autonomia, você perde em controle.</p>
+
+      <div class="overflow-x-auto mb-6 rounded-xl border border-dark-600">
+        <table class="w-full text-sm text-left">
+          <thead class="bg-dark-700/60 text-purple-400"><tr><th class="px-4 py-3 font-semibold">Modo no app</th><th class="px-4 py-3 font-semibold">Quando pergunta</th><th class="px-4 py-3 font-semibold">No terminal, o mais próximo</th></tr></thead>
+          <tbody class="divide-y divide-dark-600">
+            <tr class="bg-dark-800"><td class="px-4 py-3 text-neutral-100">Pedir aprovação</td><td class="px-4 py-3 text-neutral-300">Antes de editar fora da pasta e de usar a internet</td><td class="px-4 py-3 text-neutral-300"><code>-s workspace-write</code> com <code>-a on-request</code></td></tr>
+            <tr class="bg-dark-800"><td class="px-4 py-3 text-neutral-100">Aprovar por mim</td><td class="px-4 py-3 text-neutral-300">Só em ação arriscada: apagar, chamadas externas</td><td class="px-4 py-3 text-neutral-300"><code>--approve-for-me</code></td></tr>
+            <tr class="bg-dark-800"><td class="px-4 py-3 text-neutral-100">Acesso total</td><td class="px-4 py-3 text-neutral-300">Nunca</td><td class="px-4 py-3 text-neutral-300"><code>-s danger-full-access</code> com <code>-a never</code></td></tr>
+            <tr class="bg-dark-800"><td class="px-4 py-3 text-neutral-100">(só leitura)</td><td class="px-4 py-3 text-neutral-300">Ele lê, mas não altera nada</td><td class="px-4 py-3 text-neutral-300"><code>-s read-only</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-sm text-neutral-400 mb-6"><strong class="text-neutral-300">O que olhar na tabela:</strong> no terminal são dois controles separados. O <code>-s</code> diz <em>onde</em> ele pode mexer (só ler, editar na pasta ou acesso total). O <code>-a</code> diz <em>quando</em> ele pede aprovação.</p>
+      <div class="flex justify-start mt-6">
+        <button type="button" data-inema-read-toggle aria-pressed="false" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-purple-500/20 border border-purple-500/30 text-purple-400 hover:bg-purple-500/30 transition-colors">
+          <span class="inema-read-icon" aria-hidden="true">○</span><span class="inema-read-label">Marcar como lido</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ===================== TOPICO 3 ===================== -->
+    <section id="topico-3" data-inema-topic="modulo-3-3#topico-3" class="mb-16">
+      <div class="flex flex-wrap items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl">3</span>
+        <h2 class="text-2xl font-bold flex-1">Comece pedindo aprovação para tudo</h2>
+        <button type="button" data-inema-doubt-toggle aria-pressed="false" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-dark-700 border border-dark-600 text-neutral-300 hover:bg-dark-600 transition-colors text-sm"><span aria-hidden="true">?</span><span>Tenho dúvida</span></button>
+      </div>
+      <p data-inema-block="m3-3-t3-p1" class="text-neutral-300 mb-4 leading-relaxed">Nas primeiras semanas, fique no modo <strong class="text-purple-400">Pedir aprovação</strong>. Cada pergunta dele é uma aula: você vê que comando ele quer rodar, em que arquivo vai mexer e por quê.</p>
+      <p data-inema-block="m3-3-t3-p2" class="text-neutral-300 mb-6 leading-relaxed">A Paula fez isso por duas semanas. No fim, ela já sabia quais pedidos eram sempre seguros (ler clientes, rascunhar propostas) e quais mereciam atenção (enviar coisas para fora, mexer em contratos assinados).</p>
+
+      <div class="rounded-2xl border border-purple-500/30 bg-dark-900/40 p-3 sm:p-4 mb-3 overflow-hidden">
+        <svg viewBox="0 0 800 250" class="w-full h-auto" role="img" aria-label="Linha do tempo de uma tarefa no modo Pedir aprovação. O agente lê a pasta sem perguntar, depois aparece um cartão de aprovação para salvar um arquivo fora da pasta, outro para pesquisar na internet, e por fim a resposta. Em cada cartão há os botões aprovar e recusar.">
+          <defs>
+            <pattern id="m33c-grid" width="32" height="32" patternUnits="userSpaceOnUse"><circle cx="1.3" cy="1.3" r="1.3" fill="#c084fc" opacity="0.10"/></pattern>
+            <filter id="m33c-glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="1.8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          </defs>
+          <rect x="0" y="0" width="800" height="250" fill="url(#m33c-grid)"/>
+          <line x1="50" y1="200" x2="760" y2="200" stroke="#c084fc" stroke-width="2" opacity="0.6"/>
+          <g font-family="Inter,sans-serif" font-size="11" text-anchor="middle">
+            <circle cx="110" cy="200" r="8" fill="#38bdf8"/><text x="110" y="225" fill="#7dd3fc">lê a pasta</text><text x="110" y="240" fill="#6b7280">sem perguntar</text>
+            <circle cx="300" cy="200" r="8" fill="#c084fc"/><text x="300" y="225" fill="#d8b4fe">pausa 1</text>
+            <circle cx="520" cy="200" r="8" fill="#c084fc"/><text x="520" y="225" fill="#d8b4fe">pausa 2</text>
+            <circle cx="700" cy="200" r="8" fill="#38bdf8"/><text x="700" y="225" fill="#7dd3fc">resposta</text>
+          </g>
+          <g filter="url(#m33c-glow)"><rect x="200" y="30" width="200" height="130" rx="12" fill="#1e1233" stroke="#c084fc" stroke-width="2"/></g>
+          <g font-family="Inter,sans-serif" font-size="11"><text x="215" y="55" fill="#e9d5ff" font-weight="600">Salvar fora da pasta?</text><text x="215" y="77" fill="#d8b4fe">~/Documentos/</text><text x="215" y="95" fill="#d8b4fe">proposta-acme.docx</text>
+            <rect x="215" y="115" width="80" height="28" rx="7" fill="#38bdf8" opacity="0.3" stroke="#38bdf8"/><text x="255" y="134" text-anchor="middle" fill="#bae6fd">aprovar</text>
+            <rect x="305" y="115" width="80" height="28" rx="7" fill="#111827" stroke="#4b5563"/><text x="345" y="134" text-anchor="middle" fill="#9ca3af">recusar</text></g>
+          <rect x="420" y="30" width="200" height="130" rx="12" fill="#1e1233" stroke="#c084fc" stroke-width="2"/>
+          <g font-family="Inter,sans-serif" font-size="11"><text x="435" y="55" fill="#e9d5ff" font-weight="600">Usar a internet?</text><text x="435" y="77" fill="#d8b4fe">pesquisar piso salarial</text><text x="435" y="95" fill="#d8b4fe">de analista de RH</text>
+            <rect x="435" y="115" width="80" height="28" rx="7" fill="#38bdf8" opacity="0.3" stroke="#38bdf8"/><text x="475" y="134" text-anchor="middle" fill="#bae6fd">aprovar</text>
+            <rect x="525" y="115" width="80" height="28" rx="7" fill="#111827" stroke="#4b5563"/><text x="565" y="134" text-anchor="middle" fill="#9ca3af">recusar</text></g>
+          <g stroke="#c084fc" stroke-width="1.5" stroke-dasharray="3 4"><line x1="300" y1="162" x2="300" y2="190"/><line x1="520" y1="162" x2="520" y2="190"/></g>
+        </svg>
+      </div>
+      <p class="text-sm text-neutral-400 mb-6"><strong class="text-neutral-300">Como ler o desenho:</strong> a linha é o andamento da tarefa. Os pontos azuis ele faz sozinho; nos pontos roxos ele para e mostra um cartão com o que pretende fazer. Nada acontece até você clicar em aprovar.</p>
+
+      <div class="space-y-5 mb-6">
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center"><span class="text-purple-400 font-bold">1</span></div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-5 border border-dark-600"><h4 class="font-semibold text-neutral-100 mb-1">Escolha "Pedir aprovação"</h4><p class="text-neutral-300 text-sm">No seletor de permissão, embaixo da caixa de mensagem. No terminal: <code>codex -s workspace-write -a on-request</code>.</p></div>
+        </div>
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center"><span class="text-purple-400 font-bold">2</span></div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-5 border border-dark-600"><h4 class="font-semibold text-neutral-100 mb-1">Leia cada cartão antes de clicar</h4><p class="text-neutral-300 text-sm">Pergunte-se: "eu entendo o que ele vai fazer?". Se não, recuse e peça "explique esse passo em português simples".</p></div>
+        </div>
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center"><span class="text-purple-400 font-bold">3</span></div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-5 border border-dark-600"><h4 class="font-semibold text-neutral-100 mb-1">Anote o que sempre aprova</h4><p class="text-neutral-300 text-sm">Depois de uma ou duas semanas, a lista de "sempre sim" mostra que você está pronto para o próximo modo.</p></div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="bg-dark-800 rounded-xl p-6 border border-purple-500/30">
+          <h3 class="font-semibold text-purple-400 mb-3">✓ Bom hábito</h3>
+          <ul class="space-y-2 text-neutral-300 text-sm">
+            <li>✓ Ler o comando inteiro antes de aprovar</li>
+            <li>✓ Recusar e pedir explicação quando não entender</li>
+            <li>✓ Usar as pausas para aprender o que ele faz</li>
+          </ul>
+        </div>
+        <div class="bg-red-900/20 rounded-xl p-6 border border-red-500/30">
+          <h3 class="font-semibold text-red-400 mb-3">✗ Mau hábito</h3>
+          <ul class="space-y-2 text-neutral-300 text-sm">
+            <li>✗ Clicar em aprovar sem ler, só para andar</li>
+            <li>✗ Aprovar apagar arquivos "porque ele sabe o que faz"</li>
+            <li>✗ Pular direto para acesso total no primeiro dia</li>
+          </ul>
+        </div>
+      </div>
+      <div class="flex justify-start mt-6">
+        <button type="button" data-inema-read-toggle aria-pressed="false" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-purple-500/20 border border-purple-500/30 text-purple-400 hover:bg-purple-500/30 transition-colors">
+          <span class="inema-read-icon" aria-hidden="true">○</span><span class="inema-read-label">Marcar como lido</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ===================== TOPICO 4 ===================== -->
+    <section id="topico-4" data-inema-topic="modulo-3-3#topico-4" class="mb-16">
+      <div class="flex flex-wrap items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl">4</span>
+        <h2 class="text-2xl font-bold flex-1">Passe para a aprovação automática</h2>
+        <button type="button" data-inema-doubt-toggle aria-pressed="false" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-dark-700 border border-dark-600 text-neutral-300 hover:bg-dark-600 transition-colors text-sm"><span aria-hidden="true">?</span><span>Tenho dúvida</span></button>
+      </div>
+      <p data-inema-block="m3-3-t4-p1" class="text-neutral-300 mb-4 leading-relaxed">Quando as perguntas viram rotina, mude para <strong class="text-purple-400">Aprovar por mim</strong>. As ações comuns passam sozinhas por uma revisão automática; você só é chamado quando a ação parece arriscada, como apagar arquivos ou fazer chamadas externas.</p>
+      <p data-inema-block="m3-3-t4-p2" class="text-neutral-300 mb-6 leading-relaxed">É o modo do dia a dia para quem já conhece o agente. O Rui usa assim para atualizar o catálogo: o Codex edita dezenas de arquivos sem interromper, mas para quando quer apagar uma foto antiga.</p>
+
+      <div class="rounded-2xl border border-purple-500/30 bg-dark-900/40 p-3 sm:p-4 mb-3 overflow-hidden">
+        <svg viewBox="0 0 800 260" class="w-full h-auto" role="img" aria-label="Funil de revisão automática. Entram cinco ações: ler planilha, editar catálogo, criar rascunho, apagar foto e enviar dados para um site. O funil deixa passar direto as três primeiras, em azul. As duas últimas, em vermelho, são desviadas para um cartão que pede a sua decisão.">
+          <defs>
+            <pattern id="m33d-grid" width="32" height="32" patternUnits="userSpaceOnUse"><circle cx="1.3" cy="1.3" r="1.3" fill="#c084fc" opacity="0.10"/></pattern>
+            <filter id="m33d-glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            <marker id="m33d-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#38bdf8"/></marker>
+            <marker id="m33d-arrowr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#f87171"/></marker>
+          </defs>
+          <rect x="0" y="0" width="800" height="260" fill="url(#m33d-grid)"/>
+          <g font-family="Inter,sans-serif" font-size="11">
+            <rect x="20" y="20" width="160" height="30" rx="8" fill="#0b1f2e" stroke="#38bdf8"/><text x="35" y="40" fill="#bae6fd">ler estoque.csv</text>
+            <rect x="20" y="62" width="160" height="30" rx="8" fill="#0b1f2e" stroke="#38bdf8"/><text x="35" y="82" fill="#bae6fd">editar catálogo</text>
+            <rect x="20" y="104" width="160" height="30" rx="8" fill="#0b1f2e" stroke="#38bdf8"/><text x="35" y="124" fill="#bae6fd">criar rascunho</text>
+            <rect x="20" y="146" width="160" height="30" rx="8" fill="#2a0f0f" stroke="#f87171"/><text x="35" y="166" fill="#fca5a5">apagar foto antiga</text>
+            <rect x="20" y="188" width="160" height="30" rx="8" fill="#2a0f0f" stroke="#f87171"/><text x="35" y="208" fill="#fca5a5">enviar dados a um site</text>
+          </g>
+          <g filter="url(#m33d-glow)"><path d="M230,30 L390,30 L340,120 L340,200 L280,200 L280,120 Z" fill="#1e1233" stroke="#c084fc" stroke-width="2.5"/></g>
+          <text x="310" y="70" text-anchor="middle" fill="#e9d5ff" font-family="Inter,sans-serif" font-weight="600" font-size="12">revisão</text>
+          <text x="310" y="86" text-anchor="middle" fill="#d8b4fe" font-family="Inter,sans-serif" font-size="11">automática</text>
+          <g stroke-width="1.5" fill="none" opacity="0.7"><path d="M182,35 L232,50" stroke="#38bdf8"/><path d="M182,77 L240,70" stroke="#38bdf8"/><path d="M182,119 L255,95" stroke="#38bdf8"/><path d="M182,161 L270,110" stroke="#f87171"/><path d="M182,203 L280,125" stroke="#f87171"/></g>
+          <line x1="345" y1="160" x2="540" y2="80" stroke="#38bdf8" stroke-width="2.5" marker-end="url(#m33d-arrow)"/>
+          <line x1="345" y1="180" x2="540" y2="200" stroke="#f87171" stroke-width="2.5" marker-end="url(#m33d-arrowr)"/>
+          <rect x="550" y="45" width="220" height="70" rx="12" fill="#0b1f2e" stroke="#38bdf8" stroke-width="2"/>
+          <text x="660" y="75" text-anchor="middle" fill="#bae6fd" font-family="Inter,sans-serif" font-size="12">✓ segue sem perguntar</text>
+          <text x="660" y="95" text-anchor="middle" fill="#7dd3fc" font-family="Inter,sans-serif" font-size="11">3 ações</text>
+          <rect x="550" y="165" width="220" height="70" rx="12" fill="#2a0f0f" stroke="#f87171" stroke-width="2"/>
+          <text x="660" y="195" text-anchor="middle" fill="#fca5a5" font-family="Inter,sans-serif" font-size="12">✋ pede a sua decisão</text>
+          <text x="660" y="215" text-anchor="middle" fill="#fca5a5" font-family="Inter,sans-serif" font-size="11">2 ações arriscadas</text>
+        </svg>
+      </div>
+      <p class="text-sm text-neutral-400 mb-6"><strong class="text-neutral-300">Como ler o desenho:</strong> todas as ações passam pelo funil roxo de revisão. As azuis, rotineiras, seguem direto. As vermelhas, que apagam ou mandam dados para fora, são separadas e chegam até você como pergunta.</p>
+
+      <div class="bg-dark-800 rounded-xl border border-purple-500/30 overflow-hidden mb-6">
+        <div class="px-5 py-3 bg-purple-900/20 border-b border-purple-500/30"><span class="text-purple-400 font-semibold text-sm">⌨️ Copia e cola: abrir com aprovação automática</span></div>
+        <div class="p-5">
+          <p class="text-neutral-300 text-sm mb-3"><strong class="text-purple-400">Objetivo:</strong> trabalhar sem interrupções nas tarefas comuns, mantendo a pergunta nas arriscadas. Esse modo funciona com a caixa de areia que edita só dentro da pasta.</p>
+          <pre class="font-mono text-sm text-neutral-200 whitespace-pre-wrap bg-dark-900/60 rounded-lg p-4 border border-dark-600">cd &lt;caminho-da-sua-pasta&gt;
+codex --approve-for-me</pre>
+        </div>
+        <div class="px-5 py-3 bg-dark-700/40 border-t border-dark-600 text-neutral-300 text-sm"><strong class="text-purple-400">Como verificar:</strong> peça "crie um arquivo teste.md com a palavra ok" (deve passar sem pergunta). Depois peça "apague o arquivo teste.md" (deve parar e pedir a sua decisão).</div>
+      </div>
+
+      <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-2 flex items-center"><span class="mr-2">💡</span> A revisão automática não lê a sua mente</h3>
+        <p class="text-neutral-300 text-sm">Ela separa o que parece arriscado em geral. Ela não sabe que a pasta <code>contratos-assinados/</code> é sagrada para você. Para isso existem as regras do tópico 6.</p>
+      </div>
+      <div class="flex justify-start mt-6">
+        <button type="button" data-inema-read-toggle aria-pressed="false" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-purple-500/20 border border-purple-500/30 text-purple-400 hover:bg-purple-500/30 transition-colors">
+          <span class="inema-read-icon" aria-hidden="true">○</span><span class="inema-read-label">Marcar como lido</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ===================== TOPICO 5 ===================== -->
+    <section id="topico-5" data-inema-topic="modulo-3-3#topico-5" class="mb-16">
+      <div class="flex flex-wrap items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl">5</span>
+        <h2 class="text-2xl font-bold flex-1">Saiba quando usar acesso total</h2>
+        <button type="button" data-inema-doubt-toggle aria-pressed="false" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-dark-700 border border-dark-600 text-neutral-300 hover:bg-dark-600 transition-colors text-sm"><span aria-hidden="true">?</span><span>Tenho dúvida</span></button>
+      </div>
+      <p data-inema-block="m3-3-t5-p1" class="text-neutral-300 mb-4 leading-relaxed"><strong class="text-purple-400">Acesso total</strong> é o modo sem freio: o agente sai da caixa de areia e não pergunta nada. No aplicativo ele costuma aparecer destacado em laranja, justamente para lembrar do risco.</p>
+      <p data-inema-block="m3-3-t5-p2" class="text-neutral-300 mb-6 leading-relaxed">Ele tem lugar: tarefas longas em que você não vai estar olhando, numa pasta que você pode perder sem dor, como uma cópia de teste ou uma worktree (módulo 2.2). Nunca na pasta com os dados dos seus clientes.</p>
+
+      <div class="rounded-2xl border border-purple-500/30 bg-dark-900/40 p-3 sm:p-4 mb-3 overflow-hidden">
+        <svg viewBox="0 0 800 250" class="w-full h-auto" role="img" aria-label="Dois cenários de acesso total. À esquerda, em verde, uma pasta de teste descartável dentro de uma redoma, com o agente trabalhando sem freio: tudo bem. À direita, em vermelho, a pasta de clientes da Paula sem nenhuma proteção, com o agente sem freio e um aviso de perigo.">
+          <defs>
+            <pattern id="m33e-grid" width="32" height="32" patternUnits="userSpaceOnUse"><circle cx="1.3" cy="1.3" r="1.3" fill="#c084fc" opacity="0.10"/></pattern>
+            <filter id="m33e-glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          </defs>
+          <rect x="0" y="0" width="800" height="250" fill="url(#m33e-grid)"/>
+          <text x="200" y="28" text-anchor="middle" fill="#86efac" font-family="Inter,sans-serif" font-weight="600" font-size="13">pode: cópia descartável</text>
+          <path d="M60,200 A140,140 0 0 1 340,200 Z" fill="#0e2018" stroke="#4ade80" stroke-width="2"/>
+          <g font-family="Inter,sans-serif" text-anchor="middle"><text x="150" y="160" font-size="26">🤖</text><text x="250" y="160" font-size="26">📁</text><text x="250" y="185" fill="#86efac" font-size="11">teste-catalogo</text><text x="200" y="228" fill="#86efac" font-size="11">se der errado, apaga e recomeça</text></g>
+          <line x1="400" y1="40" x2="400" y2="230" stroke="#374151" stroke-width="2" stroke-dasharray="4 6"/>
+          <text x="600" y="28" text-anchor="middle" fill="#fdba74" font-family="Inter,sans-serif" font-weight="600" font-size="13">não: dados reais</text>
+          <g filter="url(#m33e-glow)"><rect x="470" y="60" width="260" height="140" rx="14" fill="#2a1408" stroke="#fb923c" stroke-width="2.5"/></g>
+          <g font-family="Inter,sans-serif" text-anchor="middle"><text x="540" y="140" font-size="26">🤖</text><text x="650" y="125" font-size="26">📁</text><text x="650" y="150" fill="#fdba74" font-size="11">clientes/</text>
+            <polygon points="600,70 622,105 578,105" fill="#fb923c"/><text x="600" y="101" fill="#1f2937" font-size="16" font-weight="700">!</text>
+            <text x="600" y="228" fill="#fdba74" font-size="11">um erro aqui não tem volta</text></g>
+        </svg>
+      </div>
+      <p class="text-sm text-neutral-400 mb-6"><strong class="text-neutral-300">Como ler o desenho:</strong> à esquerda, a redoma verde é uma pasta de teste que você pode jogar fora; ali o acesso total só acelera. À direita, a pasta de clientes fica exposta ao agente sem freio, e qualquer engano atinge dados reais.</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="bg-dark-800 rounded-xl p-6 border border-purple-500/30">
+          <h3 class="font-semibold text-purple-400 mb-3">✓ Acesso total faz sentido</h3>
+          <ul class="space-y-2 text-neutral-300 text-sm">
+            <li>✓ Numa cópia de teste ou numa worktree</li>
+            <li>✓ Em tarefa longa que você revisa no fim</li>
+            <li>✓ Quando você tem backup de tudo</li>
+            <li>✓ Por uma sessão, voltando ao modo normal depois</li>
+          </ul>
+        </div>
+        <div class="bg-red-900/20 rounded-xl p-6 border border-red-500/30">
+          <h3 class="font-semibold text-red-400 mb-3">✗ Nunca com acesso total</h3>
+          <ul class="space-y-2 text-neutral-300 text-sm">
+            <li>✗ Pasta com dados de clientes ou contratos</li>
+            <li>✗ Computador com e-mail e banco abertos</li>
+            <li>✗ Tarefa que envia algo para fora</li>
+            <li>✗ "Só para parar de perguntar"</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-2 flex items-center"><span class="mr-2">💡</span> Volte ao modo normal ao terminar</h3>
+        <p class="text-neutral-300 text-sm">No terminal, <code>-s danger-full-access</code> vale só para aquela sessão: feche e abra sem a opção. No aplicativo, confira o seletor antes da próxima conversa; um laranja esquecido é o caminho mais curto para um susto.</p>
+      </div>
+      <div class="flex justify-start mt-6">
+        <button type="button" data-inema-read-toggle aria-pressed="false" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-purple-500/20 border border-purple-500/30 text-purple-400 hover:bg-purple-500/30 transition-colors">
+          <span class="inema-read-icon" aria-hidden="true">○</span><span class="inema-read-label">Marcar como lido</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ===================== TOPICO 6 ===================== -->
+    <section id="topico-6" data-inema-topic="modulo-3-3#topico-6" class="mb-16">
+      <div class="flex flex-wrap items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl">6</span>
+        <h2 class="text-2xl font-bold flex-1">Bloqueie ações específicas na configuração</h2>
+        <button type="button" data-inema-doubt-toggle aria-pressed="false" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-dark-700 border border-dark-600 text-neutral-300 hover:bg-dark-600 transition-colors text-sm"><span aria-hidden="true">?</span><span>Tenho dúvida</span></button>
+      </div>
+      <p data-inema-block="m3-3-t6-p1" class="text-neutral-300 mb-4 leading-relaxed">Os três modos são gerais. Às vezes você quer uma regra só sua: "nunca apague nada em <code>clientes/</code>", "nunca envie e-mail sem me mostrar antes". Isso vai para a configuração do projeto.</p>
+      <p data-inema-block="m3-3-t6-p2" class="text-neutral-300 mb-6 leading-relaxed">Você não precisa escrever a configuração à mão. Peça ao Codex: ele sabe onde fica cada coisa (o <code>.codex/</code> do projeto ou o global, módulo 2.3) e como escrever a regra. A Paula travou a pasta de contratos assinados em dois minutos.</p>
+
+      <div class="rounded-2xl border border-purple-500/30 bg-dark-900/40 p-3 sm:p-4 mb-3 overflow-hidden">
+        <svg viewBox="0 0 800 260" class="w-full h-auto" role="img" aria-label="Painel de regras da pasta paula-escritorio. Três regras com cadeado: nunca apagar em clientes, nunca alterar contratos-assinados, sempre mostrar e-mail antes de enviar. Ao lado, as pastas: clientes e contratos-assinados com cadeado fechado, propostas e linkedin livres.">
+          <defs>
+            <pattern id="m33f-grid" width="32" height="32" patternUnits="userSpaceOnUse"><circle cx="1.3" cy="1.3" r="1.3" fill="#c084fc" opacity="0.10"/></pattern>
+            <filter id="m33f-glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="1.8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            <marker id="m33f-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#38bdf8"/></marker>
+          </defs>
+          <rect x="0" y="0" width="800" height="260" fill="url(#m33f-grid)"/>
+          <g filter="url(#m33f-glow)"><rect x="40" y="25" width="400" height="210" rx="14" fill="#1e1233" stroke="#c084fc" stroke-width="2"/></g>
+          <text x="60" y="55" fill="#e9d5ff" font-family="Inter,sans-serif" font-weight="600" font-size="13">⚙️ regras do projeto</text>
+          <g font-family="Inter,sans-serif" font-size="12">
+            <rect x="60" y="72" width="360" height="40" rx="10" fill="#111827" stroke="#c084fc"/><text x="78" y="97" fill="#e9d5ff">🔒 nunca apagar nada em clientes/</text>
+            <rect x="60" y="122" width="360" height="40" rx="10" fill="#111827" stroke="#c084fc"/><text x="78" y="147" fill="#e9d5ff">🔒 nunca alterar contratos-assinados/</text>
+            <rect x="60" y="172" width="360" height="40" rx="10" fill="#111827" stroke="#c084fc"/><text x="78" y="197" fill="#e9d5ff">🔒 mostrar todo e-mail antes de enviar</text>
+          </g>
+          <line x1="445" y1="130" x2="495" y2="130" stroke="#38bdf8" stroke-width="2.5" marker-end="url(#m33f-arrow)"/>
+          <rect x="505" y="25" width="265" height="210" rx="14" fill="#0b1220" stroke="#38bdf8" stroke-width="2"/>
+          <g font-family="ui-monospace,monospace" font-size="12">
+            <text x="525" y="55" fill="#bae6fd">📁 paula-escritorio/</text>
+            <text x="545" y="90" fill="#fca5a5">🔒 clientes/</text>
+            <text x="545" y="125" fill="#fca5a5">🔒 contratos-assinados/</text>
+            <text x="545" y="160" fill="#bae6fd">📁 propostas/</text>
+            <text x="545" y="195" fill="#bae6fd">📁 linkedin/</text>
+          </g>
+        </svg>
+      </div>
+      <p class="text-sm text-neutral-400 mb-6"><strong class="text-neutral-300">Como ler o desenho:</strong> o painel roxo são as regras que a Paula pediu. A seta mostra o efeito na pasta: as subpastas com cadeado ficam protegidas em qualquer modo de permissão, e as outras seguem livres para o trabalho do dia.</p>
+
+      <div class="bg-dark-800 rounded-xl border border-purple-500/30 overflow-hidden mb-6">
+        <div class="px-5 py-3 bg-purple-900/20 border-b border-purple-500/30"><span class="text-purple-400 font-semibold text-sm">💬 Copia e cola no Codex: trave o que é sagrado</span></div>
+        <div class="p-5">
+          <p class="text-neutral-300 text-sm mb-3"><strong class="text-purple-400">Objetivo:</strong> registrar regras de bloqueio que valem neste projeto, sem você editar arquivo de configuração.</p>
+          <pre class="font-mono text-sm text-neutral-200 whitespace-pre-wrap bg-dark-900/60 rounded-lg p-4 border border-dark-600">Quero bloquear algumas ações neste projeto, em qualquer modo de permissão: (1) nunca apagar arquivos dentro de &lt;clientes/&gt;; (2) nunca alterar nada em &lt;contratos-assinados/&gt;; (3) nunca enviar e-mail sem me mostrar o texto antes. Consulte a sua documentação, diga onde essas regras devem ficar (configuração do projeto ou global) e me mostre exatamente o que vai escrever. Só grave depois que eu aprovar.</pre>
+        </div>
+        <div class="px-5 py-3 bg-dark-700/40 border-t border-dark-600 text-neutral-300 text-sm"><strong class="text-purple-400">Como verificar:</strong> abra uma conversa nova e peça "apague um arquivo qualquer de clientes/". Ele tem de recusar ou parar, citando a regra. Se apagar, a regra não foi gravada: volte e peça para ele conferir.</div>
+      </div>
+
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6" data-inema-check="modulo-3-3#q1">
+        <p class="font-medium mb-4">Teste rápido (opcional): a Paula quer que o Codex trabalhe sem interromper nas tarefas comuns, mas pare antes de apagar arquivos. Qual modo ela escolhe?</p>
+        <div class="space-y-2">
+          <button type="button" data-inema-check-option="0" class="block w-full text-left px-4 py-2 rounded-lg bg-dark-700 border border-dark-600 hover:bg-dark-600 transition-colors text-sm">Acesso total, porque assim ele nunca interrompe.</button>
+          <button type="button" data-inema-check-option="1" class="block w-full text-left px-4 py-2 rounded-lg bg-dark-700 border border-dark-600 hover:bg-dark-600 transition-colors text-sm">Pedir aprovação, porque é o único que pergunta antes de apagar.</button>
+          <button type="button" data-inema-check-option="2" class="block w-full text-left px-4 py-2 rounded-lg bg-dark-700 border border-dark-600 hover:bg-dark-600 transition-colors text-sm">Aprovar por mim: o comum passa sozinho e o arriscado, como apagar, para e pergunta.</button>
+        </div>
+        <div data-inema-check-feedback class="mt-4 text-sm" role="status" aria-live="polite"></div>
+      </div>
+      <div class="flex justify-start mt-6">
+        <button type="button" data-inema-read-toggle aria-pressed="false" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-purple-500/20 border border-purple-500/30 text-purple-400 hover:bg-purple-500/30 transition-colors">
+          <span class="inema-read-icon" aria-hidden="true">○</span><span class="inema-read-label">Marcar como lido</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ===================== RESUMO ===================== -->
+    <section class="mb-12">
+      <div class="bg-gradient-to-br from-purple-900/40 via-dark-800 to-dark-800 rounded-xl border border-purple-500/30 p-8">
+        <h2 class="text-2xl font-bold mb-6 flex items-center"><span class="mr-3">🎓</span> Resumo do módulo</h2>
+        <div class="space-y-4 mb-8">
+          <div class="flex items-start space-x-3"><span class="text-purple-400 mt-1">✓</span><div><strong class="text-neutral-100">Ele age de verdade</strong><span class="text-neutral-400"> — por isso trabalha numa caixa de areia e pede licença.</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-purple-400 mt-1">✓</span><div><strong class="text-neutral-100">Três modos</strong><span class="text-neutral-400"> — Pedir aprovação, Aprovar por mim, Acesso total.</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-purple-400 mt-1">✓</span><div><strong class="text-neutral-100">Comece perguntando</strong><span class="text-neutral-400"> — cada pausa ensina o que ele faz.</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-purple-400 mt-1">✓</span><div><strong class="text-neutral-100">Aprovar por mim no dia a dia</strong><span class="text-neutral-400"> — só o arriscado chega até você.</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-purple-400 mt-1">✓</span><div><strong class="text-neutral-100">Acesso total só em pasta descartável</strong><span class="text-neutral-400"> — e regras próprias para o que é sagrado.</span></div></div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-4 mb-8">
+          <h3 class="font-semibold text-purple-400 mb-2">Próximo módulo:</h3>
+          <p class="text-neutral-300">3.4 — Skills: receitas reutilizáveis</p>
+        </div>
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a href="index.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">← Voltar para a trilha</a>
+          <a href="modulo-3-4.html" class="flex-1 text-center px-6 py-3 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-500 transition-colors">Módulo 3.4 →</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <aside class="hidden lg:block">
+    <nav data-inema-toc aria-label="Índice da página" class="sticky top-24">
+      <p class="text-sm text-neutral-400 mb-3"><span data-inema-section-counter>Seção 1 de 6</span></p>
+      <ol class="space-y-2 text-sm">
+        <li><a href="#topico-1" class="text-neutral-400 hover:text-purple-400">1. Por que pede licença</a></li>
+        <li><a href="#topico-2" class="text-neutral-400 hover:text-purple-400">2. Os três modos</a></li>
+        <li><a href="#topico-3" class="text-neutral-400 hover:text-purple-400">3. Pedir aprovação</a></li>
+        <li><a href="#topico-4" class="text-neutral-400 hover:text-purple-400">4. Aprovar por mim</a></li>
+        <li><a href="#topico-5" class="text-neutral-400 hover:text-purple-400">5. Acesso total</a></li>
+        <li><a href="#topico-6" class="text-neutral-400 hover:text-purple-400">6. Regras de bloqueio</a></li>
+      </ol>
+    </nav>
+  </aside>
+  </div>
+
+  <footer class="border-t border-dark-600 py-8 mt-16">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-neutral-500 text-sm">
+      <p>Codex: os 18 conceitos · 2026 | <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300">INEMA.CLUB</a> - <a href="https://inema.pro" target="_blank" class="text-amber-700 hover:text-amber-600 dark:text-slate-300 dark:hover:text-slate-200">PRO</a></p>
+      
+    </div>
+  </footer>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+    const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+    const _html = document.documentElement;
+    if (!_html.classList.contains('dark')) { themeToggleDarkIcon.classList.remove('hidden'); }
+    else { themeToggleLightIcon.classList.remove('hidden'); }
+    themeToggle.addEventListener('click', () => {
+      if (window.INEMA && INEMA.setPref) { INEMA.setPref('theme', _html.classList.contains('dark') ? 'claro' : 'inema-dark'); }
+      else { _html.classList.toggle('dark'); }
+      themeToggleDarkIcon.classList.toggle('hidden', _html.classList.contains('dark'));
+      themeToggleLightIcon.classList.toggle('hidden', !_html.classList.contains('dark'));
+      try { localStorage.setItem('theme', _html.classList.contains('dark') ? 'dark' : 'light'); } catch (e) {}
+    });
+    function toggleTopic(button) {
+      const item = button.closest('.topic-item');
+      const exp = item.querySelector('.topic-explanation');
+      const card = button.closest('[id^="modulo-"]') || document;
+      card.querySelectorAll('.topic-explanation.active').forEach(e => { if (e !== exp) { e.classList.remove('active'); const b = e.parentElement.querySelector('[aria-controls]'); if (b) b.setAttribute('aria-expanded', 'false'); } });
+      exp.classList.toggle('active');
+      button.setAttribute('aria-expanded', exp.classList.contains('active') ? 'true' : 'false');
+    }
+    let _lastModalTrigger = null;
+    function openModal(id){ const m=document.getElementById(id); if(m){ _lastModalTrigger=document.activeElement; m.classList.remove('hidden'); document.body.style.overflow='hidden'; const c=m.querySelector('button'); if(c) c.focus(); } }
+    function closeModal(){ document.querySelectorAll('.modal').forEach(m=>m.classList.add('hidden')); document.body.style.overflow='auto'; if(_lastModalTrigger){ _lastModalTrigger.focus(); _lastModalTrigger=null; } }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+  </script>
+  <script src="../../assets/learn.js"></script>
+  <script>
+    if (window.INEMA && typeof window.INEMA.init === 'function') { window.INEMA.init(); }
+  </script>
+  <script>
+    window.addEventListener('DOMContentLoaded', function () {
+      if (window.INEMA && INEMA.registerCheck) {
+
+        INEMA.registerCheck('modulo-3-3#q1', { answer: 2, explain: {
+          '0': 'Não. Acesso total não pergunta nada, nem antes de apagar. É o modo sem freio.',
+          '1': 'Quase: ele pergunta antes de apagar, mas também interrompe em muitas tarefas comuns. Não é o que ela quer.',
+          '2': 'Isso. Aprovar por mim deixa o rotineiro passar pela revisão automática e para nas ações arriscadas, como apagar.'
+        } });
+      }
+    });
+  </script>
+</body>
+</html>

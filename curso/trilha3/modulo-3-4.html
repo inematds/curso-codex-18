@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="inema-course" content="cx18">
+  <title>Skills: receitas reutilizáveis | Codex: os 18 conceitos</title>
+  <meta name="description" content="Curso gratuito do INEMA.CLUB: os 18 conceitos que fazem o Codex trabalhar por você — projetos, regras, ciclo do agente, modelos, permissões, skills, plugins, navegador, subagentes e tarefas agendadas, do zero.">
+
+  <!-- ANTI-FOUC: bloqueante, ANTES do Tailwind -->
+  <script>
+  (function () {
+    try {
+      var html = document.documentElement;
+      var DEF = { theme: 'inema-dark', font: 'inter', fontScale: 100, lineWidth: 68, leading: 1.7, accent: 'emerald' };
+      function clone(o) { var r = {}; for (var x in o) r[x] = o[x]; return r; }
+      var p = clone(DEF);
+      try {
+        var raw = localStorage.getItem('inema.prefs');
+        if (raw) {
+          var parsed = JSON.parse(raw);
+          if (parsed && typeof parsed === 'object') { for (var k in DEF) if (parsed[k] != null) p[k] = parsed[k]; }
+        } else {
+          var legacy = localStorage.getItem('theme');
+          if (legacy === 'light') p.theme = 'claro'; else if (legacy === 'dark') p.theme = 'inema-dark';
+        }
+      } catch (e) { p = clone(DEF); }
+      var THEMES = {
+        'inema-dark': { dark: true,  attr: null,        cs: 'dark'  },
+        'claro':      { dark: false, attr: null,        cs: 'light' },
+        'sepia':      { dark: false, attr: 'sepia',     cs: 'light' },
+        'foco':       { dark: null,  attr: 'foco',      cs: null    },
+        'contraste':  { dark: true,  attr: 'contraste', cs: 'dark'  }
+      };
+      var t = THEMES[p.theme] || THEMES['inema-dark'];
+      if (t.dark === true) html.classList.add('dark'); else if (t.dark === false) html.classList.remove('dark');
+      if (t.attr) html.setAttribute('data-theme', t.attr); else html.removeAttribute('data-theme');
+      html.style.colorScheme = (t.cs ? t.cs : (html.classList.contains('dark') ? 'dark' : 'light'));
+      html.setAttribute('data-font', p.font || 'inter');
+      html.setAttribute('data-accent', p.accent || 'emerald');
+      var s = html.style; var scale = (+p.fontScale || 100);
+      s.setProperty('--inema-font-scale', (scale / 100).toString());
+      s.setProperty('font-size', scale + '%');
+      s.setProperty('--measure', (+p.lineWidth || 68) + 'ch');
+      s.setProperty('--lh-body', (+p.leading || 1.7).toString());
+      var fam = p.font === 'system' ? 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif'
+        : (p.font === 'leitura' ? '"Atkinson Hyperlegible", "Inter", system-ui, sans-serif' : '"Inter", system-ui, sans-serif');
+      s.setProperty('--font-body', fam);
+      var ACC = { emerald: [152,76,45], blue: [217,91,60], purple: [258,90,66], amber: [38,92,50], teal: [174,72,41], rose: [350,89,60] };
+      var a = ACC[p.accent] || ACC.emerald;
+      s.setProperty('--accent-h', a[0]+''); s.setProperty('--accent-s', a[1]+'%'); s.setProperty('--accent-l', a[2]+'%');
+      s.setProperty('--accent', 'hsl('+a[0]+' '+a[1]+'% '+a[2]+'%)');
+    } catch (err) { try { document.documentElement.classList.add('dark'); document.documentElement.style.colorScheme = 'dark'; } catch(e){} }
+  })();
+  </script>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { darkMode: 'class', theme: { extend: { colors: {
+      primary: '#FACC15', dark: { 900: '#111827', 800: '#1f2937', 700: '#374151', 600: '#4b5563' } } } } }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/learn.css">
+
+  <!-- Manifesto do curso (OBRIGATORIO em TODA pagina, identico) -->
+  <script type="application/json" data-inema-manifest>
+  {"course":"cx18","tracks":[{"n":"1","title":"Fundamentos","modules":[{"id":"1-1","title":"Projetos: a pasta que lembra de você","topics":6,"href":"curso/trilha1/modulo-1-1.html"},{"id":"1-2","title":"AGENTS.md: as regras da casa","topics":6,"href":"curso/trilha1/modulo-1-2.html"},{"id":"1-3","title":"O ciclo do agente","topics":6,"href":"curso/trilha1/modulo-1-3.html"},{"id":"1-4","title":"/goal: um objetivo até o fim","topics":6,"href":"curso/trilha1/modulo-1-4.html"}]},{"n":"2","title":"Ambientes","modules":[{"id":"2-1","title":"Local, nuvem e celular","topics":6,"href":"curso/trilha2/modulo-2-1.html"},{"id":"2-2","title":"Worktrees: cópias para testar sem medo","topics":6,"href":"curso/trilha2/modulo-2-2.html"},{"id":"2-3","title":"A pasta .codex: configurações","topics":6,"href":"curso/trilha2/modulo-2-3.html"}]},{"n":"3","title":"Controle","modules":[{"id":"3-1","title":"Modelos: força e custo","topics":6,"href":"curso/trilha3/modulo-3-1.html"},{"id":"3-2","title":"Esforço e modo rápido","topics":6,"href":"curso/trilha3/modulo-3-2.html"},{"id":"3-3","title":"Permissões: quanto ele faz sozinho","topics":6,"href":"curso/trilha3/modulo-3-3.html"},{"id":"3-4","title":"Skills: receitas reutilizáveis","topics":6,"href":"curso/trilha3/modulo-3-4.html"},{"id":"3-5","title":"A pasta .agents e a vinda do Claude Code","topics":6,"href":"curso/trilha3/modulo-3-5.html"},{"id":"3-6","title":"Plugins: conecte seus aplicativos","topics":6,"href":"curso/trilha3/modulo-3-6.html"}]},{"n":"4","title":"Ferramentas e escala","modules":[{"id":"4-1","title":"Navegador: o Codex usa sites por você","topics":6,"href":"curso/trilha4/modulo-4-1.html"},{"id":"4-2","title":"Sites: do localhost para o mundo","topics":6,"href":"curso/trilha4/modulo-4-2.html"},{"id":"4-3","title":"Subagentes: delegue em paralelo","topics":6,"href":"curso/trilha4/modulo-4-3.html"},{"id":"4-4","title":"Tarefas agendadas: o Codex no piloto","topics":6,"href":"curso/trilha4/modulo-4-4.html"},{"id":"4-5","title":"Modo de voz: tudo junto","topics":6,"href":"curso/trilha4/modulo-4-5.html"}]}]}
+  </script>
+
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .dark body { background-color: #111827; }
+
+    /* Light mode - base */
+    html:not(.dark) body { background-color: #f8fafc; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-600 { background-color: #e5e7eb; }
+    html:not(.dark) .text-neutral-100 { color: #111827; }
+    html:not(.dark) .text-neutral-200 { color: #1f2937; }
+    html:not(.dark) .text-neutral-300 { color: #4b5563; }
+    html:not(.dark) .text-neutral-400 { color: #6b7280; }
+    html:not(.dark) .text-neutral-500 { color: #6b7280; }
+    html:not(.dark) .text-white { color: #111827; }
+    html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+    html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+
+    /* Light mode - acentos das 5 trilhas (emerald, blue, purple, amber, teal) */
+    html:not(.dark) .text-emerald-400 { color: #059669; }
+    html:not(.dark) .bg-emerald-500\/20 { background-color: rgba(5, 150, 105, 0.12); }
+    html:not(.dark) .bg-emerald-500\/10 { background-color: rgba(5, 150, 105, 0.08); }
+    html:not(.dark) .bg-emerald-900\/20 { background-color: rgba(5, 150, 105, 0.07); }
+    html:not(.dark) .border-emerald-500\/30 { border-color: rgba(5, 150, 105, 0.25); }
+    html:not(.dark) .hover\:bg-emerald-500\/30:hover { background-color: rgba(5, 150, 105, 0.18); }
+    html:not(.dark) .hover\:text-emerald-400:hover { color: #059669; }
+    html:not(.dark) .hover\:bg-emerald-500\/10:hover { background-color: rgba(5, 150, 105, 0.08); }
+    html:not(.dark) .group:hover .group-hover\:text-emerald-400 { color: #059669; }
+    html:not(.dark) .text-blue-400 { color: #2563eb; }
+    html:not(.dark) .bg-blue-500\/20 { background-color: rgba(37, 99, 235, 0.12); }
+    html:not(.dark) .bg-blue-500\/10 { background-color: rgba(37, 99, 235, 0.08); }
+    html:not(.dark) .bg-blue-900\/20 { background-color: rgba(37, 99, 235, 0.07); }
+    html:not(.dark) .border-blue-500\/30 { border-color: rgba(37, 99, 235, 0.25); }
+    html:not(.dark) .hover\:bg-blue-500\/30:hover { background-color: rgba(37, 99, 235, 0.18); }
+    html:not(.dark) .hover\:text-blue-400:hover { color: #2563eb; }
+    html:not(.dark) .hover\:bg-blue-500\/10:hover { background-color: rgba(37, 99, 235, 0.08); }
+    html:not(.dark) .group:hover .group-hover\:text-blue-400 { color: #2563eb; }
+    html:not(.dark) .text-purple-400 { color: #7c3aed; }
+    html:not(.dark) .bg-purple-500\/20 { background-color: rgba(124, 58, 237, 0.12); }
+    html:not(.dark) .bg-purple-500\/10 { background-color: rgba(124, 58, 237, 0.08); }
+    html:not(.dark) .bg-purple-900\/20 { background-color: rgba(124, 58, 237, 0.07); }
+    html:not(.dark) .border-purple-500\/30 { border-color: rgba(124, 58, 237, 0.25); }
+    html:not(.dark) .hover\:bg-purple-500\/30:hover { background-color: rgba(124, 58, 237, 0.18); }
+    html:not(.dark) .hover\:text-purple-400:hover { color: #7c3aed; }
+    html:not(.dark) .hover\:bg-purple-500\/10:hover { background-color: rgba(124, 58, 237, 0.08); }
+    html:not(.dark) .group:hover .group-hover\:text-purple-400 { color: #7c3aed; }
+    html:not(.dark) .text-amber-400 { color: #92400e; }
+    html:not(.dark) .bg-amber-500\/20 { background-color: rgba(217, 119, 6, 0.12); }
+    html:not(.dark) .bg-amber-500\/10 { background-color: rgba(217, 119, 6, 0.08); }
+    html:not(.dark) .bg-amber-900\/20 { background-color: rgba(217, 119, 6, 0.07); }
+    html:not(.dark) .border-amber-500\/30 { border-color: rgba(217, 119, 6, 0.25); }
+    html:not(.dark) .hover\:bg-amber-500\/30:hover { background-color: rgba(217, 119, 6, 0.18); }
+    html:not(.dark) .hover\:text-amber-400:hover { color: #92400e; }
+    html:not(.dark) .hover\:bg-amber-500\/10:hover { background-color: rgba(217, 119, 6, 0.08); }
+    html:not(.dark) .group:hover .group-hover\:text-amber-400 { color: #92400e; }
+    html:not(.dark) .text-teal-400 { color: #0d9488; }
+    html:not(.dark) .bg-teal-500\/20 { background-color: rgba(13, 148, 136, 0.12); }
+    html:not(.dark) .bg-teal-500\/10 { background-color: rgba(13, 148, 136, 0.08); }
+    html:not(.dark) .bg-teal-900\/20 { background-color: rgba(13, 148, 136, 0.07); }
+    html:not(.dark) .border-teal-500\/30 { border-color: rgba(13, 148, 136, 0.25); }
+    html:not(.dark) .hover\:bg-teal-500\/30:hover { background-color: rgba(13, 148, 136, 0.18); }
+    html:not(.dark) .hover\:text-teal-400:hover { color: #0d9488; }
+    html:not(.dark) .hover\:bg-teal-500\/10:hover { background-color: rgba(13, 148, 136, 0.08); }
+    html:not(.dark) .group:hover .group-hover\:text-teal-400 { color: #0d9488; }
+
+    /* Light mode - remove gradientes e cores especiais */
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+    html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.25); }
+    html:not(.dark) .border-primary\/30 { border-color: rgba(161, 98, 7, 0.22); }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-yellow-400 { color: #a16207; }
+    html:not(.dark) .text-red-400 { color: #b91c1c; }
+    html:not(.dark) .bg-red-900\/20 { background-color: rgba(185, 28, 28, 0.06); }
+    html:not(.dark) .border-red-500\/30 { border-color: rgba(185, 28, 28, 0.25); }
+    html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+    html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+
+    /* Light mode - nav */
+    html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+
+    /* Dark mode - bordas suaves */
+    .dark .border-dark-600 { border-color: #374151; }
+    .dark .divide-dark-600 > :not([hidden]) ~ :not([hidden]) { border-color: #374151; }
+
+    /* Alvos de ancora abaixo do nav sticky */
+    [data-inema-topic], [id^="modulo-"], [id^="topico-"] { scroll-margin-top: 72px; }
+
+    /* SVG light mode + animacao */
+    html:not(.dark) svg[role="img"] { filter: saturate(0.82) brightness(0.96); }
+    @keyframes wf-pulse { 0%,100% { opacity:.55 } 50% { opacity:1 } }
+    @keyframes wf-dash { to { stroke-dashoffset: -24; } }
+    @media (prefers-reduced-motion: no-preference) {
+      .wf-a { animation: wf-pulse 2.6s ease-in-out infinite; }
+      .wf-a:nth-child(2){animation-delay:.25s} .wf-a:nth-child(3){animation-delay:.5s}
+      .wf-a:nth-child(4){animation-delay:.75s} .wf-a:nth-child(5){animation-delay:1s}
+      .wf-flow { stroke-dasharray: 6 6; animation: wf-dash 1.2s linear infinite; }
+    }
+
+    /* Topicos expansiveis */
+    .topic-explanation { display: none; }
+    .topic-explanation.active { display: block; }
+    /* Popover de aparência ancorado à direita e fora do layout quando fechado (sem transbordo) */
+    .inema-appearance-pop { right: 0; }
+    main code, main pre { overflow-wrap: anywhere; }
+    main .flex-1 { min-width: 0; }
+    .inema-appearance-pop:not([data-open="true"]) { visibility: hidden; display: none; }
+  </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+  <a href="#conteudo" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[60] focus:px-4 focus:py-2 focus:bg-primary focus:text-black focus:rounded-lg">Pular para o conteúdo</a>
+
+  <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-14">
+        <div class="flex items-center space-x-1.5 sm:space-x-3">
+          <a href="../../index.html" class="flex items-center space-x-2 text-yellow-400 hover:text-yellow-300">
+            <span class="text-2xl">🧭</span>
+            <span class="font-bold text-lg hidden lg:inline">Codex 18</span>
+          </a>
+          <span class="text-neutral-600 hidden sm:inline">|</span>
+          <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium">INEMA.CLUB</a>
+          <span class="text-neutral-600">-</span>
+          <a href="https://inema.pro" target="_blank" class="text-amber-700 hover:text-amber-600 dark:text-slate-300 dark:hover:text-slate-200 text-sm font-medium">PRO</a>
+        </div>
+        <div class="flex items-center sm:space-x-1">
+          <a href="../trilha1/index.html" class="px-1.5 sm:px-2.5 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors">
+            <span class="xl:hidden">T1</span><span class="hidden xl:inline">Fundamentos</span>
+          </a>
+          <a href="../trilha2/index.html" class="px-1.5 sm:px-2.5 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors">
+            <span class="xl:hidden">T2</span><span class="hidden xl:inline">Ambientes</span>
+          </a>
+          <a href="index.html" class="px-1.5 sm:px-2.5 py-1.5 rounded-lg text-sm font-semibold text-purple-400 bg-purple-500/10">
+            <span class="xl:hidden">T3</span><span class="hidden xl:inline">Controle</span>
+          </a>
+          <a href="../trilha4/index.html" class="px-1.5 sm:px-2.5 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-amber-400 hover:bg-amber-500/10 transition-colors">
+            <span class="xl:hidden">T4</span><span class="hidden xl:inline">Ferramentas e escala</span>
+          </a>
+          <button type="button" data-inema-journey-open class="hidden sm:inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-sm text-neutral-300 hover:text-neutral-100 transition-colors" title="Minha jornada">
+            <span aria-hidden="true">◷</span><span class="hidden md:inline">Jornada</span>
+            <span class="inema-journey-badge" data-inema-journey-badge data-count="0"></span>
+          </button>
+          <div class="relative">
+            <button type="button" data-inema-appearance-toggle="#aparencia" aria-expanded="false" aria-controls="aparencia" class="p-2 rounded-lg text-neutral-300 hover:text-neutral-100 transition-colors" title="Aparência">
+              <span aria-hidden="true" class="text-sm font-semibold">Aa</span><span class="sr-only">Aparência</span>
+            </button>
+            <div id="aparencia" data-inema-appearance class="inema-appearance-pop">
+              <div class="inema-segment" aria-label="Tema">
+                <button type="button" data-inema-set-theme="inema-dark">Escuro</button>
+                <button type="button" data-inema-set-theme="claro">Claro</button>
+                <button type="button" data-inema-set-theme="sepia">Sépia</button>
+                <button type="button" data-inema-set-theme="foco">Foco</button>
+                <button type="button" data-inema-set-theme="contraste">Alto contraste</button>
+              </div>
+              <div class="inema-segment" aria-label="Fonte">
+                <button type="button" data-inema-set-font="inter">Inter</button>
+                <button type="button" data-inema-set-font="system">Sistema</button>
+                <button type="button" data-inema-set-font="leitura">Leitura</button>
+              </div>
+              <div class="inema-segment" aria-label="Tamanho do texto">
+                <button type="button" data-inema-set-fontscale="100">A</button>
+                <button type="button" data-inema-set-fontscale="112">A+</button>
+                <button type="button" data-inema-set-fontscale="125">A++</button>
+              </div>
+              <div class="inema-segment" aria-label="Largura da linha">
+                <button type="button" data-inema-set-linewidth="60">Estreito</button>
+                <button type="button" data-inema-set-linewidth="68">Médio</button>
+                <button type="button" data-inema-set-linewidth="75">Largo</button>
+              </div>
+              <div class="inema-segment" aria-label="Entrelinha">
+                <button type="button" data-inema-set-leading="1.45">Compacto</button>
+                <button type="button" data-inema-set-leading="1.7">Confortável</button>
+              </div>
+            </div>
+          </div>
+          <button id="theme-toggle" class="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors" aria-label="Alternar tema claro/escuro">
+            <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+            <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <nav aria-label="Trilha de navegação" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+    <div class="flex items-center space-x-2 text-sm text-neutral-400">
+      <a href="../../index.html" class="hover:text-purple-400">Início</a><span>/</span>
+      <a href="index.html" class="hover:text-purple-400">Trilha 3</a><span>/</span>
+      <span class="text-purple-400">Módulo 3.4</span>
+    </div>
+  </nav>
+
+  <header class="bg-gradient-to-br from-purple-900/30 via-dark-800 to-dark-800 py-12 border-b border-dark-600" data-inema-module="3-4" data-inema-track="3">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <span class="inline-block px-3 py-1 bg-purple-500/20 text-purple-400 text-xs font-semibold rounded-full mb-4">MÓDULO 3.4 · CONCEITO 11 DE 18</span>
+      <h1 class="text-3xl sm:text-4xl font-bold mb-4">🍳 Skills: receitas reutilizáveis</h1>
+      <p class="text-lg text-neutral-400 max-w-3xl">Você faz uma tarefa bem feita uma vez e ensina o Codex a repetir do mesmo jeito sempre. Isso é uma skill: uma receita escrita num arquivo, que ele consulta quando a tarefa aparece de novo.</p>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 max-w-2xl">
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-purple-400">6</div><div class="text-xs text-neutral-400">Tópicos</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-purple-400">~35</div><div class="text-xs text-neutral-400">Minutos</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-purple-400">Prático</div><div class="text-xs text-neutral-400">Nível</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-purple-400">Personalizar</div><div class="text-xs text-neutral-400">Tipo</div></div>
+      </div>
+      <div data-inema-meter="modulo:3-4" class="mt-6 max-w-2xl" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-label="Progresso do módulo 3.4">
+        <div class="flex justify-between text-xs text-neutral-400 mb-1"><span data-inema-meter-frac>0 de 6</span><span data-inema-meter-pct>0%</span></div>
+        <div class="inema-bar"><div class="inema-bar__fill" data-inema-meter-fill></div></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-10">
+    <figure class="rounded-2xl overflow-hidden border border-purple-500/30">
+      <img src="assets/img/modulo-3-4.png" alt="Ilustração: um caderno de receitas aberto e luminoso ao lado de um notebook. Cada página do caderno é uma tarefa que deu certo, anotada para o Codex repetir do mesmo jeito. A skill é essa receita guardada." class="w-full h-auto" loading="lazy" width="1536" height="640">
+    </figure>
+  </div>
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:grid lg:grid-cols-[1fr_220px] lg:gap-10">
+  <main id="conteudo" class="min-w-0" data-inema-module="3-4" data-inema-track="3">
+
+    <!-- ===================== TOPICO 1 ===================== -->
+    <section id="topico-1" data-inema-topic="modulo-3-4#topico-1" class="mb-16">
+      <div class="flex flex-wrap items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl">1</span>
+        <h2 class="text-2xl font-bold flex-1">Entenda a skill como receita</h2>
+        <button type="button" data-inema-doubt-toggle aria-pressed="false" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-dark-700 border border-dark-600 text-neutral-300 hover:bg-dark-600 transition-colors text-sm"><span aria-hidden="true">?</span><span>Tenho dúvida</span></button>
+      </div>
+      <p data-inema-block="m3-4-t1-p1" class="text-neutral-300 mb-4 leading-relaxed">Pense numa panqueca. Na primeira vez ela queimou. Você anotou na receita: "30 segundos a menos de cada lado". Na segunda saiu boa. Na terceira você nem pensa: segue a receita.</p>
+      <p data-inema-block="m3-4-t1-p2" class="text-neutral-300 mb-6 leading-relaxed">Uma <strong class="text-purple-400">skill</strong> funciona assim. É uma receita escrita para o Codex: o que fazer, em que ordem, com que cuidados. A Paula tem uma skill para responder candidatos; o Rui, uma para montar a promoção da semana. Cada correção entra na receita, e a próxima vez sai melhor.</p>
+
+      <div class="bg-purple-900/20 rounded-xl border border-purple-500/30 p-6 mb-6">
+        <h3 class="text-base font-semibold text-purple-400 mb-3 flex items-center"><span class="mr-2">🆕</span> Novo aqui? Três palavras deste módulo</h3>
+        <ul class="space-y-2 text-neutral-300 text-sm">
+          <li><strong>Skill</strong> — uma receita reutilizável. Mora numa pasta própria, com um arquivo chamado <code>SKILL.md</code>.</li>
+          <li><strong>Metadados</strong> — as linhas no topo do arquivo que dizem o nome da skill e quando usá-la. O Codex lê isso para decidir se a receita serve.</li>
+          <li><strong>Instruções</strong> — o corpo da receita: regras, passos e exemplos, em texto comum.</li>
+        </ul>
+      </div>
+
+      <div class="rounded-2xl border border-purple-500/30 bg-dark-900/40 p-3 sm:p-4 mb-3 overflow-hidden">
+        <svg viewBox="0 0 800 250" class="w-full h-auto" role="img" aria-label="Ciclo da receita em três estações. Receita: o arquivo SKILL.md. Resultado: o Codex executa a tarefa e entrega o texto. Feedback: você diz o que gostou e o que mudar. Uma seta volta do feedback para a receita, que fica melhor a cada volta.">
+          <defs>
+            <pattern id="m34a-grid" width="32" height="32" patternUnits="userSpaceOnUse"><circle cx="1.3" cy="1.3" r="1.3" fill="#c084fc" opacity="0.10"/></pattern>
+            <filter id="m34a-glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="1.8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            <marker id="m34a-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#38bdf8"/></marker>
+          </defs>
+          <rect x="0" y="0" width="800" height="250" fill="url(#m34a-grid)"/>
+          <g filter="url(#m34a-glow)"><rect x="40" y="60" width="200" height="90" rx="14" fill="#1e1233" stroke="#c084fc" stroke-width="2"/></g>
+          <text x="140" y="95" text-anchor="middle" fill="#c084fc" font-family="Inter,sans-serif" font-weight="600" font-size="14">📜 receita</text>
+          <text x="140" y="118" text-anchor="middle" fill="#e9d5ff" font-family="ui-monospace,monospace" font-size="11">SKILL.md</text>
+          <rect x="300" y="60" width="200" height="90" rx="14" fill="#0b1f2e" stroke="#38bdf8" stroke-width="2"/>
+          <text x="400" y="95" text-anchor="middle" fill="#bae6fd" font-family="Inter,sans-serif" font-weight="600" font-size="14">🥞 resultado</text>
+          <text x="400" y="118" text-anchor="middle" fill="#7dd3fc" font-family="Inter,sans-serif" font-size="11">o Codex executa</text>
+          <rect x="560" y="60" width="200" height="90" rx="14" fill="#111827" stroke="#6b7280" stroke-width="2"/>
+          <text x="660" y="95" text-anchor="middle" fill="#e5e7eb" font-family="Inter,sans-serif" font-weight="600" font-size="14">🗣️ feedback</text>
+          <text x="660" y="118" text-anchor="middle" fill="#9ca3af" font-family="Inter,sans-serif" font-size="11">"30 s a menos"</text>
+          <line class="wf-flow" x1="242" y1="105" x2="296" y2="105" stroke="#38bdf8" stroke-width="2.5" marker-end="url(#m34a-arrow)"/>
+          <line class="wf-flow" x1="502" y1="105" x2="556" y2="105" stroke="#38bdf8" stroke-width="2.5" marker-end="url(#m34a-arrow)"/>
+          <path class="wf-flow" d="M660,152 C 660,225 140,225 140,154" stroke="#c084fc" stroke-width="2.5" fill="none" marker-end="url(#m34a-arrow)"/>
+          <text x="400" y="215" text-anchor="middle" fill="#d8b4fe" font-family="Inter,sans-serif" font-size="12">a correção entra na receita: a próxima sai melhor</text>
+        </svg>
+      </div>
+      <p class="text-sm text-neutral-400 mb-6"><strong class="text-neutral-300">Como ler o desenho:</strong> a receita (roxo) gera um resultado (azul). Você comenta (cinza), e a seta roxa de baixo leva o comentário de volta para a receita. Sem essa volta, a skill nunca aprende.</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="bg-red-900/20 rounded-xl p-6 border border-red-500/30">
+          <h3 class="font-semibold text-red-400 mb-3">✗ Pedido solto toda vez</h3>
+          <ul class="space-y-2 text-neutral-300 text-sm">
+            <li>✗ Você reescreve as mesmas instruções</li>
+            <li>✗ Cada resultado sai de um jeito</li>
+            <li>✗ A correção de ontem se perde</li>
+            <li>✗ Depende da sua memória para lembrar tudo</li>
+          </ul>
+        </div>
+        <div class="bg-dark-800 rounded-xl p-6 border border-purple-500/30">
+          <h3 class="font-semibold text-purple-400 mb-3">✓ Skill</h3>
+          <ul class="space-y-2 text-neutral-300 text-sm">
+            <li>✓ As instruções ficam escritas uma vez</li>
+            <li>✓ O resultado sai sempre no mesmo padrão</li>
+            <li>✓ Cada correção vira regra permanente</li>
+            <li>✓ O Codex lembra por você</li>
+          </ul>
+        </div>
+      </div>
+      <div class="flex justify-start mt-6">
+        <button type="button" data-inema-read-toggle aria-pressed="false" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-purple-500/20 border border-purple-500/30 text-purple-400 hover:bg-purple-500/30 transition-colors">
+          <span class="inema-read-icon" aria-hidden="true">○</span><span class="inema-read-label">Marcar como lido</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ===================== TOPICO 2 ===================== -->
+    <section id="topico-2" data-inema-topic="modulo-3-4#topico-2" class="mb-16">
+      <div class="flex flex-wrap items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl">2</span>
+        <h2 class="text-2xl font-bold flex-1">Abra um SKILL.md por dentro</h2>
+        <button type="button" data-inema-doubt-toggle aria-pressed="false" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-dark-700 border border-dark-600 text-neutral-300 hover:bg-dark-600 transition-colors text-sm"><span aria-hidden="true">?</span><span>Tenho dúvida</span></button>
+      </div>
+      <p data-inema-block="m3-4-t2-p1" class="text-neutral-300 mb-4 leading-relaxed">Toda skill tem duas partes. No topo, entre duas linhas de três traços (<code>---</code>), ficam os <strong class="text-purple-400">metadados</strong>: o nome e uma descrição de quando usar. Embaixo, as <strong class="text-purple-400">instruções</strong>, em texto comum.</p>
+      <p data-inema-block="m3-4-t2-p2" class="text-neutral-300 mb-6 leading-relaxed">O detalhe que mais importa: o Codex não lê todas as receitas inteiras o tempo todo. Ele olha só a descrição de cada uma e decide qual serve. Por isso a descrição precisa dizer, com clareza, <strong class="text-purple-400">em que situação</strong> a skill entra.</p>
+
+      <div class="rounded-2xl border border-purple-500/30 bg-dark-900/40 p-3 sm:p-4 mb-3 overflow-hidden">
+        <svg viewBox="0 0 800 290" class="w-full h-auto" role="img" aria-label="Anatomia de um arquivo SKILL.md. Uma folha dividida em duas faixas. Faixa de cima, entre linhas de três traços: name e description, marcada como o que o Codex lê para decidir. Faixa de baixo: regras e passos, marcada como o que ele segue depois de escolher a skill.">
+          <defs>
+            <pattern id="m34b-grid" width="32" height="32" patternUnits="userSpaceOnUse"><circle cx="1.3" cy="1.3" r="1.3" fill="#c084fc" opacity="0.10"/></pattern>
+            <filter id="m34b-glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="1.8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            <marker id="m34b-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#38bdf8"/></marker>
+          </defs>
+          <rect x="0" y="0" width="800" height="290" fill="url(#m34b-grid)"/>
+          <rect x="60" y="20" width="400" height="250" rx="12" fill="#111827" stroke="#6b7280" stroke-width="2"/>
+          <text x="80" y="44" fill="#9ca3af" font-family="ui-monospace,monospace" font-size="11">.agents/skills/resposta-candidato/SKILL.md</text>
+          <g filter="url(#m34b-glow)"><rect x="75" y="56" width="370" height="78" rx="8" fill="#1e1233" stroke="#c084fc" stroke-width="2"/></g>
+          <g font-family="ui-monospace,monospace" font-size="12" fill="#e9d5ff">
+            <text x="90" y="76">---</text>
+            <text x="90" y="94">name: resposta-candidato</text>
+            <text x="90" y="112">description: Use ao responder candidatos…</text>
+            <text x="90" y="128">---</text>
+          </g>
+          <rect x="75" y="146" width="370" height="112" rx="8" fill="#0b1f2e" stroke="#38bdf8" stroke-width="2"/>
+          <g font-family="ui-monospace,monospace" font-size="12" fill="#bae6fd">
+            <text x="90" y="170"># Regras</text>
+            <text x="90" y="190">- tom cordial, 3 a 5 frases</text>
+            <text x="90" y="210"># Passos</text>
+            <text x="90" y="230">1. ler o currículo  2. responder</text>
+          </g>
+          <line x1="448" y1="95" x2="520" y2="95" stroke="#c084fc" stroke-width="2" marker-end="url(#m34b-arrow)"/>
+          <text x="530" y="90" fill="#c084fc" font-family="Inter,sans-serif" font-weight="600" font-size="13">metadados</text>
+          <text x="530" y="110" fill="#d8b4fe" font-family="Inter,sans-serif" font-size="11">o Codex lê para decidir</text>
+          <line x1="448" y1="200" x2="520" y2="200" stroke="#38bdf8" stroke-width="2" marker-end="url(#m34b-arrow)"/>
+          <text x="530" y="195" fill="#38bdf8" font-family="Inter,sans-serif" font-weight="600" font-size="13">instruções</text>
+          <text x="530" y="215" fill="#7dd3fc" font-family="Inter,sans-serif" font-size="11">ele segue depois de escolher</text>
+        </svg>
+      </div>
+      <p class="text-sm text-neutral-400 mb-6"><strong class="text-neutral-300">Como ler o desenho:</strong> a faixa roxa é a "etiqueta" da receita, e é tudo o que o Codex olha para saber se ela serve. A faixa azul só é lida quando a skill é escolhida. Etiqueta vaga = receita esquecida na gaveta.</p>
+
+      <div class="bg-dark-800 rounded-xl border border-purple-500/30 overflow-hidden mb-6">
+        <div class="px-5 py-3 bg-purple-900/20 border-b border-purple-500/30"><span class="text-purple-400 font-semibold text-sm">📄 Copia e cola: um SKILL.md completo (da Paula)</span></div>
+        <div class="p-5">
+          <p class="text-neutral-300 text-sm mb-3"><strong class="text-purple-400">Objetivo:</strong> ver uma skill inteira, pequena e funcional. Salve em <code>.agents/skills/descricao-post/SKILL.md</code> dentro do seu projeto.</p>
+          <pre class="font-mono text-sm text-neutral-200 whitespace-pre-wrap bg-dark-900/60 rounded-lg p-4 border border-dark-600">---
+name: descricao-post
+description: Use quando eu pedir a descrição de um post, de uma gravação ou de um material para o LinkedIn. Escreve um texto curto de apresentação no meu tom.
+---
+
+# Regras
+- De 2 a 4 frases. Sem tópicos. Sem travessão.
+- Tom próximo e profissional, como quem conversa com um gestor de RH.
+- Termine com uma pergunta simples para o leitor.
+
+# Passos
+1. Leia o rascunho ou a transcrição que eu passar.
+2. Ache o tema central em uma frase.
+3. Escreva a descrição seguindo as regras.
+4. Mostre o texto e pergunte se quero ajustar algo.</pre>
+        </div>
+        <div class="px-5 py-3 bg-dark-700/40 border-t border-dark-600 text-neutral-300 text-sm"><strong class="text-purple-400">Como verificar:</strong> abra uma conversa nova no projeto e pergunte "que skills você tem disponíveis neste projeto?". A <code>descricao-post</code> tem de aparecer na lista, com a descrição que você escreveu.</div>
+      </div>
+
+      <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-2 flex items-center"><span class="mr-2">💡</span> Curta ou longa, tanto faz</h3>
+        <p class="text-neutral-300 text-sm">Uma skill pode ter cinco linhas ou duas páginas. Comece curta, com as regras que você mais repete. Ela cresce sozinha, a cada correção que você fizer.</p>
+      </div>
+      <div class="flex justify-start mt-6">
+        <button type="button" data-inema-read-toggle aria-pressed="false" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-purple-500/20 border border-purple-500/30 text-purple-400 hover:bg-purple-500/30 transition-colors">
+          <span class="inema-read-icon" aria-hidden="true">○</span><span class="inema-read-label">Marcar como lido</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ===================== TOPICO 3 ===================== -->
+    <section id="topico-3" data-inema-topic="modulo-3-4#topico-3" class="mb-16">
+      <div class="flex flex-wrap items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl">3</span>
+        <h2 class="text-2xl font-bold flex-1">Crie sua primeira skill</h2>
+        <button type="button" data-inema-doubt-toggle aria-pressed="false" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-dark-700 border border-dark-600 text-neutral-300 hover:bg-dark-600 transition-colors text-sm"><span aria-hidden="true">?</span><span>Tenho dúvida</span></button>
+      </div>
+      <p data-inema-block="m3-4-t3-p1" class="text-neutral-300 mb-4 leading-relaxed">O jeito mais fácil não é escrever a skill do zero. É fazer a tarefa uma vez com o Codex, ajustar até ficar do seu gosto e, no fim, pedir: <strong class="text-purple-400">"transforme isso numa skill"</strong>. Ele já viu o que deu certo e escreve a receita a partir daí.</p>
+      <p data-inema-block="m3-4-t3-p2" class="text-neutral-300 mb-6 leading-relaxed">O Rui fez assim com a promoção da semana. Na segunda-feira, levou meia hora de idas e vindas até o texto ficar bom. No fim, pediu a skill. Na segunda seguinte, a promoção saiu em dois minutos.</p>
+
+      <div class="space-y-5 mb-6">
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center"><span class="text-purple-400 font-bold">1</span></div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-5 border border-dark-600"><h4 class="font-semibold text-neutral-100 mb-1">Faça a tarefa uma vez</h4><p class="text-neutral-300 text-sm">Peça normalmente. Ex.: "monte a promoção da semana com os 5 itens com mais estoque parado na planilha".</p></div>
+        </div>
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center"><span class="text-purple-400 font-bold">2</span></div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-5 border border-dark-600"><h4 class="font-semibold text-neutral-100 mb-1">Corrija até ficar bom</h4><p class="text-neutral-300 text-sm">"Tire o desconto acima de 20%." "Coloque o preço antigo riscado." Cada correção é uma regra que vai para a receita.</p></div>
+        </div>
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center"><span class="text-purple-400 font-bold">3</span></div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-5 border border-dark-600"><h4 class="font-semibold text-neutral-100 mb-1">Peça a skill</h4><p class="text-neutral-300 text-sm">Use o pedido do quadro abaixo. Ele cria a pasta da skill em <code>.agents/skills/</code> com o <code>SKILL.md</code> dentro.</p></div>
+        </div>
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center"><span class="text-purple-400 font-bold">4</span></div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-5 border border-dark-600"><h4 class="font-semibold text-neutral-100 mb-1">Leia o que ele escreveu</h4><p class="text-neutral-300 text-sm">Abra o arquivo. Confira se a descrição diz quando usar e se as suas correções estão lá. Ajuste com as suas palavras se quiser.</p></div>
+        </div>
+      </div>
+
+      <div class="rounded-2xl border border-purple-500/30 bg-dark-900/40 p-3 sm:p-4 mb-3 overflow-hidden">
+        <svg viewBox="0 0 800 230" class="w-full h-auto" role="img" aria-label="Funil de destilação. À esquerda, uma conversa longa com várias idas e vindas e correções. No meio, o pedido: transforme isso numa skill. À direita, uma pasta nova chamada promocao-semana com o arquivo SKILL.md dentro, curto e limpo.">
+          <defs>
+            <pattern id="m34c-grid" width="32" height="32" patternUnits="userSpaceOnUse"><circle cx="1.3" cy="1.3" r="1.3" fill="#c084fc" opacity="0.10"/></pattern>
+            <filter id="m34c-glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="1.8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            <marker id="m34c-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#38bdf8"/></marker>
+          </defs>
+          <rect x="0" y="0" width="800" height="230" fill="url(#m34c-grid)"/>
+          <rect x="30" y="20" width="230" height="190" rx="14" fill="#0b1220" stroke="#38bdf8" stroke-width="2"/>
+          <g font-family="Inter,sans-serif" font-size="10">
+            <rect x="45" y="35" width="150" height="22" rx="6" fill="#0b1f2e"/><text x="55" y="50" fill="#bae6fd">monte a promoção…</text>
+            <rect x="95" y="64" width="150" height="22" rx="6" fill="#1f2937"/><text x="105" y="79" fill="#d1d5db">aqui está: 5 itens…</text>
+            <rect x="45" y="93" width="150" height="22" rx="6" fill="#0b1f2e"/><text x="55" y="108" fill="#bae6fd">desconto até 20%</text>
+            <rect x="95" y="122" width="150" height="22" rx="6" fill="#1f2937"/><text x="105" y="137" fill="#d1d5db">ajustado…</text>
+            <rect x="45" y="151" width="150" height="22" rx="6" fill="#0b1f2e"/><text x="55" y="166" fill="#bae6fd">preço antigo riscado</text>
+            <rect x="95" y="180" width="150" height="22" rx="6" fill="#1f2937"/><text x="105" y="195" fill="#d1d5db">pronto!</text>
+          </g>
+          <polygon points="290,40 470,90 470,140 290,190" fill="#1e1233" stroke="#c084fc" stroke-width="2" opacity="0.9"/>
+          <text x="370" y="110" text-anchor="middle" fill="#e9d5ff" font-family="Inter,sans-serif" font-size="12">"transforme isso</text>
+          <text x="370" y="128" text-anchor="middle" fill="#e9d5ff" font-family="Inter,sans-serif" font-size="12">numa skill"</text>
+          <line class="wf-flow" x1="474" y1="115" x2="530" y2="115" stroke="#38bdf8" stroke-width="2.5" marker-end="url(#m34c-arrow)"/>
+          <g filter="url(#m34c-glow)"><rect x="540" y="55" width="230" height="120" rx="14" fill="#1e1233" stroke="#c084fc" stroke-width="2"/></g>
+          <g font-family="ui-monospace,monospace" font-size="12">
+            <text x="560" y="85" fill="#c084fc">📁 promocao-semana/</text>
+            <text x="580" y="112" fill="#e9d5ff">📄 SKILL.md</text>
+            <text x="560" y="145" fill="#d8b4fe" font-family="Inter,sans-serif" font-size="11">30 min de ajustes → 12 linhas</text>
+          </g>
+        </svg>
+      </div>
+      <p class="text-sm text-neutral-400 mb-6"><strong class="text-neutral-300">Como ler o desenho:</strong> a conversa da esquerda tem o "trabalho sujo" das correções. O funil roxo destila só o que importa, e à direita sai a receita limpa, pronta para a próxima semana.</p>
+
+      <div class="bg-dark-800 rounded-xl border border-purple-500/30 overflow-hidden mb-6">
+        <div class="px-5 py-3 bg-purple-900/20 border-b border-purple-500/30"><span class="text-purple-400 font-semibold text-sm">💬 Copia e cola no Codex: vire a tarefa numa skill</span></div>
+        <div class="p-5">
+          <p class="text-neutral-300 text-sm mb-3"><strong class="text-purple-400">Objetivo:</strong> guardar como receita uma tarefa que acabou de dar certo nesta conversa.</p>
+          <pre class="font-mono text-sm text-neutral-200 whitespace-pre-wrap bg-dark-900/60 rounded-lg p-4 border border-dark-600">A tarefa que fizemos agora ficou do jeito que eu queria. Transforme-a numa skill deste projeto, em .agents/skills/&lt;nome-curto&gt;/SKILL.md. No topo, entre linhas de ---, coloque name e uma description dizendo em que situação usar. Embaixo, escreva as regras (inclua todas as correções que eu fiz) e os passos em ordem. Mostre o arquivo antes de salvar.</pre>
+        </div>
+        <div class="px-5 py-3 bg-dark-700/40 border-t border-dark-600 text-neutral-300 text-sm"><strong class="text-purple-400">Como verificar:</strong> a pasta nova aparece dentro de <code>.agents/skills/</code>. Abra o <code>SKILL.md</code> e procure, uma por uma, as correções que você fez na conversa. Se faltar alguma, peça "inclua também a regra de &lt;tal coisa&gt;".</div>
+      </div>
+      <div class="flex justify-start mt-6">
+        <button type="button" data-inema-read-toggle aria-pressed="false" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-purple-500/20 border border-purple-500/30 text-purple-400 hover:bg-purple-500/30 transition-colors">
+          <span class="inema-read-icon" aria-hidden="true">○</span><span class="inema-read-label">Marcar como lido</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ===================== TOPICO 4 ===================== -->
+    <section id="topico-4" data-inema-topic="modulo-3-4#topico-4" class="mb-16">
+      <div class="flex flex-wrap items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl">4</span>
+        <h2 class="text-2xl font-bold flex-1">Chame a skill por texto ou por barra</h2>
+        <button type="button" data-inema-doubt-toggle aria-pressed="false" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-dark-700 border border-dark-600 text-neutral-300 hover:bg-dark-600 transition-colors text-sm"><span aria-hidden="true">?</span><span>Tenho dúvida</span></button>
+      </div>
+      <p data-inema-block="m3-4-t4-p1" class="text-neutral-300 mb-4 leading-relaxed">Existem dois jeitos de usar uma skill. O primeiro é só pedir, em português: "faça a descrição deste post". O Codex compara o pedido com as descrições das skills e escolhe a que encaixa.</p>
+      <p data-inema-block="m3-4-t4-p2" class="text-neutral-300 mb-6 leading-relaxed">O segundo é chamar pelo nome, com uma <strong class="text-purple-400">barra</strong> na frente: <code>/descricao-post</code>. É o jeito garantido, porque você não deixa a escolha com ele. Use quando tiver muitas skills parecidas ou quando quiser ter certeza.</p>
+
+      <div class="rounded-2xl border border-purple-500/30 bg-dark-900/40 p-3 sm:p-4 mb-3 overflow-hidden">
+        <svg viewBox="0 0 800 250" class="w-full h-auto" role="img" aria-label="Dois caminhos até a mesma skill. Caminho de cima, por texto: o pedido em português passa por uma lupa que compara com as descrições de três skills e acende a que combina. Caminho de baixo, por barra: o comando barra descricao-post vai direto para a skill, sem lupa.">
+          <defs>
+            <pattern id="m34d-grid" width="32" height="32" patternUnits="userSpaceOnUse"><circle cx="1.3" cy="1.3" r="1.3" fill="#c084fc" opacity="0.10"/></pattern>
+            <filter id="m34d-glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="1.8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            <marker id="m34d-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#38bdf8"/></marker>
+          </defs>
+          <rect x="0" y="0" width="800" height="250" fill="url(#m34d-grid)"/>
+          <rect x="30" y="35" width="230" height="50" rx="12" fill="#0b1f2e" stroke="#38bdf8" stroke-width="2"/>
+          <text x="145" y="65" text-anchor="middle" fill="#bae6fd" font-family="Inter,sans-serif" font-size="12">"faça a descrição deste post"</text>
+          <circle cx="330" cy="60" r="26" fill="#111827" stroke="#38bdf8" stroke-width="2"/><text x="330" y="66" text-anchor="middle" font-size="18">🔎</text>
+          <line x1="262" y1="60" x2="300" y2="60" stroke="#38bdf8" stroke-width="2" marker-end="url(#m34d-arrow)"/>
+          <rect x="30" y="165" width="230" height="50" rx="12" fill="#1e1233" stroke="#c084fc" stroke-width="2"/>
+          <text x="145" y="195" text-anchor="middle" fill="#e9d5ff" font-family="ui-monospace,monospace" font-size="13">/descricao-post</text>
+          <g font-family="ui-monospace,monospace" font-size="11">
+            <rect x="500" y="30" width="250" height="40" rx="10" fill="#111827" stroke="#4b5563"/><text x="625" y="55" text-anchor="middle" fill="#6b7280">resposta-candidato</text>
+            <g filter="url(#m34d-glow)"><rect x="500" y="100" width="250" height="44" rx="10" fill="#1e1233" stroke="#c084fc" stroke-width="2.5"/></g>
+            <text x="625" y="127" text-anchor="middle" fill="#e9d5ff">descricao-post ✓</text>
+            <rect x="500" y="175" width="250" height="40" rx="10" fill="#111827" stroke="#4b5563"/><text x="625" y="200" text-anchor="middle" fill="#6b7280">proposta-cliente</text>
+          </g>
+          <path class="wf-flow" d="M358,60 C 430,60 430,122 496,122" stroke="#38bdf8" stroke-width="2.5" fill="none" marker-end="url(#m34d-arrow)"/>
+          <path class="wf-flow" d="M262,190 C 400,190 400,122 496,122" stroke="#c084fc" stroke-width="2.5" fill="none" marker-end="url(#m34d-arrow)"/>
+          <text x="330" y="110" text-anchor="middle" fill="#7dd3fc" font-family="Inter,sans-serif" font-size="11">compara descrições</text>
+          <text x="370" y="230" text-anchor="middle" fill="#d8b4fe" font-family="Inter,sans-serif" font-size="11">vai direto, sem escolher</text>
+        </svg>
+      </div>
+      <p class="text-sm text-neutral-400 mb-6"><strong class="text-neutral-300">Como ler o desenho:</strong> pelo caminho azul (texto), o Codex usa a lupa para achar a skill certa entre várias. Pelo caminho roxo (barra), você aponta a skill e ele nem precisa procurar. Os dois chegam à mesma receita.</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="bg-dark-800 rounded-xl p-6 border border-purple-500/30">
+          <h3 class="font-semibold text-purple-400 mb-3">✓ Descrição que funciona</h3>
+          <ul class="space-y-2 text-neutral-300 text-sm">
+            <li>✓ "Use quando eu pedir a promoção da semana da loja."</li>
+            <li>✓ Cita as palavras que você costuma usar no pedido</li>
+            <li>✓ Diz o que a skill entrega (texto, tabela, arquivo)</li>
+            <li>✓ Uma situação clara por skill</li>
+          </ul>
+        </div>
+        <div class="bg-red-900/20 rounded-xl p-6 border border-red-500/30">
+          <h3 class="font-semibold text-red-400 mb-3">✗ Descrição que falha</h3>
+          <ul class="space-y-2 text-neutral-300 text-sm">
+            <li>✗ "Skill de textos." (texto de quê?)</li>
+            <li>✗ Duas skills com descrições quase iguais</li>
+            <li>✗ Descrição em branco</li>
+            <li>✗ Nome com espaço ou acento: prefira <code>promocao-semana</code></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-2 flex items-center"><span class="mr-2">💡</span> Ele não usou a skill? Pergunte</h3>
+        <p class="text-neutral-300 text-sm">Se o resultado saiu fora do padrão, pergunte "você usou alguma skill nesta resposta?". Se ele disser que não, o problema quase sempre é a descrição. Melhore a frase de "quando usar" ou chame pela barra.</p>
+      </div>
+      <div class="flex justify-start mt-6">
+        <button type="button" data-inema-read-toggle aria-pressed="false" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-purple-500/20 border border-purple-500/30 text-purple-400 hover:bg-purple-500/30 transition-colors">
+          <span class="inema-read-icon" aria-hidden="true">○</span><span class="inema-read-label">Marcar como lido</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ===================== TOPICO 5 ===================== -->
+    <section id="topico-5" data-inema-topic="modulo-3-4#topico-5" class="mb-16">
+      <div class="flex flex-wrap items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl">5</span>
+        <h2 class="text-2xl font-bold flex-1">Melhore a skill com feedback</h2>
+        <button type="button" data-inema-doubt-toggle aria-pressed="false" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-dark-700 border border-dark-600 text-neutral-300 hover:bg-dark-600 transition-colors text-sm"><span aria-hidden="true">?</span><span>Tenho dúvida</span></button>
+      </div>
+      <p data-inema-block="m3-4-t5-p1" class="text-neutral-300 mb-4 leading-relaxed">Nenhuma skill nasce perfeita. A diferença está no hábito: toda vez que o resultado não sair do jeito que você quer, em vez de só corrigir aquele texto, você corrige <strong class="text-purple-400">a receita</strong>.</p>
+      <p data-inema-block="m3-4-t5-p2" class="text-neutral-300 mb-6 leading-relaxed">A Paula notou que as respostas aos candidatos saíam formais demais. Disse: "gostei da estrutura, mas o tom ficou frio; atualize a skill para usar o primeiro nome do candidato e uma frase de agradecimento". Desde então, todas saem assim.</p>
+
+      <div class="rounded-2xl border border-purple-500/30 bg-dark-900/40 p-3 sm:p-4 mb-3 overflow-hidden">
+        <svg viewBox="0 0 800 240" class="w-full h-auto" role="img" aria-label="Escada de versões de uma skill. Versão 1: regras básicas, nota 6. Versão 2: mais o primeiro nome do candidato, nota 8. Versão 3: mais a frase de agradecimento, nota 9. Cada degrau sobe com um feedback anotado ao lado.">
+          <defs>
+            <pattern id="m34e-grid" width="32" height="32" patternUnits="userSpaceOnUse"><circle cx="1.3" cy="1.3" r="1.3" fill="#c084fc" opacity="0.10"/></pattern>
+            <filter id="m34e-glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="1.8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            <marker id="m34e-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#38bdf8"/></marker>
+          </defs>
+          <rect x="0" y="0" width="800" height="240" fill="url(#m34e-grid)"/>
+          <rect x="60" y="160" width="200" height="56" rx="10" fill="#111827" stroke="#6b7280" stroke-width="2"/>
+          <text x="160" y="184" text-anchor="middle" fill="#e5e7eb" font-family="Inter,sans-serif" font-weight="600" font-size="13">v1 · nota 6</text>
+          <text x="160" y="203" text-anchor="middle" fill="#9ca3af" font-family="Inter,sans-serif" font-size="11">regras básicas</text>
+          <rect x="300" y="100" width="200" height="56" rx="10" fill="#0b1f2e" stroke="#38bdf8" stroke-width="2"/>
+          <text x="400" y="124" text-anchor="middle" fill="#bae6fd" font-family="Inter,sans-serif" font-weight="600" font-size="13">v2 · nota 8</text>
+          <text x="400" y="143" text-anchor="middle" fill="#7dd3fc" font-family="Inter,sans-serif" font-size="11">+ primeiro nome</text>
+          <g filter="url(#m34e-glow)"><rect x="540" y="40" width="200" height="56" rx="10" fill="#1e1233" stroke="#c084fc" stroke-width="2"/></g>
+          <text x="640" y="64" text-anchor="middle" fill="#c084fc" font-family="Inter,sans-serif" font-weight="600" font-size="13">v3 · nota 9</text>
+          <text x="640" y="83" text-anchor="middle" fill="#e9d5ff" font-family="Inter,sans-serif" font-size="11">+ frase de agradecimento</text>
+          <path class="wf-flow" d="M262,170 C 285,170 280,128 296,128" stroke="#38bdf8" stroke-width="2" fill="none" marker-end="url(#m34e-arrow)"/>
+          <path class="wf-flow" d="M502,110 C 525,110 520,68 536,68" stroke="#38bdf8" stroke-width="2" fill="none" marker-end="url(#m34e-arrow)"/>
+          <text x="250" y="110" text-anchor="middle" fill="#fcd34d" font-family="Inter,sans-serif" font-size="11">"tom frio"</text>
+          <text x="490" y="40" text-anchor="middle" fill="#fcd34d" font-family="Inter,sans-serif" font-size="11">"falta gentileza"</text>
+        </svg>
+      </div>
+      <p class="text-sm text-neutral-400 mb-6"><strong class="text-neutral-300">Como ler o desenho:</strong> cada degrau é uma versão da mesma skill. O que faz subir é o comentário em amarelo, transformado em regra. Não é preciso começar no topo: é preciso subir um degrau por vez.</p>
+
+      <div class="bg-dark-800 rounded-xl border border-purple-500/30 overflow-hidden mb-6">
+        <div class="px-5 py-3 bg-purple-900/20 border-b border-purple-500/30"><span class="text-purple-400 font-semibold text-sm">💬 Copia e cola no Codex: atualize a receita</span></div>
+        <div class="p-5">
+          <p class="text-neutral-300 text-sm mb-3"><strong class="text-purple-400">Objetivo:</strong> transformar o seu comentário sobre um resultado em regra permanente da skill.</p>
+          <pre class="font-mono text-sm text-neutral-200 whitespace-pre-wrap bg-dark-900/60 rounded-lg p-4 border border-dark-600">Sobre o texto que você acabou de fazer: gostei de &lt;o que ficou bom&gt;. Não gostei de &lt;o que ficou ruim&gt;. Atualize a skill que você usou para que isso não se repita. Mostre só as linhas que mudaram no SKILL.md, antes e depois.</pre>
+        </div>
+        <div class="px-5 py-3 bg-dark-700/40 border-t border-dark-600 text-neutral-300 text-sm"><strong class="text-purple-400">Como verificar:</strong> abra uma conversa nova, faça o mesmo tipo de pedido e veja se o problema sumiu sem você precisar repetir a correção.</div>
+      </div>
+
+      <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-2 flex items-center"><span class="mr-2">💡</span> Diga o que gostou também</h3>
+        <p class="text-neutral-300 text-sm">Só criticar faz o Codex mudar coisas que estavam boas. Dizer "mantenha a estrutura em três parágrafos" protege o que já funciona enquanto ele conserta o resto.</p>
+      </div>
+      <div class="flex justify-start mt-6">
+        <button type="button" data-inema-read-toggle aria-pressed="false" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-purple-500/20 border border-purple-500/30 text-purple-400 hover:bg-purple-500/30 transition-colors">
+          <span class="inema-read-icon" aria-hidden="true">○</span><span class="inema-read-label">Marcar como lido</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ===================== TOPICO 6 ===================== -->
+    <section id="topico-6" data-inema-topic="modulo-3-4#topico-6" class="mb-16">
+      <div class="flex flex-wrap items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl">6</span>
+        <h2 class="text-2xl font-bold flex-1">Encadeie skills num fluxo maior</h2>
+        <button type="button" data-inema-doubt-toggle aria-pressed="false" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-dark-700 border border-dark-600 text-neutral-300 hover:bg-dark-600 transition-colors text-sm"><span aria-hidden="true">?</span><span>Tenho dúvida</span></button>
+      </div>
+      <p data-inema-block="m3-4-t6-p1" class="text-neutral-300 mb-4 leading-relaxed">Quando você tem algumas skills, elas começam a trabalhar juntas. A saída de uma vira a entrada da outra. Você faz um pedido grande e o Codex usa várias receitas em sequência.</p>
+      <p data-inema-block="m3-4-t6-p2" class="text-neutral-300 mb-6 leading-relaxed">A Paula grava uma conversa de dez minutos sobre entrevistas de emprego. Pede: "a partir desta transcrição, faça a descrição, o post do LinkedIn e um artigo com imagens". O Codex usa três skills, uma depois da outra. No fim, ela pergunta "que skills você usou?" e ele lista as três.</p>
+
+      <div class="rounded-2xl border border-purple-500/30 bg-dark-900/40 p-3 sm:p-4 mb-3 overflow-hidden">
+        <svg viewBox="0 0 800 220" class="w-full h-auto" role="img" aria-label="Linha de montagem com quatro estações. Gravação da Paula, depois skill descricao-post, depois skill post-linkedin, depois skill artigo-com-imagens. Uma esteira ciano liga as estações e no fim sai um pacote com três entregas.">
+          <defs>
+            <pattern id="m34f-grid" width="32" height="32" patternUnits="userSpaceOnUse"><circle cx="1.3" cy="1.3" r="1.3" fill="#c084fc" opacity="0.10"/></pattern>
+            <filter id="m34f-glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="1.8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            <marker id="m34f-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#38bdf8"/></marker>
+          </defs>
+          <rect x="0" y="0" width="800" height="220" fill="url(#m34f-grid)"/>
+          <line x1="40" y1="150" x2="760" y2="150" stroke="#38bdf8" stroke-width="3" stroke-dasharray="10 6" opacity="0.7"/>
+          <g font-family="Inter,sans-serif" text-anchor="middle">
+            <rect x="40" y="55" width="140" height="70" rx="12" fill="#111827" stroke="#6b7280" stroke-width="2"/><text x="110" y="85" fill="#e5e7eb" font-size="13">🎙️ gravação</text><text x="110" y="105" fill="#9ca3af" font-size="10">transcrição</text>
+            <rect x="225" y="55" width="150" height="70" rx="12" fill="#1e1233" stroke="#c084fc" stroke-width="2"/><text x="300" y="85" fill="#e9d5ff" font-size="12">skill 1</text><text x="300" y="105" fill="#d8b4fe" font-size="10" font-family="ui-monospace,monospace">descricao-post</text>
+            <rect x="420" y="55" width="150" height="70" rx="12" fill="#1e1233" stroke="#c084fc" stroke-width="2"/><text x="495" y="85" fill="#e9d5ff" font-size="12">skill 2</text><text x="495" y="105" fill="#d8b4fe" font-size="10" font-family="ui-monospace,monospace">post-linkedin</text>
+            <g filter="url(#m34f-glow)"><rect x="615" y="55" width="150" height="70" rx="12" fill="#1e1233" stroke="#c084fc" stroke-width="2"/></g><text x="690" y="85" fill="#e9d5ff" font-size="12">skill 3</text><text x="690" y="105" fill="#d8b4fe" font-size="10" font-family="ui-monospace,monospace">artigo-imagens</text>
+          </g>
+          <line class="wf-flow" x1="182" y1="90" x2="221" y2="90" stroke="#38bdf8" stroke-width="2" marker-end="url(#m34f-arrow)"/>
+          <line class="wf-flow" x1="377" y1="90" x2="416" y2="90" stroke="#38bdf8" stroke-width="2" marker-end="url(#m34f-arrow)"/>
+          <line class="wf-flow" x1="572" y1="90" x2="611" y2="90" stroke="#38bdf8" stroke-width="2" marker-end="url(#m34f-arrow)"/>
+          <text x="400" y="190" text-anchor="middle" fill="#7dd3fc" font-family="Inter,sans-serif" font-size="12">um pedido → três receitas em sequência → descrição + post + artigo</text>
+        </svg>
+      </div>
+      <p class="text-sm text-neutral-400 mb-6"><strong class="text-neutral-300">Como ler o desenho:</strong> a esteira ciano carrega o material de estação em estação. Cada caixa roxa é uma skill que você já tinha criado e melhorado separadamente. Juntas, viram um fluxo de trabalho inteiro.</p>
+
+      <div class="overflow-x-auto mb-6 rounded-xl border border-dark-600">
+        <table class="w-full text-sm text-left">
+          <thead class="bg-dark-700/60 text-purple-400"><tr><th class="px-4 py-3 font-semibold">Quem</th><th class="px-4 py-3 font-semibold">Pedido grande</th><th class="px-4 py-3 font-semibold">Skills em sequência</th></tr></thead>
+          <tbody class="divide-y divide-dark-600">
+            <tr class="bg-dark-800"><td class="px-4 py-3 text-neutral-100">Paula</td><td class="px-4 py-3 text-neutral-300">Conteúdo da semana a partir de uma gravação</td><td class="px-4 py-3 text-neutral-300">descrição → post do LinkedIn → artigo</td></tr>
+            <tr class="bg-dark-800"><td class="px-4 py-3 text-neutral-100">Paula</td><td class="px-4 py-3 text-neutral-300">Novo cliente</td><td class="px-4 py-3 text-neutral-300">ficha do cliente → proposta → e-mail de envio</td></tr>
+            <tr class="bg-dark-800"><td class="px-4 py-3 text-neutral-100">Rui</td><td class="px-4 py-3 text-neutral-300">Promoção da semana</td><td class="px-4 py-3 text-neutral-300">ler estoque parado → montar promoção → texto para o site</td></tr>
+            <tr class="bg-dark-800"><td class="px-4 py-3 text-neutral-100">Rui</td><td class="px-4 py-3 text-neutral-300">Chegou mercadoria</td><td class="px-4 py-3 text-neutral-300">atualizar planilha → atualizar catálogo</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-sm text-neutral-400 mb-6"><strong class="text-neutral-300">O que olhar na tabela:</strong> cada skill da última coluna funciona sozinha. Crie e acerte uma por vez; só depois peça o fluxo inteiro.</p>
+
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6" data-inema-check="modulo-3-4#q1">
+        <p class="font-medium mb-4">Teste rápido (opcional): o que o Codex lê para decidir se uma skill serve para o seu pedido?</p>
+        <div class="space-y-2">
+          <button type="button" data-inema-check-option="0" class="block w-full text-left px-4 py-2 rounded-lg bg-dark-700 border border-dark-600 hover:bg-dark-600 transition-colors text-sm">A skill inteira, todas as vezes, do começo ao fim.</button>
+          <button type="button" data-inema-check-option="1" class="block w-full text-left px-4 py-2 rounded-lg bg-dark-700 border border-dark-600 hover:bg-dark-600 transition-colors text-sm">Os metadados do topo: o nome e a descrição de quando usar.</button>
+          <button type="button" data-inema-check-option="2" class="block w-full text-left px-4 py-2 rounded-lg bg-dark-700 border border-dark-600 hover:bg-dark-600 transition-colors text-sm">Só o nome da pasta onde a skill está guardada.</button>
+        </div>
+        <div data-inema-check-feedback class="mt-4 text-sm" role="status" aria-live="polite"></div>
+      </div>
+      <div class="flex justify-start mt-6">
+        <button type="button" data-inema-read-toggle aria-pressed="false" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-purple-500/20 border border-purple-500/30 text-purple-400 hover:bg-purple-500/30 transition-colors">
+          <span class="inema-read-icon" aria-hidden="true">○</span><span class="inema-read-label">Marcar como lido</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ===================== RESUMO ===================== -->
+    <section class="mb-12">
+      <div class="bg-gradient-to-br from-purple-900/40 via-dark-800 to-dark-800 rounded-xl border border-purple-500/30 p-8">
+        <h2 class="text-2xl font-bold mb-6 flex items-center"><span class="mr-3">🎓</span> Resumo do módulo</h2>
+        <div class="space-y-4 mb-8">
+          <div class="flex items-start space-x-3"><span class="text-purple-400 mt-1">✓</span><div><strong class="text-neutral-100">Skill é receita</strong><span class="text-neutral-400"> — faça bem uma vez, repita sempre.</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-purple-400 mt-1">✓</span><div><strong class="text-neutral-100">SKILL.md tem duas partes</strong><span class="text-neutral-400"> — metadados no topo, instruções embaixo.</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-purple-400 mt-1">✓</span><div><strong class="text-neutral-100">Crie a partir do que deu certo</strong><span class="text-neutral-400"> — "transforme isso numa skill".</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-purple-400 mt-1">✓</span><div><strong class="text-neutral-100">Chame por texto ou por barra</strong><span class="text-neutral-400"> — a descrição decide o primeiro caso.</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-purple-400 mt-1">✓</span><div><strong class="text-neutral-100">Corrija a receita, não só o texto</strong><span class="text-neutral-400"> — e encadeie skills num fluxo.</span></div></div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-4 mb-8">
+          <h3 class="font-semibold text-purple-400 mb-2">Próximo módulo:</h3>
+          <p class="text-neutral-300">3.5 — A pasta .agents e a vinda do Claude Code</p>
+        </div>
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a href="index.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">← Voltar para a trilha</a>
+          <a href="modulo-3-5.html" class="flex-1 text-center px-6 py-3 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-500 transition-colors">Módulo 3.5 →</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <aside class="hidden lg:block">
+    <nav data-inema-toc aria-label="Índice da página" class="sticky top-24">
+      <p class="text-sm text-neutral-400 mb-3"><span data-inema-section-counter>Seção 1 de 6</span></p>
+      <ol class="space-y-2 text-sm">
+        <li><a href="#topico-1" class="text-neutral-400 hover:text-purple-400">1. Skill = receita</a></li>
+        <li><a href="#topico-2" class="text-neutral-400 hover:text-purple-400">2. Dentro do SKILL.md</a></li>
+        <li><a href="#topico-3" class="text-neutral-400 hover:text-purple-400">3. Primeira skill</a></li>
+        <li><a href="#topico-4" class="text-neutral-400 hover:text-purple-400">4. Texto ou barra</a></li>
+        <li><a href="#topico-5" class="text-neutral-400 hover:text-purple-400">5. Feedback</a></li>
+        <li><a href="#topico-6" class="text-neutral-400 hover:text-purple-400">6. Encadear</a></li>
+      </ol>
+    </nav>
+  </aside>
+  </div>
+
+  <footer class="border-t border-dark-600 py-8 mt-16">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-neutral-500 text-sm">
+      <p>Codex: os 18 conceitos · 2026 | <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300">INEMA.CLUB</a> - <a href="https://inema.pro" target="_blank" class="text-amber-700 hover:text-amber-600 dark:text-slate-300 dark:hover:text-slate-200">PRO</a></p>
+      
+    </div>
+  </footer>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+    const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+    const _html = document.documentElement;
+    if (!_html.classList.contains('dark')) { themeToggleDarkIcon.classList.remove('hidden'); }
+    else { themeToggleLightIcon.classList.remove('hidden'); }
+    themeToggle.addEventListener('click', () => {
+      if (window.INEMA && INEMA.setPref) { INEMA.setPref('theme', _html.classList.contains('dark') ? 'claro' : 'inema-dark'); }
+      else { _html.classList.toggle('dark'); }
+      themeToggleDarkIcon.classList.toggle('hidden', _html.classList.contains('dark'));
+      themeToggleLightIcon.classList.toggle('hidden', !_html.classList.contains('dark'));
+      try { localStorage.setItem('theme', _html.classList.contains('dark') ? 'dark' : 'light'); } catch (e) {}
+    });
+    function toggleTopic(button) {
+      const item = button.closest('.topic-item');
+      const exp = item.querySelector('.topic-explanation');
+      const card = button.closest('[id^="modulo-"]') || document;
+      card.querySelectorAll('.topic-explanation.active').forEach(e => { if (e !== exp) { e.classList.remove('active'); const b = e.parentElement.querySelector('[aria-controls]'); if (b) b.setAttribute('aria-expanded', 'false'); } });
+      exp.classList.toggle('active');
+      button.setAttribute('aria-expanded', exp.classList.contains('active') ? 'true' : 'false');
+    }
+    let _lastModalTrigger = null;
+    function openModal(id){ const m=document.getElementById(id); if(m){ _lastModalTrigger=document.activeElement; m.classList.remove('hidden'); document.body.style.overflow='hidden'; const c=m.querySelector('button'); if(c) c.focus(); } }
+    function closeModal(){ document.querySelectorAll('.modal').forEach(m=>m.classList.add('hidden')); document.body.style.overflow='auto'; if(_lastModalTrigger){ _lastModalTrigger.focus(); _lastModalTrigger=null; } }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+  </script>
+  <script src="../../assets/learn.js"></script>
+  <script>
+    if (window.INEMA && typeof window.INEMA.init === 'function') { window.INEMA.init(); }
+  </script>
+  <script>
+    window.addEventListener('DOMContentLoaded', function () {
+      if (window.INEMA && INEMA.registerCheck) {
+
+        INEMA.registerCheck('modulo-3-4#q1', { answer: 1, explain: {
+          '0': 'Não. Ler todas as receitas inteiras o tempo todo seria lento. Ele olha primeiro só o topo de cada uma.',
+          '1': 'Isso. O nome e a descrição de quando usar são a etiqueta da receita. Descrição clara = skill escolhida na hora certa.',
+          '2': 'Não. O nome da pasta ajuda você a organizar, mas quem decide é a descrição escrita nos metadados.'
+        } });
+      }
+    });
+  </script>
+</body>
+</html>

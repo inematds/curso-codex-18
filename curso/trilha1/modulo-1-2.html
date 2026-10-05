@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="inema-course" content="cx18">
+  <title>AGENTS.md: as regras da casa | Codex: os 18 conceitos</title>
+  <meta name="description" content="Curso gratuito do INEMA.CLUB: os 18 conceitos que fazem o Codex trabalhar por você — projetos, regras, ciclo do agente, modelos, permissões, skills, plugins, navegador, subagentes e tarefas agendadas, do zero.">
+
+  <!-- ANTI-FOUC: bloqueante, ANTES do Tailwind -->
+  <script>
+  (function () {
+    try {
+      var html = document.documentElement;
+      var DEF = { theme: 'inema-dark', font: 'inter', fontScale: 100, lineWidth: 68, leading: 1.7, accent: 'emerald' };
+      function clone(o) { var r = {}; for (var x in o) r[x] = o[x]; return r; }
+      var p = clone(DEF);
+      try {
+        var raw = localStorage.getItem('inema.prefs');
+        if (raw) {
+          var parsed = JSON.parse(raw);
+          if (parsed && typeof parsed === 'object') { for (var k in DEF) if (parsed[k] != null) p[k] = parsed[k]; }
+        } else {
+          var legacy = localStorage.getItem('theme');
+          if (legacy === 'light') p.theme = 'claro'; else if (legacy === 'dark') p.theme = 'inema-dark';
+        }
+      } catch (e) { p = clone(DEF); }
+      var THEMES = {
+        'inema-dark': { dark: true,  attr: null,        cs: 'dark'  },
+        'claro':      { dark: false, attr: null,        cs: 'light' },
+        'sepia':      { dark: false, attr: 'sepia',     cs: 'light' },
+        'foco':       { dark: null,  attr: 'foco',      cs: null    },
+        'contraste':  { dark: true,  attr: 'contraste', cs: 'dark'  }
+      };
+      var t = THEMES[p.theme] || THEMES['inema-dark'];
+      if (t.dark === true) html.classList.add('dark'); else if (t.dark === false) html.classList.remove('dark');
+      if (t.attr) html.setAttribute('data-theme', t.attr); else html.removeAttribute('data-theme');
+      html.style.colorScheme = (t.cs ? t.cs : (html.classList.contains('dark') ? 'dark' : 'light'));
+      html.setAttribute('data-font', p.font || 'inter');
+      html.setAttribute('data-accent', p.accent || 'emerald');
+      var s = html.style; var scale = (+p.fontScale || 100);
+      s.setProperty('--inema-font-scale', (scale / 100).toString());
+      s.setProperty('font-size', scale + '%');
+      s.setProperty('--measure', (+p.lineWidth || 68) + 'ch');
+      s.setProperty('--lh-body', (+p.leading || 1.7).toString());
+      var fam = p.font === 'system' ? 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif'
+        : (p.font === 'leitura' ? '"Atkinson Hyperlegible", "Inter", system-ui, sans-serif' : '"Inter", system-ui, sans-serif');
+      s.setProperty('--font-body', fam);
+      var ACC = { emerald: [152,76,45], blue: [217,91,60], purple: [258,90,66], amber: [38,92,50], teal: [174,72,41], rose: [350,89,60] };
+      var a = ACC[p.accent] || ACC.emerald;
+      s.setProperty('--accent-h', a[0]+''); s.setProperty('--accent-s', a[1]+'%'); s.setProperty('--accent-l', a[2]+'%');
+      s.setProperty('--accent', 'hsl('+a[0]+' '+a[1]+'% '+a[2]+'%)');
+    } catch (err) { try { document.documentElement.classList.add('dark'); document.documentElement.style.colorScheme = 'dark'; } catch(e){} }
+  })();
+  </script>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { darkMode: 'class', theme: { extend: { colors: {
+      primary: '#FACC15', dark: { 900: '#111827', 800: '#1f2937', 700: '#374151', 600: '#4b5563' } } } } }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/learn.css">
+
+  <!-- Manifesto do curso (OBRIGATORIO em TODA pagina, identico) -->
+  <script type="application/json" data-inema-manifest>
+  {"course":"cx18","tracks":[{"n":"1","title":"Fundamentos","modules":[{"id":"1-1","title":"Projetos: a pasta que lembra de você","topics":6,"href":"curso/trilha1/modulo-1-1.html"},{"id":"1-2","title":"AGENTS.md: as regras da casa","topics":6,"href":"curso/trilha1/modulo-1-2.html"},{"id":"1-3","title":"O ciclo do agente","topics":6,"href":"curso/trilha1/modulo-1-3.html"},{"id":"1-4","title":"/goal: um objetivo até o fim","topics":6,"href":"curso/trilha1/modulo-1-4.html"}]},{"n":"2","title":"Ambientes","modules":[{"id":"2-1","title":"Local, nuvem e celular","topics":6,"href":"curso/trilha2/modulo-2-1.html"},{"id":"2-2","title":"Worktrees: cópias para testar sem medo","topics":6,"href":"curso/trilha2/modulo-2-2.html"},{"id":"2-3","title":"A pasta .codex: configurações","topics":6,"href":"curso/trilha2/modulo-2-3.html"}]},{"n":"3","title":"Controle","modules":[{"id":"3-1","title":"Modelos: força e custo","topics":6,"href":"curso/trilha3/modulo-3-1.html"},{"id":"3-2","title":"Esforço e modo rápido","topics":6,"href":"curso/trilha3/modulo-3-2.html"},{"id":"3-3","title":"Permissões: quanto ele faz sozinho","topics":6,"href":"curso/trilha3/modulo-3-3.html"},{"id":"3-4","title":"Skills: receitas reutilizáveis","topics":6,"href":"curso/trilha3/modulo-3-4.html"},{"id":"3-5","title":"A pasta .agents e a vinda do Claude Code","topics":6,"href":"curso/trilha3/modulo-3-5.html"},{"id":"3-6","title":"Plugins: conecte seus aplicativos","topics":6,"href":"curso/trilha3/modulo-3-6.html"}]},{"n":"4","title":"Ferramentas e escala","modules":[{"id":"4-1","title":"Navegador: o Codex usa sites por você","topics":6,"href":"curso/trilha4/modulo-4-1.html"},{"id":"4-2","title":"Sites: do localhost para o mundo","topics":6,"href":"curso/trilha4/modulo-4-2.html"},{"id":"4-3","title":"Subagentes: delegue em paralelo","topics":6,"href":"curso/trilha4/modulo-4-3.html"},{"id":"4-4","title":"Tarefas agendadas: o Codex no piloto","topics":6,"href":"curso/trilha4/modulo-4-4.html"},{"id":"4-5","title":"Modo de voz: tudo junto","topics":6,"href":"curso/trilha4/modulo-4-5.html"}]}]}
+  </script>
+
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .dark body { background-color: #111827; }
+
+    /* Light mode - base */
+    html:not(.dark) body { background-color: #f8fafc; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-600 { background-color: #e5e7eb; }
+    html:not(.dark) .text-neutral-100 { color: #111827; }
+    html:not(.dark) .text-neutral-200 { color: #1f2937; }
+    html:not(.dark) .text-neutral-300 { color: #4b5563; }
+    html:not(.dark) .text-neutral-400 { color: #6b7280; }
+    html:not(.dark) .text-neutral-500 { color: #6b7280; }
+    html:not(.dark) .text-white { color: #111827; }
+    html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+    html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+
+    /* Light mode - acentos das 5 trilhas (emerald, blue, purple, amber, teal) */
+    html:not(.dark) .text-emerald-400 { color: #059669; }
+    html:not(.dark) .bg-emerald-500\/20 { background-color: rgba(5, 150, 105, 0.12); }
+    html:not(.dark) .bg-emerald-500\/10 { background-color: rgba(5, 150, 105, 0.08); }
+    html:not(.dark) .bg-emerald-900\/20 { background-color: rgba(5, 150, 105, 0.07); }
+    html:not(.dark) .border-emerald-500\/30 { border-color: rgba(5, 150, 105, 0.25); }
+    html:not(.dark) .hover\:bg-emerald-500\/30:hover { background-color: rgba(5, 150, 105, 0.18); }
+    html:not(.dark) .hover\:text-emerald-400:hover { color: #059669; }
+    html:not(.dark) .hover\:bg-emerald-500\/10:hover { background-color: rgba(5, 150, 105, 0.08); }
+    html:not(.dark) .group:hover .group-hover\:text-emerald-400 { color: #059669; }
+    html:not(.dark) .text-blue-400 { color: #2563eb; }
+    html:not(.dark) .bg-blue-500\/20 { background-color: rgba(37, 99, 235, 0.12); }
+    html:not(.dark) .bg-blue-500\/10 { background-color: rgba(37, 99, 235, 0.08); }
+    html:not(.dark) .bg-blue-900\/20 { background-color: rgba(37, 99, 235, 0.07); }
+    html:not(.dark) .border-blue-500\/30 { border-color: rgba(37, 99, 235, 0.25); }
+    html:not(.dark) .hover\:bg-blue-500\/30:hover { background-color: rgba(37, 99, 235, 0.18); }
+    html:not(.dark) .hover\:text-blue-400:hover { color: #2563eb; }
+    html:not(.dark) .hover\:bg-blue-500\/10:hover { background-color: rgba(37, 99, 235, 0.08); }
+    html:not(.dark) .group:hover .group-hover\:text-blue-400 { color: #2563eb; }
+    html:not(.dark) .text-purple-400 { color: #7c3aed; }
+    html:not(.dark) .bg-purple-500\/20 { background-color: rgba(124, 58, 237, 0.12); }
+    html:not(.dark) .bg-purple-500\/10 { background-color: rgba(124, 58, 237, 0.08); }
+    html:not(.dark) .bg-purple-900\/20 { background-color: rgba(124, 58, 237, 0.07); }
+    html:not(.dark) .border-purple-500\/30 { border-color: rgba(124, 58, 237, 0.25); }
+    html:not(.dark) .hover\:bg-purple-500\/30:hover { background-color: rgba(124, 58, 237, 0.18); }
+    html:not(.dark) .hover\:text-purple-400:hover { color: #7c3aed; }
+    html:not(.dark) .hover\:bg-purple-500\/10:hover { background-color: rgba(124, 58, 237, 0.08); }
+    html:not(.dark) .group:hover .group-hover\:text-purple-400 { color: #7c3aed; }
+    html:not(.dark) .text-amber-400 { color: #92400e; }
+    html:not(.dark) .bg-amber-500\/20 { background-color: rgba(217, 119, 6, 0.12); }
+    html:not(.dark) .bg-amber-500\/10 { background-color: rgba(217, 119, 6, 0.08); }
+    html:not(.dark) .bg-amber-900\/20 { background-color: rgba(217, 119, 6, 0.07); }
+    html:not(.dark) .border-amber-500\/30 { border-color: rgba(217, 119, 6, 0.25); }
+    html:not(.dark) .hover\:bg-amber-500\/30:hover { background-color: rgba(217, 119, 6, 0.18); }
+    html:not(.dark) .hover\:text-amber-400:hover { color: #92400e; }
+    html:not(.dark) .hover\:bg-amber-500\/10:hover { background-color: rgba(217, 119, 6, 0.08); }
+    html:not(.dark) .group:hover .group-hover\:text-amber-400 { color: #92400e; }
+    html:not(.dark) .text-teal-400 { color: #0d9488; }
+    html:not(.dark) .bg-teal-500\/20 { background-color: rgba(13, 148, 136, 0.12); }
+    html:not(.dark) .bg-teal-500\/10 { background-color: rgba(13, 148, 136, 0.08); }
+    html:not(.dark) .bg-teal-900\/20 { background-color: rgba(13, 148, 136, 0.07); }
+    html:not(.dark) .border-teal-500\/30 { border-color: rgba(13, 148, 136, 0.25); }
+    html:not(.dark) .hover\:bg-teal-500\/30:hover { background-color: rgba(13, 148, 136, 0.18); }
+    html:not(.dark) .hover\:text-teal-400:hover { color: #0d9488; }
+    html:not(.dark) .hover\:bg-teal-500\/10:hover { background-color: rgba(13, 148, 136, 0.08); }
+    html:not(.dark) .group:hover .group-hover\:text-teal-400 { color: #0d9488; }
+
+    /* Light mode - remove gradientes e cores especiais */
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+    html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.25); }
+    html:not(.dark) .border-primary\/30 { border-color: rgba(161, 98, 7, 0.22); }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-yellow-400 { color: #a16207; }
+    html:not(.dark) .text-red-400 { color: #b91c1c; }
+    html:not(.dark) .bg-red-900\/20 { background-color: rgba(185, 28, 28, 0.06); }
+    html:not(.dark) .border-red-500\/30 { border-color: rgba(185, 28, 28, 0.25); }
+    html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+    html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+
+    /* Light mode - nav */
+    html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+
+    /* Dark mode - bordas suaves */
+    .dark .border-dark-600 { border-color: #374151; }
+    .dark .divide-dark-600 > :not([hidden]) ~ :not([hidden]) { border-color: #374151; }
+
+    /* Alvos de ancora abaixo do nav sticky */
+    [data-inema-topic], [id^="modulo-"], [id^="topico-"] { scroll-margin-top: 72px; }
+
+    /* SVG light mode + animacao */
+    html:not(.dark) svg[role="img"] { filter: saturate(0.82) brightness(0.96); }
+    @keyframes wf-pulse { 0%,100% { opacity:.55 } 50% { opacity:1 } }
+    @keyframes wf-dash { to { stroke-dashoffset: -24; } }
+    @media (prefers-reduced-motion: no-preference) {
+      .wf-a { animation: wf-pulse 2.6s ease-in-out infinite; }
+      .wf-a:nth-child(2){animation-delay:.25s} .wf-a:nth-child(3){animation-delay:.5s}
+      .wf-a:nth-child(4){animation-delay:.75s} .wf-a:nth-child(5){animation-delay:1s}
+      .wf-flow { stroke-dasharray: 6 6; animation: wf-dash 1.2s linear infinite; }
+    }
+
+    /* Topicos expansiveis */
+    .topic-explanation { display: none; }
+    .topic-explanation.active { display: block; }
+    /* Popover de aparência ancorado à direita e fora do layout quando fechado (sem transbordo) */
+    .inema-appearance-pop { right: 0; }
+    main code, main pre { overflow-wrap: anywhere; }
+    main .flex-1 { min-width: 0; }
+    .inema-appearance-pop:not([data-open="true"]) { visibility: hidden; display: none; }
+  </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+  <a href="#conteudo" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[60] focus:px-4 focus:py-2 focus:bg-primary focus:text-black focus:rounded-lg">Pular para o conteúdo</a>
+
+  <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-14">
+        <div class="flex items-center space-x-1.5 sm:space-x-3">
+          <a href="../../index.html" class="flex items-center space-x-2 text-yellow-400 hover:text-yellow-300">
+            <span class="text-2xl">🧭</span>
+            <span class="font-bold text-lg hidden lg:inline">Codex 18</span>
+          </a>
+          <span class="text-neutral-600 hidden sm:inline">|</span>
+          <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium">INEMA.CLUB</a>
+          <span class="text-neutral-600">-</span>
+          <a href="https://inema.pro" target="_blank" class="text-amber-700 hover:text-amber-600 dark:text-slate-300 dark:hover:text-slate-200 text-sm font-medium">PRO</a>
+        </div>
+        <div class="flex items-center sm:space-x-1">
+          <a href="index.html" class="px-1.5 sm:px-2.5 py-1.5 rounded-lg text-sm font-semibold text-emerald-400 bg-emerald-500/10">
+            <span class="xl:hidden">T1</span><span class="hidden xl:inline">Fundamentos</span>
+          </a>
+          <a href="../trilha2/index.html" class="px-1.5 sm:px-2.5 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors">
+            <span class="xl:hidden">T2</span><span class="hidden xl:inline">Ambientes</span>
+          </a>
+          <a href="../trilha3/index.html" class="px-1.5 sm:px-2.5 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-purple-400 hover:bg-purple-500/10 transition-colors">
+            <span class="xl:hidden">T3</span><span class="hidden xl:inline">Controle</span>
+          </a>
+          <a href="../trilha4/index.html" class="px-1.5 sm:px-2.5 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-amber-400 hover:bg-amber-500/10 transition-colors">
+            <span class="xl:hidden">T4</span><span class="hidden xl:inline">Ferramentas e escala</span>
+          </a>
+          <button type="button" data-inema-journey-open class="hidden sm:inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-sm text-neutral-300 hover:text-neutral-100 transition-colors" title="Minha jornada">
+            <span aria-hidden="true">◷</span><span class="hidden md:inline">Jornada</span>
+            <span class="inema-journey-badge" data-inema-journey-badge data-count="0"></span>
+          </button>
+          <div class="relative">
+            <button type="button" data-inema-appearance-toggle="#aparencia" aria-expanded="false" aria-controls="aparencia" class="p-2 rounded-lg text-neutral-300 hover:text-neutral-100 transition-colors" title="Aparência">
+              <span aria-hidden="true" class="text-sm font-semibold">Aa</span><span class="sr-only">Aparência</span>
+            </button>
+            <div id="aparencia" data-inema-appearance class="inema-appearance-pop">
+              <div class="inema-segment" aria-label="Tema">
+                <button type="button" data-inema-set-theme="inema-dark">Escuro</button>
+                <button type="button" data-inema-set-theme="claro">Claro</button>
+                <button type="button" data-inema-set-theme="sepia">Sépia</button>
+                <button type="button" data-inema-set-theme="foco">Foco</button>
+                <button type="button" data-inema-set-theme="contraste">Alto contraste</button>
+              </div>
+              <div class="inema-segment" aria-label="Fonte">
+                <button type="button" data-inema-set-font="inter">Inter</button>
+                <button type="button" data-inema-set-font="system">Sistema</button>
+                <button type="button" data-inema-set-font="leitura">Leitura</button>
+              </div>
+              <div class="inema-segment" aria-label="Tamanho do texto">
+                <button type="button" data-inema-set-fontscale="100">A</button>
+                <button type="button" data-inema-set-fontscale="112">A+</button>
+                <button type="button" data-inema-set-fontscale="125">A++</button>
+              </div>
+              <div class="inema-segment" aria-label="Largura da linha">
+                <button type="button" data-inema-set-linewidth="60">Estreito</button>
+                <button type="button" data-inema-set-linewidth="68">Médio</button>
+                <button type="button" data-inema-set-linewidth="75">Largo</button>
+              </div>
+              <div class="inema-segment" aria-label="Entrelinha">
+                <button type="button" data-inema-set-leading="1.45">Compacto</button>
+                <button type="button" data-inema-set-leading="1.7">Confortável</button>
+              </div>
+            </div>
+          </div>
+          <button id="theme-toggle" class="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors" aria-label="Alternar tema claro/escuro">
+            <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+            <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <nav aria-label="Trilha de navegação" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+    <div class="flex items-center space-x-2 text-sm text-neutral-400">
+      <a href="../../index.html" class="hover:text-emerald-400">Início</a><span>/</span>
+      <a href="index.html" class="hover:text-emerald-400">Trilha 1</a><span>/</span>
+      <span class="text-emerald-400">Módulo 1.2</span>
+    </div>
+  </nav>
+
+  <header class="bg-gradient-to-br from-emerald-900/30 via-dark-800 to-dark-800 py-12 border-b border-dark-600" data-inema-module="1-2" data-inema-track="1">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <span class="inline-block px-3 py-1 bg-emerald-500/20 text-emerald-400 text-xs font-semibold rounded-full mb-4">MÓDULO 1.2 · CONCEITO 2 DE 18</span>
+      <h1 class="text-3xl sm:text-4xl font-bold mb-4">📜 AGENTS.md: as regras da casa</h1>
+      <p class="text-lg text-neutral-400 max-w-3xl">Um único arquivo de texto na raiz do projeto diz ao Codex quem você é, como ele deve trabalhar e onde achar cada coisa. Ele lê esse arquivo antes de cada conversa nova.</p>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 max-w-2xl">
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-emerald-400">6</div><div class="text-xs text-neutral-400">Tópicos</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-emerald-400">~35</div><div class="text-xs text-neutral-400">Minutos</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-emerald-400">Base</div><div class="text-xs text-neutral-400">Nível</div></div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-emerald-400">Prática</div><div class="text-xs text-neutral-400">Tipo</div></div>
+      </div>
+      <div data-inema-meter="modulo:1-2" class="mt-6 max-w-2xl" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-label="Progresso do módulo 1.2">
+        <div class="flex justify-between text-xs text-neutral-400 mb-1"><span data-inema-meter-frac>0 de 6</span><span data-inema-meter-pct>0%</span></div>
+        <div class="inema-bar"><div class="inema-bar__fill" data-inema-meter-fill></div></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-10">
+    <figure class="rounded-2xl overflow-hidden border border-emerald-500/30">
+      <img src="assets/img/modulo-1-2.png" alt="Ilustração: na porta de entrada de um escritório há um quadro de regras pendurado, e um assistente o lê antes de começar o dia. O quadro é o AGENTS.md: as regras que o Codex lê antes de qualquer pedido." class="w-full h-auto" loading="lazy" width="1536" height="640">
+    </figure>
+  </div>
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:grid lg:grid-cols-[1fr_220px] lg:gap-10">
+  <main id="conteudo" class="min-w-0" data-inema-module="1-2" data-inema-track="1">
+
+    <!-- ===================== TOPICO 1 ===================== -->
+    <section id="topico-1" data-inema-topic="modulo-1-2#topico-1" class="mb-16">
+      <div class="flex flex-wrap items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl">1</span>
+        <h2 class="text-2xl font-bold flex-1">Descubra o que é um arquivo .md</h2>
+        <button type="button" data-inema-doubt-toggle aria-pressed="false" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-dark-700 border border-dark-600 text-neutral-300 hover:bg-dark-600 transition-colors text-sm"><span aria-hidden="true">?</span><span>Tenho dúvida</span></button>
+      </div>
+      <p data-inema-block="m1-2-t1-p1" class="text-neutral-300 mb-4 leading-relaxed">O nome assusta, mas o arquivo é simples. AGENTS.md é um arquivo de texto comum, que você abre no Bloco de Notas. A terminação <code>.md</code> só avisa que ele usa um jeito leve de marcar títulos e listas.</p>
+      <p data-inema-block="m1-2-t1-p2" class="text-neutral-300 mb-6 leading-relaxed">Esse jeito se chama <strong class="text-emerald-400">Markdown</strong>. Você escreve normalmente e usa três ou quatro símbolos para dar forma ao texto. As IAs leem Markdown muito bem, e por isso ele virou o formato padrão de instruções.</p>
+
+      <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6 mb-6">
+        <h3 class="text-base font-semibold text-emerald-400 mb-3 flex items-center"><span class="mr-2">🆕</span> Novo aqui? Quatro palavras deste módulo</h3>
+        <ul class="space-y-2 text-neutral-300 text-sm">
+          <li><strong>Markdown (.md)</strong> — texto simples com marcas leves: <code>#</code> para título, <code>-</code> para item de lista, <code>**palavra**</code> para negrito.</li>
+          <li><strong>AGENTS.md</strong> — o arquivo de regras do projeto. Fica na raiz da pasta e o Codex lê antes de começar.</li>
+          <li><strong>Raiz</strong> — o primeiro nível da pasta do projeto, fora de qualquer subpasta.</li>
+          <li><strong>Mapa de rotas</strong> — uma lista no AGENTS.md que diz em qual subpasta está cada tipo de informação.</li>
+        </ul>
+      </div>
+
+      <div class="rounded-2xl border border-emerald-500/30 bg-dark-900/40 p-3 sm:p-4 mb-3 overflow-hidden">
+        <svg viewBox="0 0 800 270" class="w-full h-auto" role="img" aria-label="Um arquivo AGENTS.md aberto, com anotações ao lado. A linha que começa com cerquilha vira título. As linhas com hífen viram itens de lista. A palavra entre dois asteriscos fica em negrito. Do lado direito, o mesmo texto já formatado.">
+          <defs>
+            <pattern id="m12a-grid" width="32" height="32" patternUnits="userSpaceOnUse"><circle cx="1.3" cy="1.3" r="1.3" fill="#34d399" opacity="0.10"/></pattern>
+            <marker id="m12a-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#38bdf8"/></marker>
+          </defs>
+          <rect x="0" y="0" width="800" height="270" fill="url(#m12a-grid)"/>
+          <rect x="30" y="25" width="340" height="220" rx="14" fill="#111827" stroke="#34d399" stroke-width="2"/>
+          <text x="50" y="50" fill="#34d399" font-family="Inter,sans-serif" font-weight="600" font-size="12">AGENTS.md (como você escreve)</text>
+          <g font-family="ui-monospace,monospace" font-size="12" fill="#d1d5db">
+            <text x="50" y="85" fill="#a7f3d0"># Escritório da Paula</text>
+            <text x="50" y="115">- Responda em português</text>
+            <text x="50" y="140">- Tom cordial e direto</text>
+            <text x="50" y="170">**Nunca** apague arquivos</text>
+            <text x="50" y="195">de clientes/ sem perguntar</text>
+          </g>
+          <line x1="380" y1="135" x2="420" y2="135" stroke="#38bdf8" stroke-width="2.5" marker-end="url(#m12a-arrow)"/>
+          <rect x="430" y="25" width="340" height="220" rx="14" fill="#0b1f2e" stroke="#38bdf8" stroke-width="2"/>
+          <text x="450" y="50" fill="#bae6fd" font-family="Inter,sans-serif" font-weight="600" font-size="12">Como fica formatado</text>
+          <g font-family="Inter,sans-serif" fill="#e5e7eb">
+            <text x="450" y="88" font-size="18" font-weight="700" fill="#bae6fd">Escritório da Paula</text>
+            <text x="455" y="117" font-size="12">• Responda em português</text>
+            <text x="455" y="142" font-size="12">• Tom cordial e direto</text>
+            <text x="450" y="172" font-size="12"><tspan font-weight="700" fill="#7dd3fc">Nunca</tspan> apague arquivos</text>
+            <text x="450" y="197" font-size="12">de clientes/ sem perguntar</text>
+          </g>
+          <g font-family="Inter,sans-serif" font-size="10" fill="#6ee7b7">
+            <text x="230" y="85"># = título</text>
+            <text x="250" y="128">- = lista</text>
+            <text x="270" y="170">** = negrito</text>
+          </g>
+        </svg>
+      </div>
+      <p class="text-sm text-neutral-400 mb-6"><strong class="text-neutral-300">Como ler o desenho:</strong> à esquerda está o texto cru, do jeito que você digita. À direita, o mesmo texto com as marcas aplicadas. O Codex entende os dois lados: as marcas só ajudam a separar assuntos.</p>
+
+      <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-2 flex items-center"><span class="mr-2">💡</span> Não precisa decorar Markdown</h3>
+        <p class="text-neutral-300 text-sm">Se esquecer um símbolo, nada quebra. Um AGENTS.md escrito como e-mail comum também funciona. Títulos e listas só deixam o arquivo mais fácil de revisar depois, por você e pelo agente.</p>
+      </div>
+      <div class="flex justify-start mt-6">
+        <button type="button" data-inema-read-toggle aria-pressed="false" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/30 transition-colors">
+          <span class="inema-read-icon" aria-hidden="true">○</span><span class="inema-read-label">Marcar como lido</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ===================== TOPICO 2 ===================== -->
+    <section id="topico-2" data-inema-topic="modulo-1-2#topico-2" class="mb-16">
+      <div class="flex flex-wrap items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl">2</span>
+        <h2 class="text-2xl font-bold flex-1">Entenda quando o Codex lê o AGENTS.md</h2>
+        <button type="button" data-inema-doubt-toggle aria-pressed="false" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-dark-700 border border-dark-600 text-neutral-300 hover:bg-dark-600 transition-colors text-sm"><span aria-hidden="true">?</span><span>Tenho dúvida</span></button>
+      </div>
+      <p data-inema-block="m1-2-t2-p1" class="text-neutral-300 mb-4 leading-relaxed">Toda vez que você abre uma conversa nova num projeto, o Codex lê o AGENTS.md <strong class="text-emerald-400">antes</strong> da sua primeira mensagem. Você não precisa pedir nem anexar nada.</p>
+      <p data-inema-block="m1-2-t2-p2" class="text-neutral-300 mb-6 leading-relaxed">Na prática, o que está escrito ali ele sabe sempre. É como o crachá e o manual que um funcionário novo recebe na porta: antes de atender o primeiro cliente, ele já sabe as regras da casa.</p>
+
+      <div class="rounded-2xl border border-emerald-500/30 bg-dark-900/40 p-3 sm:p-4 mb-3 overflow-hidden">
+        <svg viewBox="0 0 800 230" class="w-full h-auto" role="img" aria-label="Fluxo da esquerda para a direita. Primeiro, a conversa nova é aberta. Segundo, o Codex lê o AGENTS.md, em destaque. Terceiro, chega a mensagem da Paula. Quarto, sai a resposta já seguindo as regras.">
+          <defs>
+            <pattern id="m12b-grid" width="32" height="32" patternUnits="userSpaceOnUse"><circle cx="1.3" cy="1.3" r="1.3" fill="#34d399" opacity="0.10"/></pattern>
+            <filter id="m12b-glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            <marker id="m12b-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#38bdf8"/></marker>
+          </defs>
+          <rect x="0" y="0" width="800" height="230" fill="url(#m12b-grid)"/>
+          <g font-family="Inter,sans-serif" text-anchor="middle">
+            <rect x="25" y="80" width="160" height="70" rx="12" fill="#111827" stroke="#6b7280" stroke-width="2"/>
+            <text x="105" y="110" fill="#e5e7eb" font-size="13">1. conversa nova</text><text x="105" y="130" fill="#9ca3af" font-size="11">no projeto</text>
+            <g filter="url(#m12b-glow)"><rect x="220" y="70" width="170" height="90" rx="14" fill="#0e2018" stroke="#34d399" stroke-width="2.5"/></g>
+            <text x="305" y="105" fill="#34d399" font-size="13" font-weight="600">2. lê AGENTS.md</text><text x="305" y="127" fill="#a7f3d0" font-size="11">antes de tudo</text>
+            <rect x="425" y="80" width="160" height="70" rx="12" fill="#0b1f2e" stroke="#38bdf8" stroke-width="2"/>
+            <text x="505" y="110" fill="#bae6fd" font-size="13">3. sua mensagem</text><text x="505" y="130" fill="#7dd3fc" font-size="11">"escreva a proposta"</text>
+            <rect x="620" y="80" width="160" height="70" rx="12" fill="#0b1f2e" stroke="#38bdf8" stroke-width="2"/>
+            <text x="700" y="110" fill="#bae6fd" font-size="13">4. resposta</text><text x="700" y="130" fill="#7dd3fc" font-size="11">já no seu padrão</text>
+            <text x="305" y="195" fill="#6ee7b7" font-size="11">acontece em TODA conversa nova</text>
+          </g>
+          <g stroke="#38bdf8" stroke-width="2" fill="none">
+            <line class="wf-flow" x1="187" y1="115" x2="216" y2="115" marker-end="url(#m12b-arrow)"/>
+            <line class="wf-flow" x1="392" y1="115" x2="421" y2="115" marker-end="url(#m12b-arrow)"/>
+            <line class="wf-flow" x1="587" y1="115" x2="616" y2="115" marker-end="url(#m12b-arrow)"/>
+          </g>
+        </svg>
+      </div>
+      <p class="text-sm text-neutral-400 mb-6"><strong class="text-neutral-300">Como ler o desenho:</strong> o passo 2 acontece sozinho e antes do passo 3. Por isso a resposta do passo 4 já sai no tom e nas regras que você definiu, mesmo que a sua mensagem seja curta.</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="bg-dark-800 rounded-xl p-6 border border-emerald-500/30">
+          <h3 class="font-semibold text-emerald-400 mb-3">✓ O que entra no AGENTS.md</h3>
+          <ul class="space-y-2 text-neutral-300 text-sm">
+            <li>✓ O que vale em toda conversa do projeto</li>
+            <li>✓ Tom, idioma, formato de entrega</li>
+            <li>✓ O que ele nunca deve fazer</li>
+            <li>✓ Onde fica cada tipo de arquivo</li>
+          </ul>
+        </div>
+        <div class="bg-red-900/20 rounded-xl p-6 border border-red-500/30">
+          <h3 class="font-semibold text-red-400 mb-3">✗ O que não entra</h3>
+          <ul class="space-y-2 text-neutral-300 text-sm">
+            <li>✗ O pedido de hoje ("escreva a proposta da Acme")</li>
+            <li>✗ Textos enormes que ele já acha nas subpastas</li>
+            <li>✗ Senhas, chaves e dados bancários</li>
+            <li>✗ Regras que valem só para outro projeto</li>
+          </ul>
+        </div>
+      </div>
+      <div class="flex justify-start mt-6">
+        <button type="button" data-inema-read-toggle aria-pressed="false" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/30 transition-colors">
+          <span class="inema-read-icon" aria-hidden="true">○</span><span class="inema-read-label">Marcar como lido</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ===================== TOPICO 3 ===================== -->
+    <section id="topico-3" data-inema-topic="modulo-1-2#topico-3" class="mb-16">
+      <div class="flex flex-wrap items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl">3</span>
+        <h2 class="text-2xl font-bold flex-1">Escreva quem você é e o que o agente faz</h2>
+        <button type="button" data-inema-doubt-toggle aria-pressed="false" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-dark-700 border border-dark-600 text-neutral-300 hover:bg-dark-600 transition-colors text-sm"><span aria-hidden="true">?</span><span>Tenho dúvida</span></button>
+      </div>
+      <p data-inema-block="m1-2-t3-p1" class="text-neutral-300 mb-4 leading-relaxed">A primeira parte do AGENTS.md responde duas perguntas: quem é você e qual é o papel do agente. Parece óbvio, mas muda tudo. Sem isso, ele escreve para "qualquer pessoa".</p>
+      <p data-inema-block="m1-2-t3-p2" class="text-neutral-300 mb-6 leading-relaxed">A Paula escreveu: "Você é o assistente do escritório da Paula, consultora de RH que trabalha sozinha. Seu trabalho é poupar o tempo dela com a operação, para ela focar nos clientes". Em seguida vêm as <strong class="text-emerald-400">regras de trabalho</strong> e as de <strong class="text-emerald-400">segurança</strong>.</p>
+
+      <div class="rounded-2xl border border-emerald-500/30 bg-dark-900/40 p-3 sm:p-4 mb-3 overflow-hidden">
+        <svg viewBox="0 0 800 260" class="w-full h-auto" role="img" aria-label="O AGENTS.md visto como uma pilha de quatro blocos. De baixo para cima: quem é você, papel do agente, regras de trabalho e segurança. No topo, o mapa de rotas, em destaque azul, que será visto no próximo tópico.">
+          <defs>
+            <pattern id="m12c-grid" width="32" height="32" patternUnits="userSpaceOnUse"><circle cx="1.3" cy="1.3" r="1.3" fill="#34d399" opacity="0.10"/></pattern>
+            <filter id="m12c-glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="1.8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          </defs>
+          <rect x="0" y="0" width="800" height="260" fill="url(#m12c-grid)"/>
+          <g font-family="Inter,sans-serif" font-size="13">
+            <g filter="url(#m12c-glow)"><rect x="200" y="20" width="400" height="38" rx="10" fill="#0b1f2e" stroke="#38bdf8" stroke-width="2"/></g>
+            <text x="400" y="44" text-anchor="middle" fill="#bae6fd">5. mapa de rotas (tópico 4)</text>
+            <rect x="200" y="66" width="400" height="38" rx="10" fill="#0e2018" stroke="#34d399" stroke-width="2"/>
+            <text x="400" y="90" text-anchor="middle" fill="#a7f3d0">4. segurança: pedir antes de apagar ou enviar</text>
+            <rect x="200" y="112" width="400" height="38" rx="10" fill="#0e2018" stroke="#34d399" stroke-width="2"/>
+            <text x="400" y="136" text-anchor="middle" fill="#a7f3d0">3. regras de trabalho: tom, idioma, formato</text>
+            <rect x="200" y="158" width="400" height="38" rx="10" fill="#0e2018" stroke="#34d399" stroke-width="2"/>
+            <text x="400" y="182" text-anchor="middle" fill="#a7f3d0">2. papel do agente: poupar tempo de operação</text>
+            <rect x="200" y="204" width="400" height="38" rx="10" fill="#0e2018" stroke="#34d399" stroke-width="2"/>
+            <text x="400" y="228" text-anchor="middle" fill="#a7f3d0">1. quem é você: Paula, consultora de RH</text>
+          </g>
+          <g font-family="Inter,sans-serif" font-size="11" fill="#9ca3af">
+            <text x="620" y="228">a base</text>
+            <text x="620" y="44">o atalho</text>
+          </g>
+        </svg>
+      </div>
+      <p class="text-sm text-neutral-400 mb-6"><strong class="text-neutral-300">Como ler o desenho:</strong> leia de baixo para cima. A identidade sustenta tudo; sem ela, as regras ficam soltas. O bloco azul do topo é o mapa de rotas, que vem a seguir.</p>
+
+      <div class="bg-dark-800 rounded-xl border border-emerald-500/30 overflow-hidden mb-6">
+        <div class="px-5 py-3 bg-emerald-900/20 border-b border-emerald-500/30"><span class="text-emerald-400 font-semibold text-sm">💬 Copia e cola no Codex: primeiro rascunho do AGENTS.md</span></div>
+        <div class="p-5">
+          <p class="text-neutral-300 text-sm mb-3"><strong class="text-emerald-400">Objetivo:</strong> o Codex lê a sua pasta e propõe um AGENTS.md inicial, que você só ajusta.</p>
+          <pre class="font-mono text-sm text-neutral-200 whitespace-pre-wrap bg-dark-900/60 rounded-lg p-4 border border-dark-600">Leia os arquivos desta pasta e escreva um rascunho de AGENTS.md na raiz. Use quatro seções: "Quem sou eu" (sou &lt;seu nome&gt;, &lt;sua profissão&gt;), "Seu papel", "Regras de trabalho" e "Segurança". Em Segurança, inclua: pedir confirmação antes de apagar, mover ou enviar qualquer coisa. Me mostre o texto antes de salvar.</pre>
+        </div>
+        <div class="px-5 py-3 bg-dark-700/40 border-t border-dark-600 text-neutral-300 text-sm"><strong class="text-emerald-400">Como verificar:</strong> abra uma conversa nova no mesmo projeto e pergunte "quem sou eu e qual é o seu papel aqui?". Ele tem de responder com o que está no arquivo, sem você explicar nada.</div>
+      </div>
+
+      <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-2 flex items-center"><span class="mr-2">💡</span> Escreva regras, não desejos</h3>
+        <p class="text-neutral-300 text-sm">"Seja profissional" é vago. "Propostas em uma página, com preço no fim e sem jargão de RH" é uma regra que ele consegue seguir e que você consegue conferir. Quanto mais concreta a frase, melhor o resultado.</p>
+      </div>
+      <div class="flex justify-start mt-6">
+        <button type="button" data-inema-read-toggle aria-pressed="false" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/30 transition-colors">
+          <span class="inema-read-icon" aria-hidden="true">○</span><span class="inema-read-label">Marcar como lido</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ===================== TOPICO 4 ===================== -->
+    <section id="topico-4" data-inema-topic="modulo-1-2#topico-4" class="mb-16">
+      <div class="flex flex-wrap items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl">4</span>
+        <h2 class="text-2xl font-bold flex-1">Monte o mapa de rotas do projeto</h2>
+        <button type="button" data-inema-doubt-toggle aria-pressed="false" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-dark-700 border border-dark-600 text-neutral-300 hover:bg-dark-600 transition-colors text-sm"><span aria-hidden="true">?</span><span>Tenho dúvida</span></button>
+      </div>
+      <p data-inema-block="m1-2-t4-p1" class="text-neutral-300 mb-4 leading-relaxed">Com o tempo, a pasta cresce. Projetos grandes chegam a milhares de arquivos. Sem um guia, o Codex abre um por um até achar o certo, e isso custa tempo e cota.</p>
+      <p data-inema-block="m1-2-t4-p2" class="text-neutral-300 mb-6 leading-relaxed">O <strong class="text-emerald-400">mapa de rotas</strong> é uma lista curta no AGENTS.md: "precisa disto, vá ali". Funciona como as placas de uma estrada. Ele lê a placa e segue direto para a saída certa.</p>
+
+      <div class="rounded-2xl border border-emerald-500/30 bg-dark-900/40 p-3 sm:p-4 mb-3 overflow-hidden">
+        <svg viewBox="0 0 800 260" class="w-full h-auto" role="img" aria-label="Uma estrada com três placas de saída. Placa 1: dados de cliente, saída clientes. Placa 2: meu jeito de escrever, saída linkedin barra estilo.md. Placa 3: propostas antigas, saída propostas. Um ponto que representa o Codex segue pela estrada lendo as placas.">
+          <defs>
+            <pattern id="m12d-grid" width="32" height="32" patternUnits="userSpaceOnUse"><circle cx="1.3" cy="1.3" r="1.3" fill="#34d399" opacity="0.10"/></pattern>
+            <filter id="m12d-glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="2.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          </defs>
+          <rect x="0" y="0" width="800" height="260" fill="url(#m12d-grid)"/>
+          <path d="M20,215 L780,215" stroke="#374151" stroke-width="30"/>
+          <path d="M20,215 L780,215" stroke="#9ca3af" stroke-width="2" stroke-dasharray="18 14"/>
+          <g stroke="#374151" stroke-width="18" fill="none">
+            <path d="M190,215 C 220,190 230,180 250,165"/><path d="M430,215 C 460,190 470,180 490,165"/><path d="M670,215 C 700,190 710,180 730,165"/>
+          </g>
+          <g font-family="Inter,sans-serif" text-anchor="middle">
+            <line x1="150" y1="200" x2="150" y2="120" stroke="#6b7280" stroke-width="3"/>
+            <rect x="60" y="40" width="180" height="80" rx="8" fill="#064e3b" stroke="#34d399" stroke-width="2"/>
+            <text x="150" y="68" fill="#d1fae5" font-size="12">dados de cliente</text><text x="150" y="96" fill="#34d399" font-size="13" font-family="ui-monospace,monospace">→ clientes/</text>
+            <line x1="390" y1="200" x2="390" y2="120" stroke="#6b7280" stroke-width="3"/>
+            <rect x="300" y="40" width="180" height="80" rx="8" fill="#064e3b" stroke="#34d399" stroke-width="2"/>
+            <text x="390" y="68" fill="#d1fae5" font-size="12">meu jeito de escrever</text><text x="390" y="96" fill="#34d399" font-size="12" font-family="ui-monospace,monospace">→ linkedin/estilo.md</text>
+            <line x1="630" y1="200" x2="630" y2="120" stroke="#6b7280" stroke-width="3"/>
+            <rect x="540" y="40" width="180" height="80" rx="8" fill="#064e3b" stroke="#34d399" stroke-width="2"/>
+            <text x="630" y="68" fill="#d1fae5" font-size="12">propostas antigas</text><text x="630" y="96" fill="#34d399" font-size="13" font-family="ui-monospace,monospace">→ propostas/</text>
+          </g>
+          <g filter="url(#m12d-glow)"><circle class="wf-a" cx="60" cy="215" r="10" fill="#38bdf8"/></g>
+          <text x="60" y="250" text-anchor="middle" fill="#7dd3fc" font-family="Inter,sans-serif" font-size="11">Codex</text>
+        </svg>
+      </div>
+      <p class="text-sm text-neutral-400 mb-6"><strong class="text-neutral-300">Como ler o desenho:</strong> o ponto azul é o Codex procurando algo. Em vez de entrar em todas as ruas, ele lê a placa e pega a saída certa. Cada placa é uma linha do seu mapa de rotas.</p>
+
+      <div class="space-y-5 mb-6">
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center"><span class="text-emerald-400 font-bold">1</span></div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-5 border border-dark-600"><h4 class="font-semibold text-neutral-100 mb-1">Liste o que você mais pede</h4><p class="text-neutral-300 text-sm">Pense nos pedidos da semana. A Paula pede propostas, posts e e-mails. O Rui pede estoque, promoções e textos do site.</p></div>
+        </div>
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center"><span class="text-emerald-400 font-bold">2</span></div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-5 border border-dark-600"><h4 class="font-semibold text-neutral-100 mb-1">Diga onde mora cada informação</h4><p class="text-neutral-300 text-sm">Uma linha por assunto: "estoque → <code>estoque.csv</code>", "promoções da semana → <code>promocoes/</code>".</p></div>
+        </div>
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center"><span class="text-emerald-400 font-bold">3</span></div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-5 border border-dark-600"><h4 class="font-semibold text-neutral-100 mb-1">Aponte o arquivo de exemplo</h4><p class="text-neutral-300 text-sm">Para cada tipo de texto, indique um modelo bom: "post bom de referência → <code>linkedin/exemplo-bom.md</code>".</p></div>
+        </div>
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center"><span class="text-emerald-400 font-bold">4</span></div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-5 border border-dark-600"><h4 class="font-semibold text-neutral-100 mb-1">Teste com um pedido curto</h4><p class="text-neutral-300 text-sm">Peça algo sem dizer onde está. Se ele for direto ao arquivo certo, o mapa funciona.</p></div>
+        </div>
+      </div>
+      <div class="flex justify-start mt-6">
+        <button type="button" data-inema-read-toggle aria-pressed="false" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/30 transition-colors">
+          <span class="inema-read-icon" aria-hidden="true">○</span><span class="inema-read-label">Marcar como lido</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ===================== TOPICO 5 ===================== -->
+    <section id="topico-5" data-inema-topic="modulo-1-2#topico-5" class="mb-16">
+      <div class="flex flex-wrap items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl">5</span>
+        <h2 class="text-2xl font-bold flex-1">Use um AGENTS.md por projeto</h2>
+        <button type="button" data-inema-doubt-toggle aria-pressed="false" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-dark-700 border border-dark-600 text-neutral-300 hover:bg-dark-600 transition-colors text-sm"><span aria-hidden="true">?</span><span>Tenho dúvida</span></button>
+      </div>
+      <p data-inema-block="m1-2-t5-p1" class="text-neutral-300 mb-4 leading-relaxed">Cada projeto tem o seu AGENTS.md, com as regras daquele trabalho. O da Paula fala de clientes e propostas. O do Rui fala de estoque, preço e promoção.</p>
+      <p data-inema-block="m1-2-t5-p2" class="text-neutral-300 mb-6 leading-relaxed">Se o Rui copiasse o arquivo da Paula, o Codex escreveria promoção de cimento com tom de consultoria de RH. <strong class="text-emerald-400">Regras certas, projeto errado, resultado estranho.</strong></p>
+
+      <div class="rounded-2xl border border-emerald-500/30 bg-dark-900/40 p-3 sm:p-4 mb-3 overflow-hidden">
+        <svg viewBox="0 0 800 260" class="w-full h-auto" role="img" aria-label="Duas pastas lado a lado, cada uma com seu próprio AGENTS.md. Na pasta paula-escritorio, as regras falam de tom cordial e propostas em uma página. Na pasta loja-rui, as regras falam de preço sempre com unidade e promoção com validade. Uma barreira no meio indica que as regras não se misturam.">
+          <defs>
+            <pattern id="m12e-grid" width="32" height="32" patternUnits="userSpaceOnUse"><circle cx="1.3" cy="1.3" r="1.3" fill="#34d399" opacity="0.10"/></pattern>
+          </defs>
+          <rect x="0" y="0" width="800" height="260" fill="url(#m12e-grid)"/>
+          <rect x="30" y="25" width="340" height="210" rx="14" fill="#0e2018" stroke="#34d399" stroke-width="2"/>
+          <text x="50" y="52" fill="#34d399" font-family="ui-monospace,monospace" font-size="13">📁 paula-escritorio/</text>
+          <rect x="50" y="68" width="300" height="150" rx="10" fill="#111827" stroke="#34d399" stroke-opacity="0.5"/>
+          <g font-family="ui-monospace,monospace" font-size="11" fill="#a7f3d0">
+            <text x="65" y="92">📜 AGENTS.md</text>
+            <text x="65" y="118">- tom cordial, sem jargão</text>
+            <text x="65" y="140">- propostas em 1 página</text>
+            <text x="65" y="162">- clientes → clientes/</text>
+            <text x="65" y="184">- estilo → linkedin/estilo.md</text>
+          </g>
+          <line x1="400" y1="30" x2="400" y2="230" stroke="#f87171" stroke-width="2" stroke-dasharray="6 6"/>
+          <text x="400" y="250" text-anchor="middle" fill="#fca5a5" font-family="Inter,sans-serif" font-size="11">não se misturam</text>
+          <rect x="430" y="25" width="340" height="210" rx="14" fill="#0b1f2e" stroke="#38bdf8" stroke-width="2"/>
+          <text x="450" y="52" fill="#38bdf8" font-family="ui-monospace,monospace" font-size="13">📁 loja-rui/</text>
+          <rect x="450" y="68" width="300" height="150" rx="10" fill="#111827" stroke="#38bdf8" stroke-opacity="0.5"/>
+          <g font-family="ui-monospace,monospace" font-size="11" fill="#bae6fd">
+            <text x="465" y="92">📜 AGENTS.md</text>
+            <text x="465" y="118">- preço sempre com unidade</text>
+            <text x="465" y="140">- promoção com validade</text>
+            <text x="465" y="162">- estoque → estoque.csv</text>
+            <text x="465" y="184">- site → site/</text>
+          </g>
+        </svg>
+      </div>
+      <p class="text-sm text-neutral-400 mb-6"><strong class="text-neutral-300">Como ler o desenho:</strong> cada pasta carrega o próprio arquivo de regras. Quando o Rui abre <code>loja-rui</code>, o Codex lê só o AGENTS.md da loja. As regras da Paula ficam do outro lado da linha vermelha.</p>
+
+      <div class="overflow-x-auto mb-6 rounded-xl border border-dark-600">
+        <table class="w-full text-sm text-left">
+          <thead class="bg-dark-700/60 text-emerald-400"><tr><th class="px-4 py-3 font-semibold">Parte</th><th class="px-4 py-3 font-semibold">paula-escritorio</th><th class="px-4 py-3 font-semibold">loja-rui</th></tr></thead>
+          <tbody class="divide-y divide-dark-600">
+            <tr class="bg-dark-800"><td class="px-4 py-3 text-neutral-100">Quem sou</td><td class="px-4 py-3 text-neutral-300">Consultora de RH, sozinha</td><td class="px-4 py-3 text-neutral-300">Dono de loja de materiais de construção</td></tr>
+            <tr class="bg-dark-800"><td class="px-4 py-3 text-neutral-100">Papel do agente</td><td class="px-4 py-3 text-neutral-300">Poupar tempo com a operação</td><td class="px-4 py-3 text-neutral-300">Cuidar de estoque, catálogo e promoções</td></tr>
+            <tr class="bg-dark-800"><td class="px-4 py-3 text-neutral-100">Tom</td><td class="px-4 py-3 text-neutral-300">Cordial, profissional</td><td class="px-4 py-3 text-neutral-300">Simples, de balcão</td></tr>
+            <tr class="bg-dark-800"><td class="px-4 py-3 text-neutral-100">Nunca fazer</td><td class="px-4 py-3 text-neutral-300">Enviar e-mail a cliente sem mostrar antes</td><td class="px-4 py-3 text-neutral-300">Mudar preço na planilha sem confirmar</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-sm text-neutral-400 mb-6"><strong class="text-neutral-300">O que olhar na tabela:</strong> as quatro partes são as mesmas nos dois arquivos. O que muda é o conteúdo. Use essa estrutura como molde em todo projeto novo.</p>
+      <div class="flex justify-start mt-6">
+        <button type="button" data-inema-read-toggle aria-pressed="false" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/30 transition-colors">
+          <span class="inema-read-icon" aria-hidden="true">○</span><span class="inema-read-label">Marcar como lido</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ===================== TOPICO 6 ===================== -->
+    <section id="topico-6" data-inema-topic="modulo-1-2#topico-6" class="mb-16">
+      <div class="flex flex-wrap items-center gap-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl">6</span>
+        <h2 class="text-2xl font-bold flex-1">Revise e melhore suas regras</h2>
+        <button type="button" data-inema-doubt-toggle aria-pressed="false" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-dark-700 border border-dark-600 text-neutral-300 hover:bg-dark-600 transition-colors text-sm"><span aria-hidden="true">?</span><span>Tenho dúvida</span></button>
+      </div>
+      <p data-inema-block="m1-2-t6-p1" class="text-neutral-300 mb-4 leading-relaxed">O AGENTS.md nunca fica pronto de primeira. Ele melhora com o uso. A regra prática é simples: <strong class="text-emerald-400">corrigiu o agente duas vezes pela mesma coisa, vira linha no AGENTS.md.</strong></p>
+      <p data-inema-block="m1-2-t6-p2" class="text-neutral-300 mb-6 leading-relaxed">O Rui pediu duas vezes "não use ponto de exclamação nas promoções". Na terceira, mandou o Codex anotar. Desde então, nenhuma promoção saiu gritando.</p>
+
+      <div class="rounded-2xl border border-emerald-500/30 bg-dark-900/40 p-3 sm:p-4 mb-3 overflow-hidden">
+        <svg viewBox="0 0 800 250" class="w-full h-auto" role="img" aria-label="Ciclo de melhoria com quatro etapas em círculo: usar o Codex, notar um erro repetido, anotar a regra no AGENTS.md e conferir na próxima conversa. No centro, o AGENTS.md cresce a cada volta.">
+          <defs>
+            <pattern id="m12f-grid" width="32" height="32" patternUnits="userSpaceOnUse"><circle cx="1.3" cy="1.3" r="1.3" fill="#34d399" opacity="0.10"/></pattern>
+            <filter id="m12f-glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            <marker id="m12f-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#38bdf8"/></marker>
+          </defs>
+          <rect x="0" y="0" width="800" height="250" fill="url(#m12f-grid)"/>
+          <circle cx="400" cy="125" r="85" fill="none" stroke="#38bdf8" stroke-width="2" stroke-dasharray="5 7" opacity="0.6"/>
+          <g filter="url(#m12f-glow)"><rect x="345" y="100" width="110" height="50" rx="12" fill="#0e2018" stroke="#34d399" stroke-width="2"/></g>
+          <text x="400" y="122" text-anchor="middle" fill="#34d399" font-family="Inter,sans-serif" font-size="12" font-weight="600">📜 AGENTS.md</text>
+          <text x="400" y="139" text-anchor="middle" fill="#a7f3d0" font-family="Inter,sans-serif" font-size="10">+1 linha</text>
+          <g font-family="Inter,sans-serif" font-size="12" text-anchor="middle">
+            <rect x="330" y="10" width="140" height="34" rx="10" fill="#0b1f2e" stroke="#38bdf8"/><text x="400" y="32" fill="#bae6fd">1. usar</text>
+            <rect x="530" y="108" width="170" height="34" rx="10" fill="#2a0f0f" stroke="#f87171"/><text x="615" y="130" fill="#fca5a5">2. erro repetido (2×)</text>
+            <rect x="320" y="206" width="160" height="34" rx="10" fill="#0e2018" stroke="#34d399"/><text x="400" y="228" fill="#a7f3d0">3. anotar a regra</text>
+            <rect x="100" y="108" width="170" height="34" rx="10" fill="#0b1f2e" stroke="#38bdf8"/><text x="185" y="130" fill="#bae6fd">4. conferir na próxima</text>
+          </g>
+          <g stroke="#38bdf8" stroke-width="2" fill="none">
+            <path class="wf-flow" d="M472,30 C 540,40 590,70 605,104" marker-end="url(#m12f-arrow)"/>
+            <path class="wf-flow" d="M610,146 C 590,190 540,215 484,222" marker-end="url(#m12f-arrow)"/>
+            <path class="wf-flow" d="M318,222 C 250,215 200,185 190,146" marker-end="url(#m12f-arrow)"/>
+            <path class="wf-flow" d="M195,104 C 215,65 260,38 326,30" marker-end="url(#m12f-arrow)"/>
+          </g>
+        </svg>
+      </div>
+      <p class="text-sm text-neutral-400 mb-6"><strong class="text-neutral-300">Como ler o desenho:</strong> siga as setas no sentido horário. Cada volta acontece quando um erro se repete, e termina com uma linha nova no arquivo do centro. Com algumas semanas de uso, as correções ficam raras.</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="bg-dark-800 rounded-xl p-6 border border-emerald-500/30">
+          <h3 class="font-semibold text-emerald-400 mb-3">✓ Boa revisão</h3>
+          <ul class="space-y-2 text-neutral-300 text-sm">
+            <li>✓ Frase curta e concreta por regra</li>
+            <li>✓ Apagar regra que ninguém usa mais</li>
+            <li>✓ Pedir ao Codex: "anote isso no AGENTS.md"</li>
+            <li>✓ Reler o arquivo uma vez por mês</li>
+          </ul>
+        </div>
+        <div class="bg-red-900/20 rounded-xl p-6 border border-red-500/30">
+          <h3 class="font-semibold text-red-400 mb-3">✗ Revisão que atrapalha</h3>
+          <ul class="space-y-2 text-neutral-300 text-sm">
+            <li>✗ Regras que se contradizem</li>
+            <li>✗ Arquivo de dez páginas que ninguém relê</li>
+            <li>✗ Anotar tudo, até o que aconteceu uma vez</li>
+            <li>✗ Copiar regras de outro projeto sem adaptar</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6" data-inema-check="modulo-1-2#q1">
+        <p class="font-medium mb-4">Teste rápido (opcional): quando o Codex lê o AGENTS.md?</p>
+        <div class="space-y-2">
+          <button type="button" data-inema-check-option="0" class="block w-full text-left px-4 py-2 rounded-lg bg-dark-700 border border-dark-600 hover:bg-dark-600 transition-colors text-sm">Só quando você anexa o arquivo na mensagem.</button>
+          <button type="button" data-inema-check-option="1" class="block w-full text-left px-4 py-2 rounded-lg bg-dark-700 border border-dark-600 hover:bg-dark-600 transition-colors text-sm">Uma vez, no dia em que você cria o projeto.</button>
+          <button type="button" data-inema-check-option="2" class="block w-full text-left px-4 py-2 rounded-lg bg-dark-700 border border-dark-600 hover:bg-dark-600 transition-colors text-sm">Em toda conversa nova daquele projeto, antes da sua primeira mensagem.</button>
+        </div>
+        <div data-inema-check-feedback class="mt-4 text-sm" role="status" aria-live="polite"></div>
+      </div>
+      <div class="flex justify-start mt-6">
+        <button type="button" data-inema-read-toggle aria-pressed="false" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/30 transition-colors">
+          <span class="inema-read-icon" aria-hidden="true">○</span><span class="inema-read-label">Marcar como lido</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ===================== RESUMO ===================== -->
+    <section class="mb-12">
+      <div class="bg-gradient-to-br from-emerald-900/40 via-dark-800 to-dark-800 rounded-xl border border-emerald-500/30 p-8">
+        <h2 class="text-2xl font-bold mb-6 flex items-center"><span class="mr-3">🎓</span> Resumo do módulo</h2>
+        <div class="space-y-4 mb-8">
+          <div class="flex items-start space-x-3"><span class="text-emerald-400 mt-1">✓</span><div><strong class="text-neutral-100">.md é texto simples</strong><span class="text-neutral-400"> — com # para título e - para lista.</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-emerald-400 mt-1">✓</span><div><strong class="text-neutral-100">Lido antes de tudo</strong><span class="text-neutral-400"> — em toda conversa nova do projeto.</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-emerald-400 mt-1">✓</span><div><strong class="text-neutral-100">Quem é você e qual o papel dele</strong><span class="text-neutral-400"> — mais regras de trabalho e segurança.</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-emerald-400 mt-1">✓</span><div><strong class="text-neutral-100">Mapa de rotas</strong><span class="text-neutral-400"> — "precisa disto, vá ali".</span></div></div>
+          <div class="flex items-start space-x-3"><span class="text-emerald-400 mt-1">✓</span><div><strong class="text-neutral-100">Um por projeto, sempre revisado</strong><span class="text-neutral-400"> — erro repetido vira regra.</span></div></div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-4 mb-8">
+          <h3 class="font-semibold text-emerald-400 mb-2">Próximo módulo:</h3>
+          <p class="text-neutral-300">1.3 — O ciclo do agente</p>
+        </div>
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a href="index.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">← Voltar para a trilha</a>
+          <a href="modulo-1-3.html" class="flex-1 text-center px-6 py-3 bg-emerald-600 text-white rounded-lg font-semibold hover:bg-emerald-500 transition-colors">Módulo 1.3 →</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <aside class="hidden lg:block">
+    <nav data-inema-toc aria-label="Índice da página" class="sticky top-24">
+      <p class="text-sm text-neutral-400 mb-3"><span data-inema-section-counter>Seção 1 de 6</span></p>
+      <ol class="space-y-2 text-sm">
+        <li><a href="#topico-1" class="text-neutral-400 hover:text-emerald-400">1. O que é .md</a></li>
+        <li><a href="#topico-2" class="text-neutral-400 hover:text-emerald-400">2. Quando ele lê</a></li>
+        <li><a href="#topico-3" class="text-neutral-400 hover:text-emerald-400">3. Quem é você</a></li>
+        <li><a href="#topico-4" class="text-neutral-400 hover:text-emerald-400">4. Mapa de rotas</a></li>
+        <li><a href="#topico-5" class="text-neutral-400 hover:text-emerald-400">5. Um por projeto</a></li>
+        <li><a href="#topico-6" class="text-neutral-400 hover:text-emerald-400">6. Revisar regras</a></li>
+      </ol>
+    </nav>
+  </aside>
+  </div>
+
+  <footer class="border-t border-dark-600 py-8 mt-16">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-neutral-500 text-sm">
+      <p>Codex: os 18 conceitos · 2026 | <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300">INEMA.CLUB</a> - <a href="https://inema.pro" target="_blank" class="text-amber-700 hover:text-amber-600 dark:text-slate-300 dark:hover:text-slate-200">PRO</a></p>
+      
+    </div>
+  </footer>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+    const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+    const _html = document.documentElement;
+    if (!_html.classList.contains('dark')) { themeToggleDarkIcon.classList.remove('hidden'); }
+    else { themeToggleLightIcon.classList.remove('hidden'); }
+    themeToggle.addEventListener('click', () => {
+      if (window.INEMA && INEMA.setPref) { INEMA.setPref('theme', _html.classList.contains('dark') ? 'claro' : 'inema-dark'); }
+      else { _html.classList.toggle('dark'); }
+      themeToggleDarkIcon.classList.toggle('hidden', _html.classList.contains('dark'));
+      themeToggleLightIcon.classList.toggle('hidden', !_html.classList.contains('dark'));
+      try { localStorage.setItem('theme', _html.classList.contains('dark') ? 'dark' : 'light'); } catch (e) {}
+    });
+    function toggleTopic(button) {
+      const item = button.closest('.topic-item');
+      const exp = item.querySelector('.topic-explanation');
+      const card = button.closest('[id^="modulo-"]') || document;
+      card.querySelectorAll('.topic-explanation.active').forEach(e => { if (e !== exp) { e.classList.remove('active'); const b = e.parentElement.querySelector('[aria-controls]'); if (b) b.setAttribute('aria-expanded', 'false'); } });
+      exp.classList.toggle('active');
+      button.setAttribute('aria-expanded', exp.classList.contains('active') ? 'true' : 'false');
+    }
+    let _lastModalTrigger = null;
+    function openModal(id){ const m=document.getElementById(id); if(m){ _lastModalTrigger=document.activeElement; m.classList.remove('hidden'); document.body.style.overflow='hidden'; const c=m.querySelector('button'); if(c) c.focus(); } }
+    function closeModal(){ document.querySelectorAll('.modal').forEach(m=>m.classList.add('hidden')); document.body.style.overflow='auto'; if(_lastModalTrigger){ _lastModalTrigger.focus(); _lastModalTrigger=null; } }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+  </script>
+  <script src="../../assets/learn.js"></script>
+  <script>
+    if (window.INEMA && typeof window.INEMA.init === 'function') { window.INEMA.init(); }
+  </script>
+  <script>
+    window.addEventListener('DOMContentLoaded', function () {
+      if (window.INEMA && INEMA.registerCheck) {
+
+        INEMA.registerCheck('modulo-1-2#q1', { answer: 2, explain: {
+          '0': 'Não. Você não precisa anexar nada: o arquivo na raiz do projeto é lido sozinho.',
+          '1': 'Não. Ele não lê uma vez só. Toda conversa nova do projeto começa pela leitura do AGENTS.md.',
+          '2': 'Isso. Em toda conversa nova daquele projeto, ele lê o arquivo antes da sua mensagem. Por isso o que está lá vale sempre.'
+        } });
+      }
+    });
+  </script>
+</body>
+</html>

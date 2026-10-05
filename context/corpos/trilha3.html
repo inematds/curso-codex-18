@@ -1,0 +1,802 @@
+<!--TITLE: Trilha 3 · Controle e personalização -->
+  <nav aria-label="Trilha de navegação" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+    <div class="flex items-center space-x-2 text-sm text-neutral-400">
+      <a href="../../index.html" class="hover:text-purple-400">Início</a><span>/</span>
+      <span class="text-purple-400">Trilha 3</span>
+    </div>
+  </nav>
+
+  <header class="bg-gradient-to-br from-purple-900/30 via-dark-800 to-dark-800 py-12 border-b border-dark-600" data-inema-track="3">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 lg:grid lg:grid-cols-[1fr_380px] lg:gap-10 lg:items-center">
+      <div>
+        <span class="inline-block px-3 py-1 bg-purple-500/20 text-purple-400 text-xs font-semibold rounded-full mb-4">TRILHA 3</span>
+        <h1 class="text-3xl sm:text-4xl font-bold mb-4">🧠 Controle e personalização</h1>
+        <p class="text-lg text-neutral-400 max-w-3xl">Você decide quanto o Codex gasta e quanto ele faz sozinho. Escolha modelo e esforço, ajuste as permissões e ensine receitas com skills, organizadas na pasta .agents, e conexões com seus aplicativos por plugins.</p>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 max-w-2xl">
+          <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-purple-400">6</div><div class="text-xs text-neutral-400">Módulos</div></div>
+          <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-purple-400">36</div><div class="text-xs text-neutral-400">Tópicos</div></div>
+          <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-purple-400">~3h</div><div class="text-xs text-neutral-400">Duração</div></div>
+          <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600"><div class="text-xl font-bold text-purple-400">Intermediário</div><div class="text-xs text-neutral-400">Nível</div></div>
+        </div>
+        <div data-inema-meter="trilha:3" class="mt-6 max-w-2xl" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-label="Progresso da trilha 3">
+          <div class="flex justify-between text-xs text-neutral-400 mb-1"><span data-inema-meter-frac>0 de 36</span><span data-inema-meter-pct>0%</span></div>
+          <div class="inema-bar"><div class="inema-bar__fill" data-inema-meter-fill></div></div>
+        </div>
+      </div>
+      <div class="mt-8 lg:mt-0 rounded-2xl border border-purple-500/30 bg-dark-900/40 p-3 overflow-hidden">
+        <svg viewBox="0 0 380 240" class="w-full h-auto" role="img" aria-label="Um painel de controle com três controles deslizantes: modelo, de Luna a Astra; esforço, de low a ultra; e permissão, de pedir aprovação a acesso total. Ao lado, três peças que se encaixam no painel: skills, a pasta .agents e plugins.">
+          <defs>
+            <pattern id="t3a-grid" width="28" height="28" patternUnits="userSpaceOnUse"><circle cx="1.2" cy="1.2" r="1.2" fill="#c084fc" opacity="0.14"/></pattern>
+            <filter id="t3a-glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          </defs>
+          <rect x="0" y="0" width="380" height="240" fill="url(#t3a-grid)"/>
+          <g font-family="Inter,sans-serif" font-size="10">
+            <rect x="16" y="22" width="220" height="196" rx="10" fill="#1a0f2a" stroke="#c084fc" stroke-width="2"/>
+            <text x="30" y="44" fill="#c084fc" font-weight="600" font-size="11">painel de controle</text>
+            <text x="30" y="72" fill="#e9d5ff">modelo</text>
+            <line x1="30" y1="86" x2="220" y2="86" stroke="#4c1d95" stroke-width="6" stroke-linecap="round"/>
+            <line x1="30" y1="86" x2="140" y2="86" stroke="#c084fc" stroke-width="6" stroke-linecap="round"/>
+            <circle cx="140" cy="86" r="8" fill="#c084fc" filter="url(#t3a-glow)"/>
+            <text x="30" y="102" fill="#a78bfa" font-size="9">Luna</text><text x="220" y="102" text-anchor="end" fill="#a78bfa" font-size="9">Astra</text>
+            <text x="30" y="128" fill="#e9d5ff">esforço</text>
+            <line x1="30" y1="142" x2="220" y2="142" stroke="#4c1d95" stroke-width="6" stroke-linecap="round"/>
+            <line x1="30" y1="142" x2="96" y2="142" stroke="#38bdf8" stroke-width="6" stroke-linecap="round"/>
+            <circle cx="96" cy="142" r="8" fill="#38bdf8" filter="url(#t3a-glow)"/>
+            <text x="30" y="158" fill="#a78bfa" font-size="9">low</text><text x="220" y="158" text-anchor="end" fill="#a78bfa" font-size="9">ultra</text>
+            <text x="30" y="184" fill="#e9d5ff">permissão</text>
+            <line x1="30" y1="198" x2="220" y2="198" stroke="#4c1d95" stroke-width="6" stroke-linecap="round"/>
+            <line x1="30" y1="198" x2="66" y2="198" stroke="#c084fc" stroke-width="6" stroke-linecap="round"/>
+            <circle cx="66" cy="198" r="8" fill="#c084fc" filter="url(#t3a-glow)"/>
+            <text x="220" y="212" text-anchor="end" fill="#a78bfa" font-size="9">acesso total</text>
+            <rect x="262" y="34" width="100" height="44" rx="8" fill="#1a0f2a" stroke="#c084fc" stroke-width="1.8"/>
+            <text x="312" y="54" text-anchor="middle" fill="#e9d5ff">skills</text><text x="312" y="68" text-anchor="middle" fill="#a78bfa" font-size="9">SKILL.md</text>
+            <rect x="262" y="98" width="100" height="44" rx="8" fill="#0b1f2e" stroke="#38bdf8" stroke-width="1.8"/>
+            <text x="312" y="118" text-anchor="middle" fill="#bae6fd">.agents/</text><text x="312" y="132" text-anchor="middle" fill="#7dd3fc" font-size="9">projeto · usuário</text>
+            <rect x="262" y="162" width="100" height="44" rx="8" fill="#1a0f2a" stroke="#c084fc" stroke-width="1.8"/>
+            <text x="312" y="182" text-anchor="middle" fill="#e9d5ff">plugins</text><text x="312" y="196" text-anchor="middle" fill="#a78bfa" font-size="9">seus aplicativos</text>
+            <line x1="238" y1="56" x2="260" y2="56" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="3 3"/>
+            <line x1="238" y1="120" x2="260" y2="120" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="3 3"/>
+            <line x1="238" y1="184" x2="260" y2="184" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="3 3"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </header>
+
+  <main id="conteudo" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12" data-inema-track="3">
+
+    <section class="mb-12">
+      <h2 class="text-2xl font-bold mb-6">Mapa da trilha</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <a href="#modulo-3-1" class="group bg-dark-800 rounded-xl border border-dark-600 hover:border-purple-500/30 p-5 transition-all">
+          <div class="flex items-center justify-between mb-2"><span class="text-purple-400 font-bold text-sm">3.1</span><span class="text-xs text-neutral-500">~30 min</span></div>
+          <h3 class="font-semibold mb-1 group-hover:text-purple-400 transition-colors">🧠 Modelos: força e custo</h3>
+          <p class="text-xs text-neutral-400">Forte quando precisa</p>
+        </a>
+        <a href="#modulo-3-2" class="group bg-dark-800 rounded-xl border border-dark-600 hover:border-purple-500/30 p-5 transition-all">
+          <div class="flex items-center justify-between mb-2"><span class="text-purple-400 font-bold text-sm">3.2</span><span class="text-xs text-neutral-500">~30 min</span></div>
+          <h3 class="font-semibold mb-1 group-hover:text-purple-400 transition-colors">🎚️ Esforço e modo rápido</h3>
+          <p class="text-xs text-neutral-400">Quanto ele pensa</p>
+        </a>
+        <a href="#modulo-3-3" class="group bg-dark-800 rounded-xl border border-dark-600 hover:border-purple-500/30 p-5 transition-all">
+          <div class="flex items-center justify-between mb-2"><span class="text-purple-400 font-bold text-sm">3.3</span><span class="text-xs text-neutral-500">~30 min</span></div>
+          <h3 class="font-semibold mb-1 group-hover:text-purple-400 transition-colors">🚦 Permissões: quanto ele faz sozinho</h3>
+          <p class="text-xs text-neutral-400">Do pedir licença ao sem freio</p>
+        </a>
+        <a href="#modulo-3-4" class="group bg-dark-800 rounded-xl border border-dark-600 hover:border-purple-500/30 p-5 transition-all">
+          <div class="flex items-center justify-between mb-2"><span class="text-purple-400 font-bold text-sm">3.4</span><span class="text-xs text-neutral-500">~30 min</span></div>
+          <h3 class="font-semibold mb-1 group-hover:text-purple-400 transition-colors">🍳 Skills: receitas reutilizáveis</h3>
+          <p class="text-xs text-neutral-400">Faça uma vez, repita sempre</p>
+        </a>
+        <a href="#modulo-3-5" class="group bg-dark-800 rounded-xl border border-dark-600 hover:border-purple-500/30 p-5 transition-all">
+          <div class="flex items-center justify-between mb-2"><span class="text-purple-400 font-bold text-sm">3.5</span><span class="text-xs text-neutral-500">~30 min</span></div>
+          <h3 class="font-semibold mb-1 group-hover:text-purple-400 transition-colors">🧳 A pasta .agents e a vinda do Claude Code</h3>
+          <p class="text-xs text-neutral-400">Skills que viajam com você</p>
+        </a>
+        <a href="#modulo-3-6" class="group bg-dark-800 rounded-xl border border-dark-600 hover:border-purple-500/30 p-5 transition-all">
+          <div class="flex items-center justify-between mb-2"><span class="text-purple-400 font-bold text-sm">3.6</span><span class="text-xs text-neutral-500">~30 min</span></div>
+          <h3 class="font-semibold mb-1 group-hover:text-purple-400 transition-colors">🧩 Plugins: conecte seus aplicativos</h3>
+          <p class="text-xs text-neutral-400">Seus apps no mesmo lugar</p>
+        </a>
+      </div>
+    </section>
+
+    <h2 class="text-2xl font-bold mb-6">Conteúdo detalhado</h2>
+
+    <!-- ===== MODULO 3.1 ===== -->
+    <div id="modulo-3-1" data-inema-module="3-1" data-inema-track="3" class="bg-dark-800 rounded-xl border border-dark-600 mb-6">
+      <figure class="rounded-t-xl overflow-hidden border-b border-purple-500/30">
+        <img src="assets/img/modulo-3-1.png" alt="Ilustração: três motores lado a lado, do pequeno e rápido ao grande e potente, com medidores de consumo acima de cada um." class="w-full h-auto" loading="lazy" width="1536" height="640">
+      </figure>
+      <div class="p-6 border-b border-dark-600">
+        <div class="flex items-center justify-between mb-2"><span class="text-purple-400 font-bold">3.1</span><span class="text-xs text-neutral-500">~30 min</span></div>
+        <h3 class="text-2xl font-bold mb-2">🧠 Modelos: força e custo</h3>
+        <p class="text-neutral-400 text-sm">A família de modelos do Codex, o que são tokens de entrada e de saída e por que a assinatura rende mais que a API.</p>
+        <div data-inema-meter="modulo:3-1" class="mt-4" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-label="Progresso do módulo 3.1">
+          <div class="flex justify-between text-xs text-neutral-400 mb-1"><span data-inema-meter-frac>0 de 6</span><span data-inema-meter-pct>0%</span></div>
+          <div class="inema-bar"><div class="inema-bar__fill" data-inema-meter-fill></div></div>
+        </div>
+      </div>
+      <div class="divide-y divide-dark-600">
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" aria-expanded="false" aria-controls="t1-3-1" class="w-full px-6 py-4 flex items-center justify-start space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-sm font-bold flex items-center justify-center flex-shrink-0">1</span>
+            <span class="text-lg">⚖️</span>
+            <div><span class="font-medium">Entenda que cada modelo tem força e preço</span><span class="text-neutral-500 text-sm ml-2">- mais forte, mais cota</span></div>
+          </button>
+          <div id="t1-3-1" class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div><span class="text-purple-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">Modelos mais inteligentes resolvem problemas mais difíceis e consomem mais da sua cota.</p></div>
+              <div><span class="text-purple-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">Usar o modelo mais forte em tudo esgota a cota sem melhorar o resultado das tarefas simples.</p></div>
+              <div><span class="text-purple-400 font-semibold">Conceitos-chave:</span><p class="text-neutral-300 text-sm">Modelo, força, cota, consumo.</p></div>
+            </div>
+          </div>
+        </div>
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" aria-expanded="false" aria-controls="t2-3-1" class="w-full px-6 py-4 flex items-center justify-start space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-sm font-bold flex items-center justify-center flex-shrink-0">2</span>
+            <span class="text-lg">👪</span>
+            <div><span class="font-medium">Conheça a família de modelos do Codex</span><span class="text-neutral-500 text-sm ml-2">- Astra, Sol, Luna</span></div>
+          </button>
+          <div id="t2-3-1" class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div><span class="text-purple-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">GPT-6-Astra (mais forte), GPT-6.1-Sol (dia a dia) e GPT-6-Luna (rápido e econômico), além de gerações anteriores.</p></div>
+              <div><span class="text-purple-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">Os nomes mudam com o tempo, mas a lógica de forte, médio e rápido fica.</p></div>
+              <div><span class="text-purple-400 font-semibold">Conceitos-chave:</span><p class="text-neutral-300 text-sm">GPT-6-Astra, GPT-6.1-Sol, GPT-6-Luna, catálogo.</p></div>
+            </div>
+          </div>
+        </div>
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" aria-expanded="false" aria-controls="t3-3-1" class="w-full px-6 py-4 flex items-center justify-start space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-sm font-bold flex items-center justify-center flex-shrink-0">3</span>
+            <span class="text-lg">🔤</span>
+            <div><span class="font-medium">Entenda tokens de entrada e de saída</span><span class="text-neutral-500 text-sm ml-2">- ≈ 4 caracteres</span></div>
+          </button>
+          <div id="t3-3-1" class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div><span class="text-purple-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">Token é um pedaço de texto; entrada é o que entra no modelo, saída é o que ele produz, incluindo o raciocínio.</p></div>
+              <div><span class="text-purple-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">A saída custa mais: saber disso explica por que respostas longas pesam na cota.</p></div>
+              <div><span class="text-purple-400 font-semibold">Conceitos-chave:</span><p class="text-neutral-300 text-sm">Token, entrada, saída, raciocínio.</p></div>
+            </div>
+          </div>
+        </div>
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" aria-expanded="false" aria-controls="t4-3-1" class="w-full px-6 py-4 flex items-center justify-start space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-sm font-bold flex items-center justify-center flex-shrink-0">4</span>
+            <span class="text-lg">💳</span>
+            <div><span class="font-medium">Diferencie assinatura de API</span><span class="text-neutral-500 text-sm ml-2">- plano mensal × por uso</span></div>
+          </button>
+          <div id="t4-3-1" class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div><span class="text-purple-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">A API cobra por milhão de tokens e serve para programas; no Codex você usa a assinatura com cota semanal.</p></div>
+              <div><span class="text-purple-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">Para uso pessoal, a assinatura sai muito mais barata que pagar a mesma quantidade pela API.</p></div>
+              <div><span class="text-purple-400 font-semibold">Conceitos-chave:</span><p class="text-neutral-300 text-sm">Assinatura, API, cota semanal, créditos extras.</p></div>
+            </div>
+          </div>
+        </div>
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" aria-expanded="false" aria-controls="t5-3-1" class="w-full px-6 py-4 flex items-center justify-start space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-sm font-bold flex items-center justify-center flex-shrink-0">5</span>
+            <span class="text-lg">🔁</span>
+            <div><span class="font-medium">Troque de modelo no meio da conversa</span><span class="text-neutral-500 text-sm ml-2">- entre uma mensagem e outra</span></div>
+          </button>
+          <div id="t5-3-1" class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div><span class="text-purple-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">Escolher o modelo ao começar e trocar entre mensagens no seletor, ou abrir com codex -m no terminal.</p></div>
+              <div><span class="text-purple-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">Você usa o forte só no trecho difícil e volta ao econômico depois.</p></div>
+              <div><span class="text-purple-400 font-semibold">Conceitos-chave:</span><p class="text-neutral-300 text-sm">Seletor de modelo, troca, codex -m.</p></div>
+            </div>
+          </div>
+        </div>
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" aria-expanded="false" aria-controls="t6-3-1" class="w-full px-6 py-4 flex items-center justify-start space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-sm font-bold flex items-center justify-center flex-shrink-0">6</span>
+            <span class="text-lg">🎯</span>
+            <div><span class="font-medium">Escolha o modelo pela tarefa</span><span class="text-neutral-500 text-sm ml-2">- nada de canhão para mosquito</span></div>
+          </button>
+          <div id="t6-3-1" class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div><span class="text-purple-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">Um critério simples: e-mail e resumo no modelo rápido, trabalho do dia no intermediário, problema difícil no mais forte.</p></div>
+              <div><span class="text-purple-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">Escolher pela tarefa economiza cota sem perder qualidade.</p></div>
+              <div><span class="text-purple-400 font-semibold">Conceitos-chave:</span><p class="text-neutral-300 text-sm">Critério, tarefa simples, tarefa difícil.</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="p-4 bg-dark-700/30 flex justify-start space-x-3">
+        <button onclick="openModal('modal-3-1')" class="px-4 py-2 text-sm bg-dark-600 hover:bg-dark-500 rounded-lg transition-colors">Ver em Modal</button>
+        <a href="modulo-3-1.html" class="px-4 py-2 text-sm bg-purple-600 hover:bg-purple-500 text-white rounded-lg transition-colors">Ver Completo</a>
+      </div>
+    </div>
+
+    <!-- ===== MODULO 3.2 ===== -->
+    <div id="modulo-3-2" data-inema-module="3-2" data-inema-track="3" class="bg-dark-800 rounded-xl border border-dark-600 mb-6">
+      <figure class="rounded-t-xl overflow-hidden border-b border-purple-500/30">
+        <img src="assets/img/modulo-3-2.png" alt="Ilustração: um controle deslizante com seis marcas, de low a ultra, e ao lado um botão de velocidade com o símbolo de raio." class="w-full h-auto" loading="lazy" width="1536" height="640">
+      </figure>
+      <div class="p-6 border-b border-dark-600">
+        <div class="flex items-center justify-between mb-2"><span class="text-purple-400 font-bold">3.2</span><span class="text-xs text-neutral-500">~30 min</span></div>
+        <h3 class="text-2xl font-bold mb-2">🎚️ Esforço e modo rápido</h3>
+        <p class="text-neutral-400 text-sm">Os níveis de esforço de low a ultra, o modo rápido e como montar a sua tabela de modelo e esforço por tarefa.</p>
+        <div data-inema-meter="modulo:3-2" class="mt-4" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-label="Progresso do módulo 3.2">
+          <div class="flex justify-between text-xs text-neutral-400 mb-1"><span data-inema-meter-frac>0 de 6</span><span data-inema-meter-pct>0%</span></div>
+          <div class="inema-bar"><div class="inema-bar__fill" data-inema-meter-fill></div></div>
+        </div>
+      </div>
+      <div class="divide-y divide-dark-600">
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" aria-expanded="false" aria-controls="t1-3-2" class="w-full px-6 py-4 flex items-center justify-start space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-sm font-bold flex items-center justify-center flex-shrink-0">1</span>
+            <span class="text-lg">🤔</span>
+            <div><span class="font-medium">Entenda o que é nível de esforço</span><span class="text-neutral-500 text-sm ml-2">- quanto ele pensa</span></div>
+          </button>
+          <div id="t1-3-2" class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div><span class="text-purple-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">Dentro de cada modelo você escolhe quanto ele raciocina antes de agir.</p></div>
+              <div><span class="text-purple-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">É um segundo botão de qualidade e custo, independente do modelo.</p></div>
+              <div><span class="text-purple-400 font-semibold">Conceitos-chave:</span><p class="text-neutral-300 text-sm">Esforço, raciocínio, qualidade.</p></div>
+            </div>
+          </div>
+        </div>
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" aria-expanded="false" aria-controls="t2-3-2" class="w-full px-6 py-4 flex items-center justify-start space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-sm font-bold flex items-center justify-center flex-shrink-0">2</span>
+            <span class="text-lg">🪜</span>
+            <div><span class="font-medium">Conheça a escada de low a ultra</span><span class="text-neutral-500 text-sm ml-2">- seis degraus</span></div>
+          </button>
+          <div id="t2-3-2" class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div><span class="text-purple-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">low, medium, high, xhigh, max e ultra; ultra é o máximo, com delegação automática de tarefas.</p></div>
+              <div><span class="text-purple-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">Saber o que cada degrau faz evita subir sem necessidade.</p></div>
+              <div><span class="text-purple-400 font-semibold">Conceitos-chave:</span><p class="text-neutral-300 text-sm">low, medium, high, xhigh, max, ultra.</p></div>
+            </div>
+          </div>
+        </div>
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" aria-expanded="false" aria-controls="t3-3-2" class="w-full px-6 py-4 flex items-center justify-start space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-sm font-bold flex items-center justify-center flex-shrink-0">3</span>
+            <span class="text-lg">📈</span>
+            <div><span class="font-medium">Veja por que mais esforço gasta mais cota</span><span class="text-neutral-500 text-sm ml-2">- pensar custa</span></div>
+          </button>
+          <div id="t3-3-2" class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div><span class="text-purple-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">Mais esforço significa mais raciocínio, ou seja, mais tokens de saída e mais cota gasta.</p></div>
+              <div><span class="text-purple-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">Explica por que o mesmo modelo aparece em comparativos com resultados e custos diferentes.</p></div>
+              <div><span class="text-purple-400 font-semibold">Conceitos-chave:</span><p class="text-neutral-300 text-sm">Custo do raciocínio, tokens de saída, comparativos.</p></div>
+            </div>
+          </div>
+        </div>
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" aria-expanded="false" aria-controls="t4-3-2" class="w-full px-6 py-4 flex items-center justify-start space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-sm font-bold flex items-center justify-center flex-shrink-0">4</span>
+            <span class="text-lg">⚡</span>
+            <div><span class="font-medium">Use o modo rápido com consciência</span><span class="text-neutral-500 text-sm ml-2">- 2× mais rápido</span></div>
+          </button>
+          <div id="t4-3-2" class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div><span class="text-purple-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">O modo rápido responde duas vezes mais rápido e consome mais cota.</p></div>
+              <div><span class="text-purple-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">Vale quando o tempo importa mais que a cota, não como padrão.</p></div>
+              <div><span class="text-purple-400 font-semibold">Conceitos-chave:</span><p class="text-neutral-300 text-sm">Modo rápido, velocidade, consumo.</p></div>
+            </div>
+          </div>
+        </div>
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" aria-expanded="false" aria-controls="t5-3-2" class="w-full px-6 py-4 flex items-center justify-start space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-sm font-bold flex items-center justify-center flex-shrink-0">5</span>
+            <span class="text-lg">🧩</span>
+            <div><span class="font-medium">Combine modelo e esforço</span><span class="text-neutral-500 text-sm ml-2">- dois botões juntos</span></div>
+          </button>
+          <div id="t5-3-2" class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div><span class="text-purple-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">Juntar modelo e esforço: o modelo do dia a dia em medium resolve quase todo trabalho de escritório.</p></div>
+              <div><span class="text-purple-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">A combinação certa entrega qualidade sem desperdiçar cota.</p></div>
+              <div><span class="text-purple-400 font-semibold">Conceitos-chave:</span><p class="text-neutral-300 text-sm">Combinação, padrão, codex -c model_reasoning_effort.</p></div>
+            </div>
+          </div>
+        </div>
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" aria-expanded="false" aria-controls="t6-3-2" class="w-full px-6 py-4 flex items-center justify-start space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-sm font-bold flex items-center justify-center flex-shrink-0">6</span>
+            <span class="text-lg">📋</span>
+            <div><span class="font-medium">Monte sua tabela pessoal</span><span class="text-neutral-500 text-sm ml-2">- tarefa → modelo → esforço</span></div>
+          </button>
+          <div id="t6-3-2" class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div><span class="text-purple-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">Uma tabela com as suas tarefas frequentes e o modelo e esforço de cada uma.</p></div>
+              <div><span class="text-purple-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">Você para de decidir toda vez e acerta de primeira.</p></div>
+              <div><span class="text-purple-400 font-semibold">Conceitos-chave:</span><p class="text-neutral-300 text-sm">Tabela pessoal, tarefas frequentes, padrão.</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="p-4 bg-dark-700/30 flex justify-start space-x-3">
+        <button onclick="openModal('modal-3-2')" class="px-4 py-2 text-sm bg-dark-600 hover:bg-dark-500 rounded-lg transition-colors">Ver em Modal</button>
+        <a href="modulo-3-2.html" class="px-4 py-2 text-sm bg-purple-600 hover:bg-purple-500 text-white rounded-lg transition-colors">Ver Completo</a>
+      </div>
+    </div>
+
+    <!-- ===== MODULO 3.3 ===== -->
+    <div id="modulo-3-3" data-inema-module="3-3" data-inema-track="3" class="bg-dark-800 rounded-xl border border-dark-600 mb-6">
+      <figure class="rounded-t-xl overflow-hidden border-b border-purple-500/30">
+        <img src="assets/img/modulo-3-3.png" alt="Ilustração: um semáforo com três luzes, verde para pedir aprovação, amarela para aprovar por mim e laranja para acesso total." class="w-full h-auto" loading="lazy" width="1536" height="640">
+      </figure>
+      <div class="p-6 border-b border-dark-600">
+        <div class="flex items-center justify-between mb-2"><span class="text-purple-400 font-bold">3.3</span><span class="text-xs text-neutral-500">~30 min</span></div>
+        <h3 class="text-2xl font-bold mb-2">🚦 Permissões: quanto ele faz sozinho</h3>
+        <p class="text-neutral-400 text-sm">Os três modos de permissão, quando subir de um para o outro e como bloquear ações específicas na configuração.</p>
+        <div data-inema-meter="modulo:3-3" class="mt-4" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-label="Progresso do módulo 3.3">
+          <div class="flex justify-between text-xs text-neutral-400 mb-1"><span data-inema-meter-frac>0 de 6</span><span data-inema-meter-pct>0%</span></div>
+          <div class="inema-bar"><div class="inema-bar__fill" data-inema-meter-fill></div></div>
+        </div>
+      </div>
+      <div class="divide-y divide-dark-600">
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" aria-expanded="false" aria-controls="t1-3-3" class="w-full px-6 py-4 flex items-center justify-start space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-sm font-bold flex items-center justify-center flex-shrink-0">1</span>
+            <span class="text-lg">🙋</span>
+            <div><span class="font-medium">Entenda por que o agente pede licença</span><span class="text-neutral-500 text-sm ml-2">- ele age de verdade</span></div>
+          </button>
+          <div id="t1-3-3" class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div><span class="text-purple-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">O agente mexe em arquivos, roda comandos e usa a internet; a permissão define o que ele faz sem perguntar.</p></div>
+              <div><span class="text-purple-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">Quem age de verdade precisa de limites claros.</p></div>
+              <div><span class="text-purple-400 font-semibold">Conceitos-chave:</span><p class="text-neutral-300 text-sm">Permissão, ação real, sandbox.</p></div>
+            </div>
+          </div>
+        </div>
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" aria-expanded="false" aria-controls="t2-3-3" class="w-full px-6 py-4 flex items-center justify-start space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-sm font-bold flex items-center justify-center flex-shrink-0">2</span>
+            <span class="text-lg">🚦</span>
+            <div><span class="font-medium">Conheça os três modos de permissão</span><span class="text-neutral-500 text-sm ml-2">- pedir, aprovar por mim, total</span></div>
+          </button>
+          <div id="t2-3-3" class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div><span class="text-purple-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">Pedir aprovação, Aprovar por mim (só pergunta em ação arriscada) e Acesso total (não pergunta nada).</p></div>
+              <div><span class="text-purple-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">Cada modo serve a um momento; conhecer os três evita ficar preso no errado.</p></div>
+              <div><span class="text-purple-400 font-semibold">Conceitos-chave:</span><p class="text-neutral-300 text-sm">Pedir aprovação, Aprovar por mim, Acesso total.</p></div>
+            </div>
+          </div>
+        </div>
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" aria-expanded="false" aria-controls="t3-3-3" class="w-full px-6 py-4 flex items-center justify-start space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-sm font-bold flex items-center justify-center flex-shrink-0">3</span>
+            <span class="text-lg">🐢</span>
+            <div><span class="font-medium">Comece pedindo aprovação para tudo</span><span class="text-neutral-500 text-sm ml-2">- aprenda vendo cada passo</span></div>
+          </button>
+          <div id="t3-3-3" class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div><span class="text-purple-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">Usar o modo que pergunta antes de mexer fora da pasta e antes de usar a internet.</p></div>
+              <div><span class="text-purple-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">É o melhor jeito de aprender o que o agente faz, passo a passo.</p></div>
+              <div><span class="text-purple-400 font-semibold">Conceitos-chave:</span><p class="text-neutral-300 text-sm">Modo seguro, aprendizado, aprovação manual.</p></div>
+            </div>
+          </div>
+        </div>
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" aria-expanded="false" aria-controls="t4-3-3" class="w-full px-6 py-4 flex items-center justify-start space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-sm font-bold flex items-center justify-center flex-shrink-0">4</span>
+            <span class="text-lg">🚗</span>
+            <div><span class="font-medium">Passe para a aprovação automática</span><span class="text-neutral-500 text-sm ml-2">- só o arriscado pergunta</span></div>
+          </button>
+          <div id="t4-3-3" class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div><span class="text-purple-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">Quando já confia, trocar para o modo que só pergunta quando a ação parece arriscada, como apagar ou chamar serviço externo.</p></div>
+              <div><span class="text-purple-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">Você ganha velocidade sem abrir mão do freio nas ações perigosas.</p></div>
+              <div><span class="text-purple-400 font-semibold">Conceitos-chave:</span><p class="text-neutral-300 text-sm">Aprovar por mim, --approve-for-me, ação arriscada.</p></div>
+            </div>
+          </div>
+        </div>
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" aria-expanded="false" aria-controls="t5-3-3" class="w-full px-6 py-4 flex items-center justify-start space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-sm font-bold flex items-center justify-center flex-shrink-0">5</span>
+            <span class="text-lg">🔥</span>
+            <div><span class="font-medium">Saiba quando usar acesso total</span><span class="text-neutral-500 text-sm ml-2">- só em pasta que pode perder</span></div>
+          </button>
+          <div id="t5-3-3" class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div><span class="text-purple-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">O modo sem freio: não pergunta nada. Só faz sentido numa pasta que você pode perder sem dor.</p></div>
+              <div><span class="text-purple-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">Usado no lugar errado, um erro do agente vira prejuízo real.</p></div>
+              <div><span class="text-purple-400 font-semibold">Conceitos-chave:</span><p class="text-neutral-300 text-sm">Acesso total, danger-full-access, pasta descartável.</p></div>
+            </div>
+          </div>
+        </div>
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" aria-expanded="false" aria-controls="t6-3-3" class="w-full px-6 py-4 flex items-center justify-start space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-sm font-bold flex items-center justify-center flex-shrink-0">6</span>
+            <span class="text-lg">⛔</span>
+            <div><span class="font-medium">Bloqueie ações específicas na configuração</span><span class="text-neutral-500 text-sm ml-2">- nunca apagar clientes/</span></div>
+          </button>
+          <div id="t6-3-3" class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div><span class="text-purple-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">Pedir ao Codex que registre regras na configuração, como nunca apagar arquivos de clientes ou nunca enviar e-mail sem mostrar antes.</p></div>
+              <div><span class="text-purple-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">Bloqueios específicos protegem o que importa em qualquer modo.</p></div>
+              <div><span class="text-purple-400 font-semibold">Conceitos-chave:</span><p class="text-neutral-300 text-sm">Regra de bloqueio, configuração, proteção.</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="p-4 bg-dark-700/30 flex justify-start space-x-3">
+        <button onclick="openModal('modal-3-3')" class="px-4 py-2 text-sm bg-dark-600 hover:bg-dark-500 rounded-lg transition-colors">Ver em Modal</button>
+        <a href="modulo-3-3.html" class="px-4 py-2 text-sm bg-purple-600 hover:bg-purple-500 text-white rounded-lg transition-colors">Ver Completo</a>
+      </div>
+    </div>
+
+    <!-- ===== MODULO 3.4 ===== -->
+    <div id="modulo-3-4" data-inema-module="3-4" data-inema-track="3" class="bg-dark-800 rounded-xl border border-dark-600 mb-6">
+      <figure class="rounded-t-xl overflow-hidden border-b border-purple-500/30">
+        <img src="assets/img/modulo-3-4.png" alt="Ilustração: um livro de receitas aberto com cartões de passos, e uma frigideira ao lado com uma panqueca no ponto." class="w-full h-auto" loading="lazy" width="1536" height="640">
+      </figure>
+      <div class="p-6 border-b border-dark-600">
+        <div class="flex items-center justify-between mb-2"><span class="text-purple-400 font-bold">3.4</span><span class="text-xs text-neutral-500">~30 min</span></div>
+        <h3 class="text-2xl font-bold mb-2">🍳 Skills: receitas reutilizáveis</h3>
+        <p class="text-neutral-400 text-sm">Como transformar uma tarefa que deu certo numa receita que o Codex segue igual, melhora com feedback e encadeia com outras.</p>
+        <div data-inema-meter="modulo:3-4" class="mt-4" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-label="Progresso do módulo 3.4">
+          <div class="flex justify-between text-xs text-neutral-400 mb-1"><span data-inema-meter-frac>0 de 6</span><span data-inema-meter-pct>0%</span></div>
+          <div class="inema-bar"><div class="inema-bar__fill" data-inema-meter-fill></div></div>
+        </div>
+      </div>
+      <div class="divide-y divide-dark-600">
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" aria-expanded="false" aria-controls="t1-3-4" class="w-full px-6 py-4 flex items-center justify-start space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-sm font-bold flex items-center justify-center flex-shrink-0">1</span>
+            <span class="text-lg">📖</span>
+            <div><span class="font-medium">Entenda a skill como receita</span><span class="text-neutral-500 text-sm ml-2">- a panqueca melhora</span></div>
+          </button>
+          <div id="t1-3-4" class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div><span class="text-purple-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">Skill é uma receita reutilizável: você faz bem uma vez e ensina o Codex a fazer igual sempre.</p></div>
+              <div><span class="text-purple-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">Tarefa repetida vira um pedido de uma linha.</p></div>
+              <div><span class="text-purple-400 font-semibold">Conceitos-chave:</span><p class="text-neutral-300 text-sm">Skill, receita, repetição, padrão.</p></div>
+            </div>
+          </div>
+        </div>
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" aria-expanded="false" aria-controls="t2-3-4" class="w-full px-6 py-4 flex items-center justify-start space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-sm font-bold flex items-center justify-center flex-shrink-0">2</span>
+            <span class="text-lg">🔎</span>
+            <div><span class="font-medium">Abra um SKILL.md por dentro</span><span class="text-neutral-500 text-sm ml-2">- metadados e instruções</span></div>
+          </button>
+          <div id="t2-3-4" class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div><span class="text-purple-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">No topo, nome e quando usar (é isso que o Codex lê para decidir); embaixo, as instruções passo a passo.</p></div>
+              <div><span class="text-purple-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">Saber a anatomia permite ler, corrigir e escrever skills.</p></div>
+              <div><span class="text-purple-400 font-semibold">Conceitos-chave:</span><p class="text-neutral-300 text-sm">SKILL.md, metadados, descrição, instruções.</p></div>
+            </div>
+          </div>
+        </div>
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" aria-expanded="false" aria-controls="t3-3-4" class="w-full px-6 py-4 flex items-center justify-start space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-sm font-bold flex items-center justify-center flex-shrink-0">3</span>
+            <span class="text-lg">✍️</span>
+            <div><span class="font-medium">Crie sua primeira skill</span><span class="text-neutral-500 text-sm ml-2">- a partir do que deu certo</span></div>
+          </button>
+          <div id="t3-3-4" class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div><span class="text-purple-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">Pedir ao Codex que transforme a tarefa que acabou de dar certo numa skill.</p></div>
+              <div><span class="text-purple-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">A melhor skill nasce de um resultado aprovado, não de uma ideia no vácuo.</p></div>
+              <div><span class="text-purple-400 font-semibold">Conceitos-chave:</span><p class="text-neutral-300 text-sm">Criar skill, tarefa aprovada, pasta da skill.</p></div>
+            </div>
+          </div>
+        </div>
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" aria-expanded="false" aria-controls="t4-3-4" class="w-full px-6 py-4 flex items-center justify-start space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-sm font-bold flex items-center justify-center flex-shrink-0">4</span>
+            <span class="text-lg">⌨️</span>
+            <div><span class="font-medium">Chame a skill por texto ou por barra</span><span class="text-neutral-500 text-sm ml-2">- natural ou /nome</span></div>
+          </button>
+          <div id="t4-3-4" class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div><span class="text-purple-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">Pedir em linguagem natural ("faça a descrição deste vídeo") ou chamar direto por /nome-da-skill.</p></div>
+              <div><span class="text-purple-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">Os dois jeitos funcionam; a barra garante que é aquela skill.</p></div>
+              <div><span class="text-purple-400 font-semibold">Conceitos-chave:</span><p class="text-neutral-300 text-sm">Chamada natural, barra, nome da skill.</p></div>
+            </div>
+          </div>
+        </div>
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" aria-expanded="false" aria-controls="t5-3-4" class="w-full px-6 py-4 flex items-center justify-start space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-sm font-bold flex items-center justify-center flex-shrink-0">5</span>
+            <span class="text-lg">🔧</span>
+            <div><span class="font-medium">Melhore a skill com feedback</span><span class="text-neutral-500 text-sm ml-2">- gostei disso, não daquilo</span></div>
+          </button>
+          <div id="t5-3-4" class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div><span class="text-purple-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">Depois do resultado, dizer o que gostou e o que não, e pedir que ele atualize a skill.</p></div>
+              <div><span class="text-purple-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">Cada uso deixa a receita melhor, como a anotação na margem do caderno.</p></div>
+              <div><span class="text-purple-400 font-semibold">Conceitos-chave:</span><p class="text-neutral-300 text-sm">Feedback, atualizar skill, melhoria contínua.</p></div>
+            </div>
+          </div>
+        </div>
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" aria-expanded="false" aria-controls="t6-3-4" class="w-full px-6 py-4 flex items-center justify-start space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-sm font-bold flex items-center justify-center flex-shrink-0">6</span>
+            <span class="text-lg">⛓️</span>
+            <div><span class="font-medium">Encadeie skills num fluxo maior</span><span class="text-neutral-500 text-sm ml-2">- vídeo → post → artigo</span></div>
+          </button>
+          <div id="t6-3-4" class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div><span class="text-purple-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">Uma skill puxando a outra: descrição do vídeo, depois post do LinkedIn, depois artigo com imagens.</p></div>
+              <div><span class="text-purple-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">Fluxos encadeados fazem em minutos o que levava uma tarde.</p></div>
+              <div><span class="text-purple-400 font-semibold">Conceitos-chave:</span><p class="text-neutral-300 text-sm">Encadeamento, fluxo, "que skills você usou?".</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="p-4 bg-dark-700/30 flex justify-start space-x-3">
+        <button onclick="openModal('modal-3-4')" class="px-4 py-2 text-sm bg-dark-600 hover:bg-dark-500 rounded-lg transition-colors">Ver em Modal</button>
+        <a href="modulo-3-4.html" class="px-4 py-2 text-sm bg-purple-600 hover:bg-purple-500 text-white rounded-lg transition-colors">Ver Completo</a>
+      </div>
+    </div>
+
+    <!-- ===== MODULO 3.5 ===== -->
+    <div id="modulo-3-5" data-inema-module="3-5" data-inema-track="3" class="bg-dark-800 rounded-xl border border-dark-600 mb-6">
+      <figure class="rounded-t-xl overflow-hidden border-b border-purple-500/30">
+        <img src="assets/img/modulo-3-5.png" alt="Ilustração: uma mala aberta com pastas de skills dentro, saindo de uma casa e entrando em outra, mostrando a mudança entre ferramentas." class="w-full h-auto" loading="lazy" width="1536" height="640">
+      </figure>
+      <div class="p-6 border-b border-dark-600">
+        <div class="flex items-center justify-between mb-2"><span class="text-purple-400 font-bold">3.5</span><span class="text-xs text-neutral-500">~30 min</span></div>
+        <h3 class="text-2xl font-bold mb-2">🧳 A pasta .agents e a vinda do Claude Code</h3>
+        <p class="text-neutral-400 text-sm">Onde as skills moram, como separar as do projeto das globais e como trazer um projeto montado no Claude Code.</p>
+        <div data-inema-meter="modulo:3-5" class="mt-4" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-label="Progresso do módulo 3.5">
+          <div class="flex justify-between text-xs text-neutral-400 mb-1"><span data-inema-meter-frac>0 de 6</span><span data-inema-meter-pct>0%</span></div>
+          <div class="inema-bar"><div class="inema-bar__fill" data-inema-meter-fill></div></div>
+        </div>
+      </div>
+      <div class="divide-y divide-dark-600">
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" aria-expanded="false" aria-controls="t1-3-5" class="w-full px-6 py-4 flex items-center justify-start space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-sm font-bold flex items-center justify-center flex-shrink-0">1</span>
+            <span class="text-lg">🔦</span>
+            <div><span class="font-medium">Encontre a pasta .agents</span><span class="text-neutral-500 text-sm ml-2">- .agents/skills/</span></div>
+          </button>
+          <div id="t1-3-5" class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div><span class="text-purple-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">A pasta .agents guarda as skills, uma pasta por skill com o seu SKILL.md dentro.</p></div>
+              <div><span class="text-purple-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">Saber onde ficam permite revisar, copiar e organizar suas receitas.</p></div>
+              <div><span class="text-purple-400 font-semibold">Conceitos-chave:</span><p class="text-neutral-300 text-sm">.agents, skills, pasta oculta.</p></div>
+            </div>
+          </div>
+        </div>
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" aria-expanded="false" aria-controls="t2-3-5" class="w-full px-6 py-4 flex items-center justify-start space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-sm font-bold flex items-center justify-center flex-shrink-0">2</span>
+            <span class="text-lg">🏘️</span>
+            <div><span class="font-medium">Separe skills do projeto e skills globais</span><span class="text-neutral-500 text-sm ml-2">- aqui ou em todo lugar</span></div>
+          </button>
+          <div id="t2-3-5" class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div><span class="text-purple-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">Skill no .agents do projeto vale só ali; no ~/.agents da sua pasta de usuário vale em todos os projetos.</p></div>
+              <div><span class="text-purple-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">É a mesma lógica do .codex: decide onde cada receita deve valer.</p></div>
+              <div><span class="text-purple-400 font-semibold">Conceitos-chave:</span><p class="text-neutral-300 text-sm">Skill de projeto, skill global, escopo.</p></div>
+            </div>
+          </div>
+        </div>
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" aria-expanded="false" aria-controls="t3-3-5" class="w-full px-6 py-4 flex items-center justify-start space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-sm font-bold flex items-center justify-center flex-shrink-0">3</span>
+            <span class="text-lg">📎</span>
+            <div><span class="font-medium">Faça a skill usar outros arquivos</span><span class="text-neutral-500 text-sm ml-2">- guia, modelo, planilha</span></div>
+          </button>
+          <div id="t3-3-5" class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div><span class="text-purple-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">A skill pode apontar para outros arquivos: guia de voz, modelo de documento, planilha.</p></div>
+              <div><span class="text-purple-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">Mantém o SKILL.md curto e reaproveita o material que você já tem.</p></div>
+              <div><span class="text-purple-400 font-semibold">Conceitos-chave:</span><p class="text-neutral-300 text-sm">Referência a arquivo, guia de estilo, modelo.</p></div>
+            </div>
+          </div>
+        </div>
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" aria-expanded="false" aria-controls="t4-3-5" class="w-full px-6 py-4 flex items-center justify-start space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-sm font-bold flex items-center justify-center flex-shrink-0">4</span>
+            <span class="text-lg">🚚</span>
+            <div><span class="font-medium">Traga seu projeto do Claude Code</span><span class="text-neutral-500 text-sm ml-2">- CLAUDE.md vira AGENTS.md</span></div>
+          </button>
+          <div id="t4-3-5" class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div><span class="text-purple-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">Lá existem CLAUDE.md e .claude; aqui AGENTS.md, .agents e .codex. O mais simples é pedir ao Codex para adaptar o projeto.</p></div>
+              <div><span class="text-purple-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">Você não perde o que já construiu ao mudar de ferramenta.</p></div>
+              <div><span class="text-purple-400 font-semibold">Conceitos-chave:</span><p class="text-neutral-300 text-sm">Migração, CLAUDE.md, AGENTS.md, adaptação.</p></div>
+            </div>
+          </div>
+        </div>
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" aria-expanded="false" aria-controls="t5-3-5" class="w-full px-6 py-4 flex items-center justify-start space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-sm font-bold flex items-center justify-center flex-shrink-0">5</span>
+            <span class="text-lg">🌐</span>
+            <div><span class="font-medium">Mantenha um projeto que serve a qualquer agente</span><span class="text-neutral-500 text-sm ml-2">- arquivos, não amarras</span></div>
+          </button>
+          <div id="t5-3-5" class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div><span class="text-purple-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">Regras e skills em arquivos locais de texto, que qualquer agente consegue ler.</p></div>
+              <div><span class="text-purple-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">Seu trabalho fica independente de ferramenta e sobrevive às trocas.</p></div>
+              <div><span class="text-purple-400 font-semibold">Conceitos-chave:</span><p class="text-neutral-300 text-sm">Portabilidade, arquivos locais, independência.</p></div>
+            </div>
+          </div>
+        </div>
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" aria-expanded="false" aria-controls="t6-3-5" class="w-full px-6 py-4 flex items-center justify-start space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-sm font-bold flex items-center justify-center flex-shrink-0">6</span>
+            <span class="text-lg">📚</span>
+            <div><span class="font-medium">Organize sua biblioteca de skills</span><span class="text-neutral-500 text-sm ml-2">- nomes claros, revisão</span></div>
+          </button>
+          <div id="t6-3-5" class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div><span class="text-purple-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">Nomes que dizem o que a skill faz, uma pasta por skill e revisão das que você não usa mais.</p></div>
+              <div><span class="text-purple-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">Biblioteca bagunçada faz o Codex escolher a skill errada.</p></div>
+              <div><span class="text-purple-400 font-semibold">Conceitos-chave:</span><p class="text-neutral-300 text-sm">Biblioteca, nomenclatura, limpeza.</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="p-4 bg-dark-700/30 flex justify-start space-x-3">
+        <button onclick="openModal('modal-3-5')" class="px-4 py-2 text-sm bg-dark-600 hover:bg-dark-500 rounded-lg transition-colors">Ver em Modal</button>
+        <a href="modulo-3-5.html" class="px-4 py-2 text-sm bg-purple-600 hover:bg-purple-500 text-white rounded-lg transition-colors">Ver Completo</a>
+      </div>
+    </div>
+
+    <!-- ===== MODULO 3.6 ===== -->
+    <div id="modulo-3-6" data-inema-module="3-6" data-inema-track="3" class="bg-dark-800 rounded-xl border border-dark-600 mb-6">
+      <figure class="rounded-t-xl overflow-hidden border-b border-purple-500/30">
+        <img src="assets/img/modulo-3-6.png" alt="Ilustração: peças de quebra-cabeça com ícones de aplicativos se encaixando em volta de uma janela central do Codex." class="w-full h-auto" loading="lazy" width="1536" height="640">
+      </figure>
+      <div class="p-6 border-b border-dark-600">
+        <div class="flex items-center justify-between mb-2"><span class="text-purple-400 font-bold">3.6</span><span class="text-xs text-neutral-500">~30 min</span></div>
+        <h3 class="text-2xl font-bold mb-2">🧩 Plugins: conecte seus aplicativos</h3>
+        <p class="text-neutral-400 text-sm">Como conectar e-mail, drive e outros aplicativos ao Codex, o que fazer quando não há plugin e como cuidar da segurança.</p>
+        <div data-inema-meter="modulo:3-6" class="mt-4" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-label="Progresso do módulo 3.6">
+          <div class="flex justify-between text-xs text-neutral-400 mb-1"><span data-inema-meter-frac>0 de 6</span><span data-inema-meter-pct>0%</span></div>
+          <div class="inema-bar"><div class="inema-bar__fill" data-inema-meter-fill></div></div>
+        </div>
+      </div>
+      <div class="divide-y divide-dark-600">
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" aria-expanded="false" aria-controls="t1-3-6" class="w-full px-6 py-4 flex items-center justify-start space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-sm font-bold flex items-center justify-center flex-shrink-0">1</span>
+            <span class="text-lg">🧩</span>
+            <div><span class="font-medium">Entenda o que é um plugin</span><span class="text-neutral-500 text-sm ml-2">- conexão pronta</span></div>
+          </button>
+          <div id="t1-3-6" class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div><span class="text-purple-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">Plugin é uma conexão pronta com um aplicativo, como e-mail, drive, agenda ou gerenciador de tarefas.</p></div>
+              <div><span class="text-purple-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">Com o plugin, o Codex usa o aplicativo direto, sem você copiar e colar.</p></div>
+              <div><span class="text-purple-400 font-semibold">Conceitos-chave:</span><p class="text-neutral-300 text-sm">Plugin, conexão, aplicativo.</p></div>
+            </div>
+          </div>
+        </div>
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" aria-expanded="false" aria-controls="t2-3-6" class="w-full px-6 py-4 flex items-center justify-start space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-sm font-bold flex items-center justify-center flex-shrink-0">2</span>
+            <span class="text-lg">🔌</span>
+            <div><span class="font-medium">Conecte seu primeiro aplicativo</span><span class="text-neutral-500 text-sm ml-2">- entre uma vez</span></div>
+          </button>
+          <div id="t2-3-6" class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div><span class="text-purple-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">Abrir a área de Plugins, escolher o aplicativo e entrar com a sua conta uma vez.</p></div>
+              <div><span class="text-purple-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">Uma conexão bem feita já muda o tipo de pedido que você consegue fazer.</p></div>
+              <div><span class="text-purple-400 font-semibold">Conceitos-chave:</span><p class="text-neutral-300 text-sm">Área de Plugins, login, autorização.</p></div>
+            </div>
+          </div>
+        </div>
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" aria-expanded="false" aria-controls="t3-3-6" class="w-full px-6 py-4 flex items-center justify-start space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-sm font-bold flex items-center justify-center flex-shrink-0">3</span>
+            <span class="text-lg">🔍</span>
+            <div><span class="font-medium">Busque o plugin que você precisa</span><span class="text-neutral-500 text-sm ml-2">- catálogo por categoria</span></div>
+          </button>
+          <div id="t3-3-6" class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div><span class="text-purple-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">Procurar por categoria (criatividade, negócios, dados, comunicação) no app, ou listar com codex plugin list.</p></div>
+              <div><span class="text-purple-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">O catálogo cresce; saber procurar evita achar que não existe.</p></div>
+              <div><span class="text-purple-400 font-semibold">Conceitos-chave:</span><p class="text-neutral-300 text-sm">Catálogo, categorias, codex plugin list.</p></div>
+            </div>
+          </div>
+        </div>
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" aria-expanded="false" aria-controls="t4-3-6" class="w-full px-6 py-4 flex items-center justify-start space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-sm font-bold flex items-center justify-center flex-shrink-0">4</span>
+            <span class="text-lg">💬</span>
+            <div><span class="font-medium">Use o plugin numa conversa</span><span class="text-neutral-500 text-sm ml-2">- pedido em português</span></div>
+          </button>
+          <div id="t4-3-6" class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div><span class="text-purple-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">Fazer um pedido que usa o aplicativo conectado, como buscar um e-mail ou salvar um arquivo no drive.</p></div>
+              <div><span class="text-purple-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">É aqui que a conexão vira trabalho poupado.</p></div>
+              <div><span class="text-purple-400 font-semibold">Conceitos-chave:</span><p class="text-neutral-300 text-sm">Uso do plugin, pedido, resultado.</p></div>
+            </div>
+          </div>
+        </div>
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" aria-expanded="false" aria-controls="t5-3-6" class="w-full px-6 py-4 flex items-center justify-start space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-sm font-bold flex items-center justify-center flex-shrink-0">5</span>
+            <span class="text-lg">🛠️</span>
+            <div><span class="font-medium">Saiba o que fazer quando não há plugin</span><span class="text-neutral-500 text-sm ml-2">- chave, MCP ou navegador</span></div>
+          </button>
+          <div id="t5-3-6" class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div><span class="text-purple-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">Sem plugin, conectar por chave de API num arquivo .env, por MCP (codex mcp add) ou pelo navegador.</p></div>
+              <div><span class="text-purple-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">Quase todo aplicativo tem algum caminho; o plugin é só o mais fácil.</p></div>
+              <div><span class="text-purple-400 font-semibold">Conceitos-chave:</span><p class="text-neutral-300 text-sm">Chave de API, .env, MCP, navegador.</p></div>
+            </div>
+          </div>
+        </div>
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" aria-expanded="false" aria-controls="t6-3-6" class="w-full px-6 py-4 flex items-center justify-start space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-sm font-bold flex items-center justify-center flex-shrink-0">6</span>
+            <span class="text-lg">🔒</span>
+            <div><span class="font-medium">Cuide da segurança das conexões</span><span class="text-neutral-500 text-sm ml-2">- só o necessário</span></div>
+          </button>
+          <div id="t6-3-6" class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div><span class="text-purple-400 font-semibold">O que é:</span><p class="text-neutral-300 text-sm">Conceder só o que precisa, revisar acessos, nunca pôr chave no AGENTS.md e remover o que não usa.</p></div>
+              <div><span class="text-purple-400 font-semibold">Por que aprender:</span><p class="text-neutral-300 text-sm">Cada conexão é uma porta para a sua conta; porta esquecida é risco.</p></div>
+              <div><span class="text-purple-400 font-semibold">Conceitos-chave:</span><p class="text-neutral-300 text-sm">Permissão mínima, revisão, codex plugin remove.</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="p-4 bg-dark-700/30 flex justify-start space-x-3">
+        <button onclick="openModal('modal-3-6')" class="px-4 py-2 text-sm bg-dark-600 hover:bg-dark-500 rounded-lg transition-colors">Ver em Modal</button>
+        <a href="modulo-3-6.html" class="px-4 py-2 text-sm bg-purple-600 hover:bg-purple-500 text-white rounded-lg transition-colors">Ver Completo</a>
+      </div>
+    </div>
+
+    <div class="flex flex-col sm:flex-row gap-4 mt-12">
+      <a href="../trilha2/index.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">← Trilha anterior</a>
+      <a href="../trilha4/index.html" class="flex-1 text-center px-6 py-3 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-500 transition-colors">Próxima trilha: Ferramentas e escala →</a>
+    </div>
+  </main>
+
+  <!-- MODAIS (iframe carrega a pagina do modulo) -->
+  <div id="modal-3-1" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/80" role="dialog" aria-modal="true" aria-labelledby="modal-3-1-title" onclick="if(event.target === this) closeModal()">
+    <div class="bg-dark-800 rounded-xl w-full max-w-6xl h-[95vh] flex flex-col border border-dark-600">
+      <div class="p-4 border-b border-dark-600 flex justify-between items-center flex-shrink-0">
+        <div class="flex items-center space-x-3"><span class="text-purple-400 font-bold">3.1</span><span id="modal-3-1-title" class="font-semibold">Modelos: força e custo</span></div>
+        <button onclick="closeModal()" class="text-neutral-400 hover:text-neutral-100 text-2xl leading-none" aria-label="Fechar">&times;</button>
+      </div>
+      <iframe src="modulo-3-1.html" title="Módulo 3.1" loading="lazy" class="flex-1 w-full rounded-b-xl"></iframe>
+    </div>
+  </div>
+  <div id="modal-3-2" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/80" role="dialog" aria-modal="true" aria-labelledby="modal-3-2-title" onclick="if(event.target === this) closeModal()">
+    <div class="bg-dark-800 rounded-xl w-full max-w-6xl h-[95vh] flex flex-col border border-dark-600">
+      <div class="p-4 border-b border-dark-600 flex justify-between items-center flex-shrink-0">
+        <div class="flex items-center space-x-3"><span class="text-purple-400 font-bold">3.2</span><span id="modal-3-2-title" class="font-semibold">Esforço e modo rápido</span></div>
+        <button onclick="closeModal()" class="text-neutral-400 hover:text-neutral-100 text-2xl leading-none" aria-label="Fechar">&times;</button>
+      </div>
+      <iframe src="modulo-3-2.html" title="Módulo 3.2" loading="lazy" class="flex-1 w-full rounded-b-xl"></iframe>
+    </div>
+  </div>
+  <div id="modal-3-3" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/80" role="dialog" aria-modal="true" aria-labelledby="modal-3-3-title" onclick="if(event.target === this) closeModal()">
+    <div class="bg-dark-800 rounded-xl w-full max-w-6xl h-[95vh] flex flex-col border border-dark-600">
+      <div class="p-4 border-b border-dark-600 flex justify-between items-center flex-shrink-0">
+        <div class="flex items-center space-x-3"><span class="text-purple-400 font-bold">3.3</span><span id="modal-3-3-title" class="font-semibold">Permissões: quanto ele faz sozinho</span></div>
+        <button onclick="closeModal()" class="text-neutral-400 hover:text-neutral-100 text-2xl leading-none" aria-label="Fechar">&times;</button>
+      </div>
+      <iframe src="modulo-3-3.html" title="Módulo 3.3" loading="lazy" class="flex-1 w-full rounded-b-xl"></iframe>
+    </div>
+  </div>
+  <div id="modal-3-4" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/80" role="dialog" aria-modal="true" aria-labelledby="modal-3-4-title" onclick="if(event.target === this) closeModal()">
+    <div class="bg-dark-800 rounded-xl w-full max-w-6xl h-[95vh] flex flex-col border border-dark-600">
+      <div class="p-4 border-b border-dark-600 flex justify-between items-center flex-shrink-0">
+        <div class="flex items-center space-x-3"><span class="text-purple-400 font-bold">3.4</span><span id="modal-3-4-title" class="font-semibold">Skills: receitas reutilizáveis</span></div>
+        <button onclick="closeModal()" class="text-neutral-400 hover:text-neutral-100 text-2xl leading-none" aria-label="Fechar">&times;</button>
+      </div>
+      <iframe src="modulo-3-4.html" title="Módulo 3.4" loading="lazy" class="flex-1 w-full rounded-b-xl"></iframe>
+    </div>
+  </div>
+  <div id="modal-3-5" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/80" role="dialog" aria-modal="true" aria-labelledby="modal-3-5-title" onclick="if(event.target === this) closeModal()">
+    <div class="bg-dark-800 rounded-xl w-full max-w-6xl h-[95vh] flex flex-col border border-dark-600">
+      <div class="p-4 border-b border-dark-600 flex justify-between items-center flex-shrink-0">
+        <div class="flex items-center space-x-3"><span class="text-purple-400 font-bold">3.5</span><span id="modal-3-5-title" class="font-semibold">A pasta .agents e a vinda do Claude Code</span></div>
+        <button onclick="closeModal()" class="text-neutral-400 hover:text-neutral-100 text-2xl leading-none" aria-label="Fechar">&times;</button>
+      </div>
+      <iframe src="modulo-3-5.html" title="Módulo 3.5" loading="lazy" class="flex-1 w-full rounded-b-xl"></iframe>
+    </div>
+  </div>
+  <div id="modal-3-6" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/80" role="dialog" aria-modal="true" aria-labelledby="modal-3-6-title" onclick="if(event.target === this) closeModal()">
+    <div class="bg-dark-800 rounded-xl w-full max-w-6xl h-[95vh] flex flex-col border border-dark-600">
+      <div class="p-4 border-b border-dark-600 flex justify-between items-center flex-shrink-0">
+        <div class="flex items-center space-x-3"><span class="text-purple-400 font-bold">3.6</span><span id="modal-3-6-title" class="font-semibold">Plugins: conecte seus aplicativos</span></div>
+        <button onclick="closeModal()" class="text-neutral-400 hover:text-neutral-100 text-2xl leading-none" aria-label="Fechar">&times;</button>
+      </div>
+      <iframe src="modulo-3-6.html" title="Módulo 3.6" loading="lazy" class="flex-1 w-full rounded-b-xl"></iframe>
+    </div>
+  </div>
